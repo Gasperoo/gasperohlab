@@ -1,32 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  /* Warm, cinematic near-black */
-  --background: #070506;
-  --background-elevated: #100b0c;
-  --foreground: #f6ede6;
-  --muted: #a99b93;
-  --border: rgba(255, 255, 255, 0.08);
+  /* Neutral, near-black — no warm tint. Engineered, not moody. */
+  --background: #08090a;
+  --background-elevated: #0e0f11;
+  --surface: #111214;
+  --surface-hover: #16181b;
+  --foreground: #f4f5f6;
+  --muted: #9a9ca1;
+  --faint: #6b6d73;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
 
-  /* Amber -> Orange -> Red */
-  --accent: #ffb020;
-  --accent-2: #ff6a2b;
-  --accent-3: #ff3d5a;
-
-  --accent-rgb: 255, 176, 32;
-  --accent-2-rgb: 255, 106, 43;
-  --accent-3-rgb: 255, 61, 90;
+  /* One accent. A single, confident red. */
+  --accent: #ff3b47;
+  --accent-hover: #e5242f;
+  --accent-rgb: 255, 59, 71;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-background-elevated: var(--background-elevated);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
+  --color-faint: var(--faint);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-accent: var(--accent);
-  --color-accent-2: var(--accent-2);
-  --color-accent-3: var(--accent-3);
+  --color-accent-hover: var(--accent-hover);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-display);
@@ -38,7 +41,6 @@
 
 html {
   scroll-behavior: smooth;
-  /* Belt-and-suspenders guard against any horizontal bleed on mobile. */
   overflow-x: clip;
 }
 
@@ -52,11 +54,11 @@ body {
 }
 
 ::selection {
-  background: rgba(var(--accent-2-rgb), 0.28);
+  background: rgba(var(--accent-rgb), 0.28);
   color: #fff;
 }
 
-/* Thin, subtle scrollbar */
+/* Thin, neutral scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -64,13 +66,13 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
   border-radius: 999px;
   border: 3px solid transparent;
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(var(--accent-2-rgb), 0.45);
+  background: rgba(255, 255, 255, 0.2);
   background-clip: content-box;
 }
 
@@ -80,133 +82,47 @@ body {
   font-family: var(--font-display), var(--font-geist-sans), system-ui, sans-serif;
 }
 
-/* Static warm gradient text */
-.text-gradient {
-  background: linear-gradient(
-    100deg,
-    var(--accent) 0%,
-    var(--accent-2) 48%,
-    var(--accent-3) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-
-/* Animated shimmering gradient text (for the hero wordmark) */
-.text-gradient-anim {
-  background: linear-gradient(
-    100deg,
-    var(--accent-3) 0%,
-    var(--accent-2) 20%,
-    var(--accent) 40%,
-    #fff6e6 50%,
-    var(--accent) 60%,
-    var(--accent-2) 80%,
-    var(--accent-3) 100%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  animation: text-shine 6s linear infinite;
-}
-
-@keyframes text-shine {
-  to {
-    background-position: 200% center;
-  }
+/* Small, mono, uppercase section label */
+.eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 /* ---------- Surfaces ---------- */
 
-/* Glass card */
-.glass {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.055) 0%,
-    rgba(255, 255, 255, 0.02) 100%
-  );
+/* Solid card. No glass, no blur. Just a clean, defined surface. */
+.surface {
+  background: var(--surface);
   border: 1px solid var(--border);
-  backdrop-filter: blur(12px);
+}
+.surface-hover-fx {
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.surface-hover-fx:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
 }
 
-.glass-strong {
-  background: linear-gradient(
-    180deg,
-    rgba(20, 14, 12, 0.75) 0%,
-    rgba(10, 8, 8, 0.6) 100%
-  );
+/* Only the nav uses a translucent panel — it sits over content. */
+.panel {
+  background: rgba(12, 13, 15, 0.72);
+  backdrop-filter: blur(14px) saturate(140%);
   border: 1px solid var(--border);
-  backdrop-filter: blur(20px);
-}
-
-/* Gradient border wrapper: put on a rounded element */
-.border-gradient {
-  position: relative;
-}
-.border-gradient::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(
-    130deg,
-    rgba(var(--accent-rgb), 0.6),
-    rgba(var(--accent-3-rgb), 0.35) 45%,
-    rgba(255, 255, 255, 0.04) 75%
-  );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
 }
 
 /* ---------- Backgrounds ---------- */
 
-/* Faint grid, masked toward the top */
+/* Faint engineering grid, gently masked so it fades out. */
 .grid-bg {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-  background-size: 62px 62px;
-  mask-image: radial-gradient(ellipse 85% 65% at 50% 0%, #000 25%, transparent 75%);
-  -webkit-mask-image: radial-gradient(ellipse 85% 65% at 50% 0%, #000 25%, transparent 75%);
-}
-
-/* Subtle noise overlay */
-.noise {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.03;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* Conic aurora, slowly rotating */
-.aurora {
-  background: conic-gradient(
-    from 0deg at 50% 50%,
-    rgba(var(--accent-rgb), 0.0) 0deg,
-    rgba(var(--accent-rgb), 0.18) 70deg,
-    rgba(var(--accent-2-rgb), 0.22) 140deg,
-    rgba(var(--accent-3-rgb), 0.16) 220deg,
-    rgba(var(--accent-rgb), 0.0) 320deg
-  );
-  animation: spin-slow 40s linear infinite;
-}
-
-@keyframes spin-slow {
-  to {
-    transform: rotate(360deg);
-  }
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 20%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 20%, transparent 78%);
 }
 
 /* ---------- Motion keyframes ---------- */
@@ -220,46 +136,22 @@ body {
   }
 }
 .animate-marquee {
-  animation: marquee 34s linear infinite;
-}
-.animate-marquee-slow {
-  animation: marquee 60s linear infinite;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(18px, -26px) scale(1.05);
-  }
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    opacity: 0.55;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-.animate-pulse-glow {
-  animation: pulse-glow 3.5s ease-in-out infinite;
+  animation: marquee 48s linear infinite;
 }
 
 /* Live status dot ping */
 @keyframes ping-ring {
   0% {
     transform: scale(1);
-    opacity: 0.7;
+    opacity: 0.6;
   }
   70%, 100% {
-    transform: scale(2.4);
+    transform: scale(2.2);
     opacity: 0;
   }
 }
 .animate-ping-ring {
-  animation: ping-ring 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  animation: ping-ring 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
 /* ---------- Reduced motion ---------- */
@@ -268,10 +160,6 @@ body {
     scroll-behavior: auto;
   }
   .animate-marquee,
-  .animate-marquee-slow,
-  .aurora,
-  .text-gradient-anim,
-  .animate-pulse-glow,
   .animate-ping-ring {
     animation: none !important;
   }

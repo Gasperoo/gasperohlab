@@ -15,8 +15,8 @@ export default function OgImage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "#070506",
-          color: "#f6ede6",
+          background: "#08090a",
+          color: "#f4f5f6",
           fontFamily: "sans-serif",
         }}
       >
@@ -26,16 +26,15 @@ export default function OgImage() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              width: 128,
-              height: 128,
-              borderRadius: 28,
-              background:
-                "linear-gradient(135deg, #ffb020 0%, #ff6a2b 50%, #ff3d5a 100%)",
+              width: 116,
+              height: 116,
+              borderRadius: 24,
+              background: "#ff3b47",
             }}
           >
             <svg
-              width="80"
-              height="80"
+              width="74"
+              height="74"
               viewBox="0 0 24 24"
               fill="none"
               stroke="#fff"
@@ -49,11 +48,12 @@ export default function OgImage() {
               <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
             </svg>
           </div>
-          <div style={{ fontSize: 92, fontWeight: 700, letterSpacing: -2 }}>
-            GASPEROHLAB
+          <div style={{ display: "flex", fontSize: 92, fontWeight: 700, letterSpacing: -2 }}>
+            <span>GASPEROH</span>
+            <span style={{ color: "#ff3b47" }}>LAB</span>
           </div>
         </div>
-        <div style={{ marginTop: 36, fontSize: 34, color: "#a79b91" }}>
+        <div style={{ marginTop: 40, fontSize: 34, color: "#9a9ca1" }}>
           Games, apps &amp; AI, engineered.
         </div>
       </div>

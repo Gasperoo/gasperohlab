@@ -6,14 +6,14 @@ const disciplines = [
     icon: Gamepad2,
     title: "Games",
     description:
-      "Playable ideas — from tight arcade loops to strange, systemic worlds. Mechanics first, polish always.",
+      "Playable systems — from tight arcade loops to strange, systemic worlds. Mechanics first, polish always.",
     tag: "Interactive",
   },
   {
     icon: LayoutGrid,
-    title: "Apps",
+    title: "Applications",
     description:
-      "Web and mobile products designed with intent. Fast, accessible, and genuinely pleasant to use.",
+      "Web and mobile products built with intent. Fast, accessible and genuinely pleasant to use.",
     tag: "Product",
   },
   {
@@ -25,51 +25,55 @@ const disciplines = [
   },
   {
     icon: TerminalSquare,
-    title: "Programs",
+    title: "Systems & Tools",
     description:
       "Command-line tools, automations and engines. The quiet software that makes everything else possible.",
-    tag: "Systems",
+    tag: "Infrastructure",
   },
 ];
 
 export function Disciplines() {
   return (
-    <section id="disciplines" className="relative mx-auto max-w-6xl px-5 py-20 sm:px-6 sm:py-28">
-      <Reveal className="mx-auto max-w-2xl text-center">
-        <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">
-          What we build
-        </p>
+    <section
+      id="disciplines"
+      className="relative mx-auto max-w-6xl px-5 py-24 sm:px-6 sm:py-32"
+    >
+      <Reveal className="max-w-2xl">
+        <p className="eyebrow mb-4">What we build</p>
         <h2 className="font-display text-balance text-4xl font-bold tracking-tight sm:text-5xl">
-          Four disciplines, one obsession
+          Four disciplines, one team
         </h2>
-        <p className="mt-4 text-pretty text-lg text-muted">
-          Every project starts as an experiment. These are the forms it takes.
+        <p className="mt-4 text-pretty text-lg leading-relaxed text-muted">
+          Every project starts as a question. These are the forms the answers
+          take.
         </p>
       </Reveal>
 
-      <div className="mt-12 grid gap-4 sm:mt-16 sm:grid-cols-2">
+      <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2">
         {disciplines.map((d, i) => (
-          <Reveal key={d.title} delay={i * 0.08}>
-            <article className="glass group relative h-full overflow-hidden rounded-2xl p-8 transition-colors hover:bg-white/[0.06]">
-              {/* Hover glow */}
-              <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-accent/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
+          <Reveal
+            key={d.title}
+            delay={i * 0.06}
+            className="group relative bg-background-elevated p-8 transition-colors duration-200 hover:bg-surface sm:p-10"
+          >
+            {/* Accent rule that appears on hover */}
+            <span className="absolute inset-x-0 top-0 h-px scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100" />
 
-              <div className="flex items-center justify-between">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-white/10 to-white/[0.02] ring-1 ring-white/10">
-                  <d.icon className="h-6 w-6 text-accent" strokeWidth={1.6} />
-                </span>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-muted">
-                  {d.tag}
-                </span>
-              </div>
+            <div className="flex items-center justify-between">
+              <span className="flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-surface text-muted transition-colors duration-200 group-hover:border-accent/40 group-hover:text-accent">
+                <d.icon className="h-5 w-5" strokeWidth={1.7} />
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-faint">
+                {d.tag}
+              </span>
+            </div>
 
-              <h3 className="mt-6 font-display text-2xl font-bold tracking-tight">
-                {d.title}
-              </h3>
-              <p className="mt-3 text-pretty leading-relaxed text-muted">
-                {d.description}
-              </p>
-            </article>
+            <h3 className="mt-6 font-display text-2xl font-bold tracking-tight">
+              {d.title}
+            </h3>
+            <p className="mt-3 text-pretty leading-relaxed text-muted">
+              {d.description}
+            </p>
           </Reveal>
         ))}
       </div>

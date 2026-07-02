@@ -47,11 +47,11 @@ export function Footer() {
     <footer className="relative mt-auto border-t border-border">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-5 py-10 sm:flex-row sm:px-6">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-linear-to-br from-accent/30 to-accent-3/30 ring-1 ring-white/10">
-            <Rocket className="h-3.5 w-3.5 text-accent-2" />
+          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-accent text-white ring-1 ring-white/10">
+            <Rocket className="h-3.5 w-3.5" strokeWidth={2} />
           </span>
-          <span className="font-display text-sm font-bold tracking-[0.14em]">
-            GASPEROH<span className="text-gradient">LAB</span>
+          <span className="font-display text-sm font-bold tracking-[0.12em]">
+            GASPEROH<span className="text-accent">LAB</span>
           </span>
         </div>
 

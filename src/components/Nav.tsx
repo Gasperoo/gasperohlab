@@ -6,18 +6,18 @@ import { ArrowUpRight, Menu, Rocket, X } from "lucide-react";
 
 const links = [
   { label: "Disciplines", href: "#disciplines" },
-  { label: "Projects", href: "#projects" },
+  { label: "Work", href: "#projects" },
   { label: "Ethos", href: "#ethos" },
 ];
 
 function Logo({ onClick }: { onClick?: () => void }) {
   return (
     <a href="#top" onClick={onClick} className="group flex items-center gap-2.5">
-      <span className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-accent/30 to-accent-3/30 ring-1 ring-white/10">
-        <Rocket className="h-4 w-4 text-accent-2 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+      <span className="flex h-7 w-7 items-center justify-center rounded-md bg-accent text-white ring-1 ring-white/10">
+        <Rocket className="h-4 w-4 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2} />
       </span>
-      <span className="font-display text-sm font-bold tracking-[0.14em]">
-        GASPEROH<span className="text-gradient">LAB</span>
+      <span className="font-display text-sm font-bold tracking-[0.12em]">
+        GASPEROH<span className="text-accent">LAB</span>
       </span>
     </a>
   );
@@ -87,7 +87,7 @@ export function Nav() {
     <>
       {/* Scroll progress bar */}
       <motion.div
-        className="fixed inset-x-0 top-0 z-[60] h-0.5 origin-left bg-linear-to-r from-accent via-accent-2 to-accent-3"
+        className="fixed inset-x-0 top-0 z-[60] h-0.5 origin-left bg-accent"
         style={{ scaleX: progress }}
       />
 
@@ -98,9 +98,9 @@ export function Nav() {
         className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4"
       >
         <nav
-          className={`flex w-full max-w-5xl items-center justify-between rounded-full px-4 py-2.5 transition-all duration-300 sm:px-6 ${
+          className={`flex w-full max-w-5xl items-center justify-between rounded-xl px-4 py-2.5 transition-all duration-300 sm:px-5 ${
             scrolled || menuOpen
-              ? "glass-strong shadow-lg shadow-black/40"
+              ? "panel shadow-lg shadow-black/40"
               : "border border-transparent"
           }`}
         >
@@ -113,14 +113,14 @@ export function Nav() {
                 <a
                   key={l.href}
                   href={l.href}
-                  className={`relative rounded-full px-3.5 py-1.5 text-sm transition-colors ${
+                  className={`relative rounded-lg px-3.5 py-1.5 text-sm transition-colors ${
                     isActive ? "text-foreground" : "text-muted hover:text-foreground"
                   }`}
                 >
                   {isActive && (
                     <motion.span
                       layoutId="nav-active"
-                      className="absolute inset-0 -z-10 rounded-full bg-white/[0.07] ring-1 ring-white/10"
+                      className="absolute inset-0 -z-10 rounded-lg bg-white/[0.06] ring-1 ring-white/10"
                       transition={{ type: "spring", stiffness: 350, damping: 30 }}
                     />
                   )}
@@ -133,9 +133,9 @@ export function Nav() {
           <div className="flex items-center gap-2">
             <a
               href="#contact"
-              className="group relative hidden overflow-hidden rounded-full bg-foreground px-4 py-1.5 text-sm font-medium text-background transition-transform hover:scale-[1.03] active:scale-95 md:inline-block"
+              className="hidden rounded-lg bg-accent px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-accent-hover md:inline-block"
             >
-              <span className="relative z-10">Get in touch</span>
+              Get in touch
             </a>
 
             {/* Mobile menu toggle */}
@@ -145,7 +145,7 @@ export function Nav() {
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-white/5 active:scale-95 md:hidden"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-foreground transition-colors hover:bg-white/5 active:scale-95 md:hidden"
             >
               <AnimatePresence mode="wait" initial={false}>
                 {menuOpen ? (
@@ -197,7 +197,7 @@ export function Nav() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -12, scale: 0.98 }}
               transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-              className="glass-strong border-gradient absolute inset-x-4 top-[4.75rem] overflow-hidden rounded-3xl p-3"
+              className="panel absolute inset-x-4 top-[4.75rem] overflow-hidden rounded-2xl p-3"
             >
               <nav className="flex flex-col">
                 {links.map((l, i) => {
@@ -210,7 +210,7 @@ export function Nav() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.06 + i * 0.05, duration: 0.25 }}
-                      className={`flex items-center justify-between rounded-2xl px-4 py-3.5 text-base font-medium transition-colors ${
+                      className={`flex items-center justify-between rounded-xl px-4 py-3.5 text-base font-medium transition-colors ${
                         isActive
                           ? "bg-white/[0.06] text-foreground"
                           : "text-muted hover:bg-white/[0.04] hover:text-foreground"
@@ -229,7 +229,7 @@ export function Nav() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.06 + links.length * 0.05, duration: 0.25 }}
-                className="mt-2 flex items-center justify-center rounded-2xl bg-foreground px-4 py-3.5 text-sm font-semibold text-background transition-transform active:scale-95"
+                className="mt-2 flex items-center justify-center rounded-xl bg-accent px-4 py-3.5 text-sm font-semibold text-white transition-colors active:scale-95"
               >
                 Get in touch
               </motion.a>

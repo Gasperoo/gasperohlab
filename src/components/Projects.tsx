@@ -1,14 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useMotionValue,
-  useSpring,
-  useTransform,
-  type Variants,
-} from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
   Gamepad2,
   LayoutGrid,
@@ -77,128 +70,87 @@ const projects: Project[] = [
 const filters = ["All", "Released"] as const;
 type Filter = (typeof filters)[number];
 
-const statusStyles: Record<
-  Status,
-  { dot: string; text: string; live?: boolean }
-> = {
+const statusStyles: Record<Status, { dot: string; text: string; live?: boolean }> = {
   "In Development": { dot: "bg-accent", text: "text-accent", live: true },
   Released: { dot: "bg-emerald-400", text: "text-emerald-400" },
-  "Coming Soon": { dot: "bg-accent-3", text: "text-accent-3" },
+  "Coming Soon": { dot: "bg-muted", text: "text-muted" },
 };
 
 const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
-  exit: { opacity: 0, y: -12, transition: { duration: 0.25 } },
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } },
+  exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
 };
 
 function ProjectCard({ project }: { project: Project }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const rx = useMotionValue(0);
-  const ry = useMotionValue(0);
-  const srx = useSpring(rx, { stiffness: 150, damping: 18 });
-  const sry = useSpring(ry, { stiffness: 150, damping: 18 });
-  const rotateX = useTransform(srx, [-0.5, 0.5], ["7deg", "-7deg"]);
-  const rotateY = useTransform(sry, [-0.5, 0.5], ["-7deg", "7deg"]);
-
   const Icon = disciplineIcon[project.discipline];
   const status = statusStyles[project.status];
   const isComingSoon = project.status === "Coming Soon";
-
-  function onMove(e: React.PointerEvent) {
-    // Skip the 3D tilt on touch / coarse-pointer devices — it fights scrolling.
-    if (e.pointerType !== "mouse") return;
-    const el = cardRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    rx.set((e.clientY - rect.top) / rect.height - 0.5);
-    ry.set((e.clientX - rect.left) / rect.width - 0.5);
-  }
-  function onLeave() {
-    rx.set(0);
-    ry.set(0);
-  }
-
   const Wrapper = project.href ? motion.a : motion.div;
 
   return (
-    <motion.div
+    <Wrapper
+      {...(project.href ? { href: project.href } : {})}
+      {...(project.external ? { target: "_blank", rel: "noreferrer" } : {})}
       variants={cardVariants}
       layout
       exit="exit"
-      style={{ perspective: 1000 }}
-      className="h-full"
+      className="surface surface-hover-fx group relative flex h-full flex-col rounded-xl p-6 sm:p-7"
     >
-      <Wrapper
-        {...(project.href ? { href: project.href } : {})}
-        {...(project.external
-          ? { target: "_blank", rel: "noreferrer" }
-          : {})}
-        ref={cardRef as never}
-        onPointerMove={onMove}
-        onPointerLeave={onLeave}
-        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        className="glass border-gradient group relative flex h-full flex-col overflow-hidden rounded-2xl p-7"
-      >
-        {/* Hover glow */}
-        <div className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 rounded-full bg-accent-2/15 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
+      <div className="flex items-start justify-between">
+        <span className="flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-background-elevated text-muted transition-colors group-hover:text-foreground">
+          <Icon className="h-5 w-5" strokeWidth={1.7} />
+        </span>
 
-        <div className="relative flex items-start justify-between" style={{ transform: "translateZ(40px)" }}>
-          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-linear-to-br from-white/10 to-white/[0.02] ring-1 ring-white/10">
-            <Icon className="h-5 w-5 text-accent-2" strokeWidth={1.7} />
-          </span>
-
-          <span
-            className={`inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs ${status.text}`}
-          >
-            <span className="relative flex h-1.5 w-1.5">
-              {status.live && (
-                <span
-                  className={`animate-ping-ring absolute inline-flex h-full w-full rounded-full ${status.dot}`}
-                />
-              )}
-              <span className={`relative inline-flex h-1.5 w-1.5 rounded-full ${status.dot}`} />
-            </span>
-            {project.status}
-          </span>
-        </div>
-
-        <div className="relative mt-7 flex items-center gap-2" style={{ transform: "translateZ(30px)" }}>
-          <h3 className="text-xl font-semibold tracking-tight">{project.name}</h3>
-          {isComingSoon ? (
-            <Lock className="h-4 w-4 text-muted" />
-          ) : project.href ? (
-            <ArrowUpRight className="h-4 w-4 text-muted transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground" />
-          ) : null}
-        </div>
-        <p className="relative mt-1 font-mono text-[11px] uppercase tracking-widest text-accent/80">
-          {project.discipline} · {project.year}
-        </p>
-
-        <p className="relative mt-4 flex-1 text-pretty text-sm leading-relaxed text-muted">
-          {project.blurb}
-        </p>
-
-        {/* In-development progress bar */}
-        {project.status === "In Development" && project.progress != null && (
-          <div className="relative mt-6" style={{ transform: "translateZ(20px)" }}>
-            <div className="mb-1.5 flex justify-between font-mono text-[10px] uppercase tracking-widest text-muted">
-              <span>Build progress</span>
-              <span className="text-accent">{project.progress}%</span>
-            </div>
-            <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
-              <motion.div
-                className="h-full rounded-full bg-linear-to-r from-accent via-accent-2 to-accent-3"
-                initial={{ width: 0 }}
-                whileInView={{ width: `${project.progress}%` }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+        <span
+          className={`inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs ${status.text}`}
+        >
+          <span className="relative flex h-1.5 w-1.5">
+            {status.live && (
+              <span
+                className={`animate-ping-ring absolute inline-flex h-full w-full rounded-full ${status.dot}`}
               />
-            </div>
+            )}
+            <span className={`relative inline-flex h-1.5 w-1.5 rounded-full ${status.dot}`} />
+          </span>
+          {project.status}
+        </span>
+      </div>
+
+      <div className="mt-6 flex items-center gap-2">
+        <h3 className="text-lg font-semibold tracking-tight">{project.name}</h3>
+        {isComingSoon ? (
+          <Lock className="h-4 w-4 text-faint" />
+        ) : project.href ? (
+          <ArrowUpRight className="h-4 w-4 text-faint transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
+        ) : null}
+      </div>
+      <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.16em] text-faint">
+        {project.discipline} · {project.year}
+      </p>
+
+      <p className="mt-4 flex-1 text-pretty text-sm leading-relaxed text-muted">
+        {project.blurb}
+      </p>
+
+      {project.status === "In Development" && project.progress != null && (
+        <div className="mt-6">
+          <div className="mb-1.5 flex justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-faint">
+            <span>Build progress</span>
+            <span className="text-accent">{project.progress}%</span>
           </div>
-        )}
-      </Wrapper>
-    </motion.div>
+          <div className="h-1 overflow-hidden rounded-full bg-white/[0.06]">
+            <motion.div
+              className="h-full rounded-full bg-accent"
+              initial={{ width: 0 }}
+              whileInView={{ width: `${project.progress}%` }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+            />
+          </div>
+        </div>
+      )}
+    </Wrapper>
   );
 }
 
@@ -208,35 +160,35 @@ export function Projects() {
     filter === "All" ? projects : projects.filter((p) => p.status === filter);
 
   return (
-    <section id="projects" className="relative mx-auto max-w-6xl px-5 py-20 sm:px-6 sm:py-28">
+    <section
+      id="projects"
+      className="relative mx-auto max-w-6xl px-5 py-24 sm:px-6 sm:py-32"
+    >
       <Reveal className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
         <div className="max-w-xl">
-          <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">
-            The work
-          </p>
+          <p className="eyebrow mb-4">Selected work</p>
           <h2 className="font-display text-balance text-4xl font-bold tracking-tight sm:text-5xl">
-            Projects from the lab
+            What we&apos;ve shipped
           </h2>
           <p className="mt-4 max-w-md text-pretty text-muted">
-            Some are shipping, some are taking shape, some are still secrets.
-            Here&apos;s what&apos;s in the pipeline.
+            Products in production today — with more taking shape in the lab.
           </p>
         </div>
 
         {/* Filter tabs */}
-        <div className="glass flex flex-wrap gap-1 rounded-full p-1">
+        <div className="flex flex-wrap gap-1 rounded-lg border border-border bg-surface p-1">
           {filters.map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`relative rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
-                filter === f ? "text-background" : "text-muted hover:text-foreground"
+              className={`relative rounded-md px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                filter === f ? "text-white" : "text-muted hover:text-foreground"
               }`}
             >
               {filter === f && (
                 <motion.span
                   layoutId="project-filter"
-                  className="absolute inset-0 -z-10 rounded-full bg-linear-to-r from-accent to-accent-2"
+                  className="absolute inset-0 -z-10 rounded-md bg-accent"
                   transition={{ type: "spring", stiffness: 350, damping: 30 }}
                 />
               )}
@@ -246,7 +198,10 @@ export function Projects() {
         </div>
       </Reveal>
 
-      <motion.div layout className="mt-10 grid gap-4 sm:mt-14 sm:grid-cols-2 lg:grid-cols-3">
+      <motion.div
+        layout
+        className="mt-12 grid gap-4 sm:mt-14 sm:grid-cols-2 lg:grid-cols-3"
+      >
         <AnimatePresence mode="popLayout">
           {visible.map((p) => (
             <ProjectCard key={p.name} project={p} />

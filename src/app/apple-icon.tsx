@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
-// Apple touch icon: brand gradient tile with the rocket wordmark glyph.
+// Apple touch icon: solid red brand tile with the rocket mark.
 export default function AppleIcon() {
   return new ImageResponse(
     (
@@ -14,8 +14,7 @@ export default function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background:
-            "linear-gradient(135deg, #ffb020 0%, #ff6a2b 50%, #ff3d5a 100%)",
+          background: "#ff3b47",
         }}
       >
         <svg

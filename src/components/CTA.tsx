@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Mail } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Reveal } from "./Reveal";
 import { ContactModal } from "./ContactModal";
 
@@ -9,31 +9,31 @@ export function CTA() {
   const [open, setOpen] = useState(false);
 
   return (
-    <section id="contact" className="relative mx-auto max-w-6xl px-5 py-20 sm:px-6 sm:py-28">
+    <section
+      id="contact"
+      className="relative mx-auto max-w-6xl px-5 py-24 sm:px-6 sm:py-32"
+    >
       <Reveal>
-        <div className="glass relative overflow-hidden rounded-3xl px-6 py-14 text-center sm:px-16 sm:py-24">
-          {/* Glow */}
-          <div className="pointer-events-none absolute left-1/2 top-0 h-64 w-[36rem] max-w-full -translate-x-1/2 rounded-full bg-accent-2/20 blur-[120px]" />
+        <div className="surface relative overflow-hidden rounded-2xl px-6 py-16 text-center sm:px-16 sm:py-24">
+          {/* Single restrained accent glow */}
+          <div className="pointer-events-none absolute left-1/2 top-0 h-56 w-208 max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/12 blur-[110px]" />
 
-          <p className="relative mb-4 font-mono text-xs uppercase tracking-[0.2em] text-accent">
-            Let&apos;s make something
-          </p>
+          <p className="eyebrow relative mb-4">Start a project</p>
           <h2 className="relative mx-auto max-w-2xl font-display text-balance text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-            Have an idea worth experimenting on?
+            Have something worth building?
           </h2>
-          <p className="relative mx-auto mt-5 max-w-lg text-pretty text-lg text-muted">
-            Whether it&apos;s a game, an app, an AI model or something with no
-            name yet — let&apos;s build the prototype and find out.
+          <p className="relative mx-auto mt-5 max-w-lg text-pretty text-lg leading-relaxed text-muted">
+            A game, an app, an AI model, or a problem that doesn&apos;t have a
+            name yet — tell us about it and we&apos;ll build the prototype.
           </p>
 
           <div className="relative mt-10 flex items-center justify-center">
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="group inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background transition-transform hover:scale-[1.03] active:scale-95"
+              className="group inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-hover"
             >
-              <Mail className="h-4 w-4" />
-              Contact us
+              Get in touch
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </button>
           </div>

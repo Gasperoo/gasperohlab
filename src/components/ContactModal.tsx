@@ -109,9 +109,9 @@ export function ContactModal({ open, onClose }: Props) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.98 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="glass-strong border-gradient relative w-full max-w-md overflow-hidden rounded-3xl p-8"
+            className="relative w-full max-w-md overflow-hidden rounded-2xl border border-border bg-background-elevated p-8 shadow-2xl shadow-black/50"
           >
-            <div className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 rounded-full bg-accent-2/20 blur-3xl" />
+            <div className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 rounded-full bg-accent/15 blur-3xl" />
 
             <button
               type="button"
@@ -218,7 +218,7 @@ export function ContactModal({ open, onClose }: Props) {
                   {status === "error" && (
                     <p
                       role="alert"
-                      className="rounded-xl border border-accent-3/40 bg-accent-3/10 px-4 py-2.5 text-xs text-accent-3"
+                      className="rounded-xl border border-accent/40 bg-accent/10 px-4 py-2.5 text-xs text-accent"
                     >
                       {error}
                     </p>

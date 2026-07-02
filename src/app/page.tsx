@@ -12,7 +12,6 @@ export default function Home() {
   return (
     <>
       <Background />
-      <div className="noise" aria-hidden />
       <Nav />
       <main className="relative z-10 flex-1">
         <Hero />

@@ -7,29 +7,19 @@ import {
   useTransform,
   type Variants,
 } from "framer-motion";
-import { ArrowRight, Rocket, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const container: Variants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.15 } },
+  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.1 } },
 };
 
 const item: Variants = {
-  hidden: { opacity: 0, y: 26 },
+  hidden: { opacity: 0, y: 18 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
-  },
-};
-
-const wordmark: Variants = {
-  hidden: { opacity: 0, y: 40, filter: "blur(12px)" },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
   },
 };
 
@@ -40,78 +30,74 @@ export function Hero() {
     offset: ["start start", "end start"],
   });
 
-  // Parallax + fade as the hero scrolls away
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, 140]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-  const markScale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
+  // Gentle parallax fade as the hero scrolls away. Nothing flashy.
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 90]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
 
   return (
     <section
       id="top"
       ref={ref}
-      className="relative flex min-h-[100svh] flex-col items-center justify-center px-5 pt-24 pb-20 text-center sm:px-6 sm:pt-28 sm:pb-24"
+      className="relative flex min-h-[100svh] flex-col items-center justify-center px-5 pt-28 pb-24 text-center sm:px-6"
     >
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
         variants={container}
         initial="hidden"
         animate="visible"
-        className="flex w-full max-w-5xl flex-col items-center"
+        className="flex w-full max-w-4xl flex-col items-center"
       >
-        <motion.a
+        {/* Status line — calm, factual */}
+        <motion.div
           variants={item}
-          href="#projects"
-          className="glass border-gradient group mb-9 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-muted"
+          className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-border bg-surface/60 px-3.5 py-1.5"
         >
-          <Sparkles className="h-3.5 w-3.5 text-accent" />
-          An independent lab for bold experiments
-          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-        </motion.a>
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="animate-ping-ring absolute inline-flex h-full w-full rounded-full bg-accent" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
+          </span>
+          <span className="text-xs font-medium tracking-wide text-muted">
+            Independent software lab
+          </span>
+        </motion.div>
 
-        {/* Kinetic wordmark */}
+        {/* Wordmark — solid, tight, engineered */}
         <motion.h1
-          variants={wordmark}
-          style={{ scale: markScale }}
-          className="flex w-full items-center justify-center gap-[0.12em] font-display text-[11.5vw] font-bold leading-[0.9] tracking-[-0.03em] sm:text-[11vw] lg:text-[8rem]"
+          variants={item}
+          className="font-display text-[12vw] font-bold leading-[0.92] tracking-[-0.04em] text-foreground sm:text-[9rem] lg:text-[10rem]"
         >
-          <Rocket className="h-[0.7em] w-[0.7em] shrink-0 text-accent" />
-          <span className="text-gradient-anim">GASPEROHLAB</span>
+          GASPEROH<span className="text-accent">LAB</span>
         </motion.h1>
 
         <motion.p
           variants={item}
-          className="mt-2 font-display text-2xl font-semibold tracking-tight text-foreground/90 sm:text-3xl"
+          className="mt-7 max-w-2xl text-balance text-xl font-medium leading-snug text-foreground sm:text-2xl"
         >
-          We build the software that doesn&apos;t exist yet.
+          We design and ship games, applications and AI models.
         </motion.p>
 
         <motion.p
           variants={item}
-          className="mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-muted sm:text-xl"
+          className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-muted sm:text-lg"
         >
-          GASPEROHLAB is where relentless curiosity meets execution. We are a
-          dedicated collective turning wild ideas into concrete software —
-          including games, apps, and AI programs. Our process is simple: we
-          experiment constantly, refine ruthlessly, and launch only our best
-          work.
+          An independent lab that takes hard problems from prototype to
+          production — engineering software people actually use, not slide decks.
         </motion.p>
 
         <motion.div
           variants={item}
-          className="mt-10 flex flex-col items-center gap-3 sm:flex-row"
+          className="mt-10 flex w-full max-w-sm flex-col items-stretch gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:items-center"
         >
           <a
             href="#projects"
-            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-linear-to-r from-accent via-accent-2 to-accent-3 px-6 py-3 text-sm font-semibold text-background shadow-[0_8px_30px_-8px_rgba(255,106,43,0.6)] transition-transform hover:scale-[1.03] active:scale-95"
+            className="group inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-hover"
           >
-            <span className="relative z-10 inline-flex items-center gap-2">
-              Explore the work
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </span>
+            View our work
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </a>
           <a
             href="#contact"
-            className="glass inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-white/10"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-border-strong bg-surface px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-surface-hover"
           >
             Start a project
           </a>
@@ -119,23 +105,25 @@ export function Hero() {
       </motion.div>
 
       {/* Scroll hint */}
-      <motion.div
+      <motion.a
+        href="#disciplines"
+        aria-label="Scroll to content"
         style={{ opacity: contentOpacity }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
       >
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.4, duration: 0.8 }}
+          transition={{ delay: 1.2, duration: 0.8 }}
           className="flex h-9 w-6 items-start justify-center rounded-full border border-border p-1.5"
         >
           <motion.span
-            className="h-1.5 w-1.5 rounded-full bg-accent-2"
+            className="h-1.5 w-1.5 rounded-full bg-muted"
             animate={{ y: [0, 8, 0], opacity: [1, 0.3, 1] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
           />
         </motion.div>
-      </motion.div>
+      </motion.a>
     </section>
   );
 }
