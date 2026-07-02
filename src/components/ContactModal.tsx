@@ -9,15 +9,19 @@ type Props = {
   onClose: () => void;
 };
 
-type Status = "idle" | "submitting" | "success";
+type Status = "idle" | "submitting" | "success" | "error";
 
 export function ContactModal({ open, onClose }: Props) {
   const [status, setStatus] = useState<Status>("idle");
+  const [error, setError] = useState<string>("");
   const firstFieldRef = useRef<HTMLInputElement>(null);
+  // When the form was shown — the server uses this as a bot time-trap.
+  const renderedAt = useRef<number>(0);
 
   // Close on Escape and lock body scroll while open.
   useEffect(() => {
     if (!open) return;
+    renderedAt.current = Date.now();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
@@ -35,15 +39,49 @@ export function ContactModal({ open, onClose }: Props) {
   // Reset back to the form a moment after closing.
   useEffect(() => {
     if (open) return;
-    const t = setTimeout(() => setStatus("idle"), 250);
+    const t = setTimeout(() => {
+      setStatus("idle");
+      setError("");
+    }, 250);
     return () => clearTimeout(t);
   }, [open]);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
     setStatus("submitting");
-    // No backend yet — simulate a send so the flow is in place.
-    setTimeout(() => setStatus("success"), 700);
+    setError("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("name"),
+          email: data.get("email"),
+          phone: data.get("phone"),
+          message: data.get("message"),
+          company: data.get("company"), // honeypot
+          renderedAt: renderedAt.current,
+        }),
+      });
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        setError(
+          body?.error || "Something went wrong. Please try again in a moment."
+        );
+        setStatus("error");
+        return;
+      }
+
+      form.reset();
+      setStatus("success");
+    } catch {
+      setError("Network error. Please check your connection and try again.");
+      setStatus("error");
+    }
   }
 
   return (
@@ -156,6 +194,36 @@ export function ContactModal({ open, onClose }: Props) {
                     />
                   </Field>
 
+                  {/* Honeypot — hidden from people, tempting to bots. */}
+                  <div
+                    aria-hidden
+                    style={{
+                      position: "absolute",
+                      left: "-9999px",
+                      width: 1,
+                      height: 1,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <label htmlFor="cf-company">Company</label>
+                    <input
+                      id="cf-company"
+                      name="company"
+                      type="text"
+                      tabIndex={-1}
+                      autoComplete="off"
+                    />
+                  </div>
+
+                  {status === "error" && (
+                    <p
+                      role="alert"
+                      className="rounded-xl border border-accent-3/40 bg-accent-3/10 px-4 py-2.5 text-xs text-accent-3"
+                    >
+                      {error}
+                    </p>
+                  )}
+
                   <button
                     type="submit"
                     disabled={status === "submitting"}
@@ -166,6 +234,8 @@ export function ContactModal({ open, onClose }: Props) {
                         <Loader2 className="h-4 w-4 animate-spin" />
                         Sending…
                       </>
+                    ) : status === "error" ? (
+                      "Try again"
                     ) : (
                       "Send message"
                     )}
