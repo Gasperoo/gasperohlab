@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gasper Oh Lab
 
-## Getting Started
+The website for **[gasperohlab.com](https://gasperohlab.com)** — an independent
+studio building games, apps, AI models and programs. A place for bold
+experiments turned into real, shipped software.
 
-First, run the development server:
+## Tech stack
+
+- **[Next.js 16](https://nextjs.org)** (App Router) + **React 19**
+- **TypeScript**
+- **Tailwind CSS v4**
+- **Framer Motion** for animation
+- **lucide-react** for icons
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view it.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command         | Description                          |
+| --------------- | ------------------------------------ |
+| `npm run dev`   | Start the local development server   |
+| `npm run build` | Create an optimized production build |
+| `npm run start` | Serve the production build           |
+| `npm run lint`  | Run ESLint                           |
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+  app/
+    layout.tsx      # Root layout, fonts, SEO metadata
+    page.tsx        # Landing page composition
+    globals.css     # Design tokens + Tailwind + utilities
+  components/        # Nav, Hero, Marquee, Disciplines,
+                     # Experiments, Ethos, CTA, Footer, Background
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Optimized for [Vercel](https://vercel.com). The domain is managed through
+Cloudflare — point DNS at the host once deployed.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+© Gasper Oh Lab — Experiments in games, apps & AI.
