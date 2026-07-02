@@ -71,6 +71,26 @@ const projects: Project[] = [
     external: true,
   },
   {
+    name: "Marapone Construction Suite",
+    discipline: "App",
+    status: "Released",
+    blurb:
+      "Private construction AI that audits blueprints, clears RFI backlogs and flags tender risk before it costs you — owned outright, no cloud, no subscriptions. Part of Marapone.",
+    year: "2025",
+    href: "https://marapone.com/construction",
+    external: true,
+  },
+  {
+    name: "Marapone Logistics Suite",
+    discipline: "App",
+    status: "Released",
+    blurb:
+      "Private AI for freight, import/export and trade compliance — automating the paperwork and surfacing risk across every shipment. Owned and on-prem. Part of Marapone.",
+    year: "2025",
+    href: "https://marapone.com/logistics",
+    external: true,
+  },
+  {
     name: "Forge",
     discipline: "Program",
     status: "Released",
