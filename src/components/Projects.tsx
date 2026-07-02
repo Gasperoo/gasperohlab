@@ -87,14 +87,6 @@ const projects: Project[] = [
       "An atmospheric exploration game about light, memory and the spaces between. Currently a well-kept secret.",
     year: "2026",
   },
-  {
-    name: "Marapone Copilot",
-    discipline: "AI",
-    status: "Coming Soon",
-    blurb:
-      "An on-site AI assistant for construction and logistics crews — surfacing the right answer from your operations in seconds. A new MaraponeAI capability, in early research.",
-    year: "2027",
-  },
 ];
 
 const filters = ["All", "In Development", "Released", "Coming Soon"] as const;
