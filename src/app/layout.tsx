@@ -24,47 +24,89 @@ const siteUrl = "https://gasperohlab.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  applicationName: "GASPEROHLAB",
   title: {
-    default: "GASPEROH LAB — Games, apps & AI, engineered.",
-    template: "%s · GASPEROH LAB",
+    default: "GASPEROHLAB — Games, apps & AI, engineered.",
+    template: "%s · GASPEROHLAB",
   },
   description:
-    "GASPEROH LAB is an independent studio engineering games, apps, AI models and programs. Bold experiments, turned into real, shipped software.",
+    "GASPEROHLAB is a collective engineering games, apps, AI models and programs. Bold experiments, turned into real, shipped software.",
   keywords: [
-    "Gasperoh",
-    "GASPEROH LAB",
+    "GASPEROHLAB",
+    "Gasperohlab",
     "game development",
     "app development",
     "AI models",
-    "software studio",
+    "software collective",
     "indie",
     "experiments",
   ],
-  authors: [{ name: "GASPEROH LAB" }],
-  creator: "GASPEROH LAB",
+  authors: [{ name: "GASPEROHLAB", url: siteUrl }],
+  creator: "GASPEROHLAB",
+  publisher: "GASPEROHLAB",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     url: siteUrl,
-    title: "GASPEROH LAB — Games, apps & AI, engineered.",
+    title: "GASPEROHLAB — Games, apps & AI, engineered.",
     description:
-      "An independent studio engineering games, apps, AI models and programs. Bold experiments, turned into shipped software.",
-    siteName: "GASPEROH LAB",
+      "A collective engineering games, apps, AI models and programs. Bold experiments, turned into shipped software.",
+    siteName: "GASPEROHLAB",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "GASPEROH LAB — Games, apps & AI, engineered.",
+    title: "GASPEROHLAB — Games, apps & AI, engineered.",
     description:
-      "An independent studio engineering games, apps, AI models and programs.",
+      "A collective engineering games, apps, AI models and programs.",
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
+  // Drop your Google Search Console token into GOOGLE_SITE_VERIFICATION to
+  // verify ownership; harmlessly omitted when unset.
+  ...(process.env.GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
+    : {}),
 };
 
 export const viewport: Viewport = {
   themeColor: "#070506",
   colorScheme: "dark",
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      name: "GASPEROHLAB",
+      legalName: "GASPEROHLAB Inc.",
+      url: siteUrl,
+      logo: `${siteUrl}/icon.svg`,
+      description:
+        "A collective engineering games, apps, AI models and programs.",
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      name: "GASPEROHLAB",
+      url: siteUrl,
+      publisher: { "@id": `${siteUrl}/#organization` },
+      inLanguage: "en",
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -78,6 +120,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         {children}
       </body>
     </html>

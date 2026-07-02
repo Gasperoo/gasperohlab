@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
+import { Rocket } from "lucide-react";
 
 const links = [
   { label: "Disciplines", href: "#disciplines" },
@@ -13,10 +14,10 @@ function Logo() {
   return (
     <a href="#top" className="group flex items-center gap-2.5">
       <span className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-accent/30 to-accent-3/30 ring-1 ring-white/10">
-        <span className="h-2.5 w-2.5 rotate-45 rounded-[3px] bg-linear-to-br from-accent to-accent-3 shadow-[0_0_14px_var(--accent-2)] transition-transform duration-500 group-hover:rotate-[135deg]" />
+        <Rocket className="h-4 w-4 text-accent-2 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
       </span>
       <span className="font-display text-sm font-bold tracking-[0.14em]">
-        GASPEROH <span className="text-gradient">LAB</span>
+        GASPEROH<span className="text-gradient">LAB</span>
       </span>
     </a>
   );

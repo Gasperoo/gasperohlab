@@ -89,9 +89,11 @@ export function Hero() {
           variants={item}
           className="mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-muted sm:text-xl"
         >
-          GASPEROH LAB is a one-of-a-kind studio turning restless curiosity into
-          real software — games, applications, AI models and programs. We
-          experiment relentlessly, then ship the things worth keeping.
+          GASPEROHLAB is where relentless curiosity meets execution. We are a
+          dedicated collective turning wild ideas into concrete software —
+          including games, apps, and AI programs. Our process is simple: we
+          experiment constantly, refine ruthlessly, and launch only our best
+          work.
         </motion.p>
 
         <motion.div

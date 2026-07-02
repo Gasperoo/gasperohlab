@@ -35,7 +35,7 @@ export function Ethos() {
             A lab, not a factory.
           </h2>
           <p className="mt-5 max-w-md text-pretty text-lg leading-relaxed text-muted">
-            GASPEROH LAB exists to explore. We move between games, apps, AI and
+            GASPEROHLAB exists to explore. We move between games, apps, AI and
             systems freely, letting each discipline sharpen the others. The goal
             isn&apos;t volume — it&apos;s finding the ideas that deserve to become
             real.

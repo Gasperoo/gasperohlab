@@ -1,7 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import { ArrowRight, Mail } from "lucide-react";
 import { Reveal } from "./Reveal";
+import { ContactModal } from "./ContactModal";
 
 export function CTA() {
+  const [open, setOpen] = useState(false);
+
   return (
     <section id="contact" className="relative mx-auto max-w-6xl px-6 py-28">
       <Reveal>
@@ -20,24 +26,21 @@ export function CTA() {
             name yet — let&apos;s build the prototype and find out.
           </p>
 
-          <div className="relative mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <a
-              href="mailto:contact@gasperohlab.com"
+          <div className="relative mt-10 flex items-center justify-center">
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
               className="group inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background transition-transform hover:scale-[1.03] active:scale-95"
             >
               <Mail className="h-4 w-4" />
-              contact@gasperohlab.com
+              Contact us
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </a>
-            <a
-              href="mailto:info@gasperohlab.com"
-              className="glass inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-white/10"
-            >
-              info@gasperohlab.com
-            </a>
+            </button>
           </div>
         </div>
       </Reveal>
+
+      <ContactModal open={open} onClose={() => setOpen(false)} />
     </section>
   );
 }
