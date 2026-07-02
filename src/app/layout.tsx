@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,18 +14,25 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-display",
+  subsets: ["latin"],
+  display: "swap",
+});
+
 const siteUrl = "https://gasperohlab.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Gasper Oh Lab — Experiments in games, apps & AI",
-    template: "%s · Gasper Oh Lab",
+    default: "GASPEROH LAB — Games, apps & AI, engineered.",
+    template: "%s · GASPEROH LAB",
   },
   description:
-    "Gasper Oh Lab is an independent studio building games, apps, AI models and programs. A place for bold experiments turned into real, shipped software.",
+    "GASPEROH LAB is an independent studio engineering games, apps, AI models and programs. Bold experiments, turned into real, shipped software.",
   keywords: [
-    "Gasper Oh Lab",
+    "Gasperoh",
+    "GASPEROH LAB",
     "game development",
     "app development",
     "AI models",
@@ -33,21 +40,21 @@ export const metadata: Metadata = {
     "indie",
     "experiments",
   ],
-  authors: [{ name: "Gasper Oh Lab" }],
-  creator: "Gasper Oh Lab",
+  authors: [{ name: "GASPEROH LAB" }],
+  creator: "GASPEROH LAB",
   openGraph: {
     type: "website",
     url: siteUrl,
-    title: "Gasper Oh Lab — Experiments in games, apps & AI",
+    title: "GASPEROH LAB — Games, apps & AI, engineered.",
     description:
-      "An independent studio building games, apps, AI models and programs. Bold experiments turned into shipped software.",
-    siteName: "Gasper Oh Lab",
+      "An independent studio engineering games, apps, AI models and programs. Bold experiments, turned into shipped software.",
+    siteName: "GASPEROH LAB",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Gasper Oh Lab — Experiments in games, apps & AI",
+    title: "GASPEROH LAB — Games, apps & AI, engineered.",
     description:
-      "An independent studio building games, apps, AI models and programs.",
+      "An independent studio engineering games, apps, AI models and programs.",
   },
   robots: {
     index: true,
@@ -56,7 +63,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#05060a",
+  themeColor: "#070506",
   colorScheme: "dark",
 };
 
@@ -68,7 +75,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {children}

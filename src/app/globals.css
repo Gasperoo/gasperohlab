@@ -1,14 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --background: #05060a;
-  --background-elevated: #0a0c14;
-  --foreground: #e8eaf2;
-  --muted: #8b90a8;
+  /* Warm, cinematic near-black */
+  --background: #070506;
+  --background-elevated: #100b0c;
+  --foreground: #f6ede6;
+  --muted: #a99b93;
   --border: rgba(255, 255, 255, 0.08);
-  --accent: #6ee7ff;
-  --accent-2: #a78bfa;
-  --accent-3: #f0abfc;
+
+  /* Amber -> Orange -> Red */
+  --accent: #ffb020;
+  --accent-2: #ff6a2b;
+  --accent-3: #ff3d5a;
+
+  --accent-rgb: 255, 176, 32;
+  --accent-2-rgb: 255, 106, 43;
+  --accent-3-rgb: 255, 61, 90;
 }
 
 @theme inline {
@@ -22,6 +29,7 @@
   --color-accent-3: var(--accent-3);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-display);
 }
 
 * {
@@ -42,8 +50,8 @@ body {
 }
 
 ::selection {
-  background: rgba(110, 231, 255, 0.25);
-  color: #ffffff;
+  background: rgba(var(--accent-2-rgb), 0.28);
+  color: #fff;
 }
 
 /* Thin, subtle scrollbar */
@@ -60,16 +68,22 @@ body {
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(var(--accent-2-rgb), 0.45);
   background-clip: content-box;
 }
 
-/* Utility: gradient text */
+/* ---------- Typography helpers ---------- */
+
+.font-display {
+  font-family: var(--font-display), var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* Static warm gradient text */
 .text-gradient {
   background: linear-gradient(
-    120deg,
+    100deg,
     var(--accent) 0%,
-    var(--accent-2) 45%,
+    var(--accent-2) 48%,
     var(--accent-3) 100%
   );
   -webkit-background-clip: text;
@@ -78,39 +92,123 @@ body {
   color: transparent;
 }
 
-/* Utility: faint animated grid background */
-.grid-bg {
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
-  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+/* Animated shimmering gradient text (for the hero wordmark) */
+.text-gradient-anim {
+  background: linear-gradient(
+    100deg,
+    var(--accent-3) 0%,
+    var(--accent-2) 20%,
+    var(--accent) 40%,
+    #fff6e6 50%,
+    var(--accent) 60%,
+    var(--accent-2) 80%,
+    var(--accent-3) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: text-shine 6s linear infinite;
 }
 
-/* Utility: glass card */
+@keyframes text-shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* ---------- Surfaces ---------- */
+
+/* Glass card */
 .glass {
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.055) 0%,
     rgba(255, 255, 255, 0.02) 100%
   );
   border: 1px solid var(--border);
   backdrop-filter: blur(12px);
 }
 
-/* Utility: subtle noise overlay */
+.glass-strong {
+  background: linear-gradient(
+    180deg,
+    rgba(20, 14, 12, 0.75) 0%,
+    rgba(10, 8, 8, 0.6) 100%
+  );
+  border: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+}
+
+/* Gradient border wrapper: put on a rounded element */
+.border-gradient {
+  position: relative;
+}
+.border-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    130deg,
+    rgba(var(--accent-rgb), 0.6),
+    rgba(var(--accent-3-rgb), 0.35) 45%,
+    rgba(255, 255, 255, 0.04) 75%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ---------- Backgrounds ---------- */
+
+/* Faint grid, masked toward the top */
+.grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 62px 62px;
+  mask-image: radial-gradient(ellipse 85% 65% at 50% 0%, #000 25%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 65% at 50% 0%, #000 25%, transparent 75%);
+}
+
+/* Subtle noise overlay */
 .noise {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.025;
+  opacity: 0.03;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Marquee */
+/* Conic aurora, slowly rotating */
+.aurora {
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    rgba(var(--accent-rgb), 0.0) 0deg,
+    rgba(var(--accent-rgb), 0.18) 70deg,
+    rgba(var(--accent-2-rgb), 0.22) 140deg,
+    rgba(var(--accent-3-rgb), 0.16) 220deg,
+    rgba(var(--accent-rgb), 0.0) 320deg
+  );
+  animation: spin-slow 40s linear infinite;
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Motion keyframes ---------- */
+
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -120,25 +218,59 @@ body {
   }
 }
 .animate-marquee {
-  animation: marquee 32s linear infinite;
+  animation: marquee 34s linear infinite;
+}
+.animate-marquee-slow {
+  animation: marquee 60s linear infinite;
 }
 
-/* Slow float for orbs */
 @keyframes float {
   0%, 100% {
     transform: translate(0, 0) scale(1);
   }
   50% {
-    transform: translate(20px, -30px) scale(1.05);
+    transform: translate(18px, -26px) scale(1.05);
   }
 }
 
-/* Reduced motion respect */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.animate-pulse-glow {
+  animation: pulse-glow 3.5s ease-in-out infinite;
+}
+
+/* Live status dot ping */
+@keyframes ping-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  70%, 100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+.animate-ping-ring {
+  animation: ping-ring 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  .animate-marquee {
-    animation: none;
+  .animate-marquee,
+  .animate-marquee-slow,
+  .aurora,
+  .text-gradient-anim,
+  .animate-pulse-glow,
+  .animate-ping-ring {
+    animation: none !important;
   }
 }

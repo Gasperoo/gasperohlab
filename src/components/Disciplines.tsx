@@ -39,7 +39,7 @@ export function Disciplines() {
         <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">
           What we build
         </p>
-        <h2 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
+        <h2 className="font-display text-balance text-4xl font-bold tracking-tight sm:text-5xl">
           Four disciplines, one obsession
         </h2>
         <p className="mt-4 text-pretty text-lg text-muted">
@@ -63,7 +63,7 @@ export function Disciplines() {
                 </span>
               </div>
 
-              <h3 className="mt-6 text-2xl font-semibold tracking-tight">
+              <h3 className="mt-6 font-display text-2xl font-bold tracking-tight">
                 {d.title}
               </h3>
               <p className="mt-3 text-pretty leading-relaxed text-muted">

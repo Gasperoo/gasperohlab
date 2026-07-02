@@ -17,16 +17,16 @@ export function Footer() {
     <footer className="relative mt-auto border-t border-border">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 py-10 sm:flex-row">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-linear-to-br from-accent/30 to-accent-2/30 ring-1 ring-white/10">
-            <span className="h-2 w-2 rounded-sm bg-linear-to-br from-accent to-accent-3" />
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-linear-to-br from-accent/30 to-accent-3/30 ring-1 ring-white/10">
+            <span className="h-2 w-2 rotate-45 rounded-[2px] bg-linear-to-br from-accent to-accent-3" />
           </span>
-          <span className="text-sm font-semibold tracking-tight">
-            Gasper Oh Lab
+          <span className="font-display text-sm font-bold tracking-[0.14em]">
+            GASPEROH <span className="text-gradient">LAB</span>
           </span>
         </div>
 
         <p className="text-center text-sm text-muted">
-          © {year} Gasper Oh Lab · Experiments in games, apps &amp; AI
+          © {year} GASPEROH LAB · Experiments in games, apps &amp; AI
         </p>
 
         <a

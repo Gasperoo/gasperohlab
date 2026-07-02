@@ -7,6 +7,8 @@ const words = [
   "Tools",
   "Experiments",
   "Interfaces",
+  "Engines",
+  "Shipped",
 ];
 
 export function Marquee() {
@@ -15,20 +17,20 @@ export function Marquee() {
       <div className="animate-marquee flex shrink-0 items-center gap-8 pr-8">
         {[...words, ...words].map((w, i) => (
           <div key={i} className="flex items-center gap-8">
-            <span className="text-lg font-medium tracking-tight text-muted">
+            <span className="font-display text-lg font-medium tracking-tight text-muted">
               {w}
             </span>
-            <span className="h-1.5 w-1.5 rounded-full bg-accent/60" />
+            <span className="h-1.5 w-1.5 rounded-full bg-accent-2/70" />
           </div>
         ))}
       </div>
       <div className="animate-marquee flex shrink-0 items-center gap-8 pr-8" aria-hidden>
         {[...words, ...words].map((w, i) => (
           <div key={i} className="flex items-center gap-8">
-            <span className="text-lg font-medium tracking-tight text-muted">
+            <span className="font-display text-lg font-medium tracking-tight text-muted">
               {w}
             </span>
-            <span className="h-1.5 w-1.5 rounded-full bg-accent/60" />
+            <span className="h-1.5 w-1.5 rounded-full bg-accent-2/70" />
           </div>
         ))}
       </div>

@@ -3,7 +3,7 @@ import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
 import { Marquee } from "@/components/Marquee";
 import { Disciplines } from "@/components/Disciplines";
-import { Experiments } from "@/components/Experiments";
+import { Projects } from "@/components/Projects";
 import { Ethos } from "@/components/Ethos";
 import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
@@ -18,7 +18,7 @@ export default function Home() {
         <Hero />
         <Marquee />
         <Disciplines />
-        <Experiments />
+        <Projects />
         <Ethos />
         <CTA />
       </main>

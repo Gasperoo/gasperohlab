@@ -1,4 +1,4 @@
-# Gasper Oh Lab
+# GASPEROH LAB
 
 The website for **[gasperohlab.com](https://gasperohlab.com)** — an independent
 studio building games, apps, AI models and programs. A place for bold
@@ -38,8 +38,8 @@ src/
     layout.tsx      # Root layout, fonts, SEO metadata
     page.tsx        # Landing page composition
     globals.css     # Design tokens + Tailwind + utilities
-  components/        # Nav, Hero, Marquee, Disciplines,
-                     # Experiments, Ethos, CTA, Footer, Background
+  components/        # Nav, Hero, Marquee, Disciplines, Projects,
+                     # Ethos, CTA, Footer, Background, Reveal, CountUp
 ```
 
 ## Deployment
@@ -49,4 +49,4 @@ Cloudflare — point DNS at the host once deployed.
 
 ---
 
-© Gasper Oh Lab — Experiments in games, apps & AI.
+© GASPEROH LAB — Experiments in games, apps & AI.

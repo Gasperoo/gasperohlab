@@ -1,4 +1,5 @@
 import { Reveal } from "./Reveal";
+import { CountUp } from "./CountUp";
 
 const principles = [
   {
@@ -15,11 +16,11 @@ const principles = [
   },
 ];
 
-const stats = [
+const stats: { value: string; count?: number; label: string }[] = [
   { value: "∞", label: "Ideas in the pipeline" },
-  { value: "4", label: "Disciplines under one roof" },
-  { value: "1", label: "Independent lab" },
-  { value: "0", label: "Rules we won't break" },
+  { value: "4", count: 4, label: "Disciplines under one roof" },
+  { value: "1", count: 1, label: "Independent lab" },
+  { value: "0", count: 0, label: "Rules we won't break" },
 ];
 
 export function Ethos() {
@@ -30,11 +31,11 @@ export function Ethos() {
           <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">
             The ethos
           </p>
-          <h2 className="text-balance text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+          <h2 className="font-display text-balance text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
             A lab, not a factory.
           </h2>
           <p className="mt-5 max-w-md text-pretty text-lg leading-relaxed text-muted">
-            Gasper Oh Lab exists to explore. We move between games, apps, AI and
+            GASPEROH LAB exists to explore. We move between games, apps, AI and
             systems freely, letting each discipline sharpen the others. The goal
             isn&apos;t volume — it&apos;s finding the ideas that deserve to become
             real.
@@ -43,8 +44,8 @@ export function Ethos() {
           <dl className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border">
             {stats.map((s) => (
               <div key={s.label} className="bg-background-elevated p-6">
-                <dt className="text-4xl font-semibold tracking-tight text-gradient">
-                  {s.value}
+                <dt className="font-display text-4xl font-bold tracking-tight text-gradient">
+                  {s.count != null ? <CountUp value={s.count} /> : s.value}
                 </dt>
                 <dd className="mt-1 text-sm text-muted">{s.label}</dd>
               </div>

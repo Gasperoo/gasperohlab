@@ -7,12 +7,12 @@ export function CTA() {
       <Reveal>
         <div className="glass relative overflow-hidden rounded-3xl px-8 py-16 text-center sm:px-16 sm:py-24">
           {/* Glow */}
-          <div className="pointer-events-none absolute left-1/2 top-0 h-64 w-[36rem] max-w-full -translate-x-1/2 rounded-full bg-accent/15 blur-[120px]" />
+          <div className="pointer-events-none absolute left-1/2 top-0 h-64 w-[36rem] max-w-full -translate-x-1/2 rounded-full bg-accent-2/20 blur-[120px]" />
 
           <p className="relative mb-4 font-mono text-xs uppercase tracking-[0.2em] text-accent">
             Let&apos;s make something
           </p>
-          <h2 className="relative mx-auto max-w-2xl text-balance text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+          <h2 className="relative mx-auto max-w-2xl font-display text-balance text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
             Have an idea worth experimenting on?
           </h2>
           <p className="relative mx-auto mt-5 max-w-lg text-pretty text-lg text-muted">
