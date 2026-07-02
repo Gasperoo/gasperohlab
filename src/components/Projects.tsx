@@ -43,24 +43,6 @@ const disciplineIcon: Record<Discipline, LucideIcon> = {
 
 const projects: Project[] = [
   {
-    name: "Aether Engine",
-    discipline: "Game",
-    status: "In Development",
-    blurb:
-      "A lightweight engine for rapidly prototyping playable worlds — physics, input and rendering in one small, fast package.",
-    progress: 68,
-    year: "2026",
-  },
-  {
-    name: "Signal",
-    discipline: "App",
-    status: "Released",
-    blurb:
-      "A focused productivity app that turns scattered thoughts into structured, actionable plans. Shipped and in the wild.",
-    year: "2025",
-    href: "#contact",
-  },
-  {
     name: "MaraponeAI",
     discipline: "AI",
     status: "Released",
@@ -90,26 +72,9 @@ const projects: Project[] = [
     href: "https://marapone.com/logistics",
     external: true,
   },
-  {
-    name: "Forge",
-    discipline: "Program",
-    status: "Released",
-    blurb:
-      "A command-line toolkit for scaffolding and automation — the quiet software that makes everything else faster.",
-    year: "2025",
-    href: "#contact",
-  },
-  {
-    name: "Nocturne",
-    discipline: "Game",
-    status: "Coming Soon",
-    blurb:
-      "An atmospheric exploration game about light, memory and the spaces between. Currently a well-kept secret.",
-    year: "2026",
-  },
 ];
 
-const filters = ["All", "In Development", "Released", "Coming Soon"] as const;
+const filters = ["All", "Released"] as const;
 type Filter = (typeof filters)[number];
 
 const statusStyles: Record<

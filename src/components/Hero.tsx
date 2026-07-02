@@ -7,7 +7,7 @@ import {
   useTransform,
   type Variants,
 } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Rocket, Sparkles } from "lucide-react";
 
 const container: Variants = {
   hidden: {},
@@ -72,9 +72,10 @@ export function Hero() {
         <motion.h1
           variants={wordmark}
           style={{ scale: markScale }}
-          className="font-display text-[15vw] font-bold leading-[0.9] tracking-[-0.03em] sm:text-[11vw] lg:text-[9rem]"
+          className="flex items-center justify-center gap-[0.15em] font-display text-[15vw] font-bold leading-[0.9] tracking-[-0.03em] sm:text-[11vw] lg:text-[9rem]"
         >
-          <span className="text-gradient-anim">GASPEROH</span>
+          <Rocket className="h-[0.7em] w-[0.7em] shrink-0 text-accent" />
+          <span className="text-gradient-anim">GASPEROHLAB</span>
         </motion.h1>
 
         <motion.p
