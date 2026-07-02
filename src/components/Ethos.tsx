@@ -25,8 +25,8 @@ const stats: { value: string; count?: number; label: string }[] = [
 
 export function Ethos() {
   return (
-    <section id="ethos" className="relative mx-auto max-w-6xl px-6 py-28">
-      <div className="grid gap-14 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
+    <section id="ethos" className="relative mx-auto max-w-6xl px-5 py-20 sm:px-6 sm:py-28">
+      <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
         <Reveal>
           <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">
             The ethos

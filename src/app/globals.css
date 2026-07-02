@@ -38,6 +38,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Belt-and-suspenders guard against any horizontal bleed on mobile. */
+  overflow-x: clip;
 }
 
 body {

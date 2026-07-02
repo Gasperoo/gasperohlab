@@ -34,7 +34,7 @@ const disciplines = [
 
 export function Disciplines() {
   return (
-    <section id="disciplines" className="relative mx-auto max-w-6xl px-6 py-28">
+    <section id="disciplines" className="relative mx-auto max-w-6xl px-5 py-20 sm:px-6 sm:py-28">
       <Reveal className="mx-auto max-w-2xl text-center">
         <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">
           What we build
@@ -47,7 +47,7 @@ export function Disciplines() {
         </p>
       </Reveal>
 
-      <div className="mt-16 grid gap-4 sm:grid-cols-2">
+      <div className="mt-12 grid gap-4 sm:mt-16 sm:grid-cols-2">
         {disciplines.map((d, i) => (
           <Reveal key={d.title} delay={i * 0.08}>
             <article className="glass group relative h-full overflow-hidden rounded-2xl p-8 transition-colors hover:bg-white/[0.06]">

@@ -9,9 +9,9 @@ export function CTA() {
   const [open, setOpen] = useState(false);
 
   return (
-    <section id="contact" className="relative mx-auto max-w-6xl px-6 py-28">
+    <section id="contact" className="relative mx-auto max-w-6xl px-5 py-20 sm:px-6 sm:py-28">
       <Reveal>
-        <div className="glass relative overflow-hidden rounded-3xl px-8 py-16 text-center sm:px-16 sm:py-24">
+        <div className="glass relative overflow-hidden rounded-3xl px-6 py-14 text-center sm:px-16 sm:py-24">
           {/* Glow */}
           <div className="pointer-events-none absolute left-1/2 top-0 h-64 w-[36rem] max-w-full -translate-x-1/2 rounded-full bg-accent-2/20 blur-[120px]" />
 

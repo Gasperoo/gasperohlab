@@ -106,6 +106,8 @@ function ProjectCard({ project }: { project: Project }) {
   const isComingSoon = project.status === "Coming Soon";
 
   function onMove(e: React.PointerEvent) {
+    // Skip the 3D tilt on touch / coarse-pointer devices — it fights scrolling.
+    if (e.pointerType !== "mouse") return;
     const el = cardRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -206,7 +208,7 @@ export function Projects() {
     filter === "All" ? projects : projects.filter((p) => p.status === filter);
 
   return (
-    <section id="projects" className="relative mx-auto max-w-6xl px-6 py-28">
+    <section id="projects" className="relative mx-auto max-w-6xl px-5 py-20 sm:px-6 sm:py-28">
       <Reveal className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
         <div className="max-w-xl">
           <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">
@@ -244,7 +246,7 @@ export function Projects() {
         </div>
       </Reveal>
 
-      <motion.div layout className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <motion.div layout className="mt-10 grid gap-4 sm:mt-14 sm:grid-cols-2 lg:grid-cols-3">
         <AnimatePresence mode="popLayout">
           {visible.map((p) => (
             <ProjectCard key={p.name} project={p} />

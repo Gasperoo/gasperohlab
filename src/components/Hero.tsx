@@ -49,7 +49,7 @@ export function Hero() {
     <section
       id="top"
       ref={ref}
-      className="relative flex min-h-[100svh] flex-col items-center justify-center px-6 pt-28 pb-24 text-center"
+      className="relative flex min-h-[100svh] flex-col items-center justify-center px-5 pt-24 pb-20 text-center sm:px-6 sm:pt-28 sm:pb-24"
     >
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
@@ -72,7 +72,7 @@ export function Hero() {
         <motion.h1
           variants={wordmark}
           style={{ scale: markScale }}
-          className="flex items-center justify-center gap-[0.15em] font-display text-[15vw] font-bold leading-[0.9] tracking-[-0.03em] sm:text-[11vw] lg:text-[9rem]"
+          className="flex w-full items-center justify-center gap-[0.12em] font-display text-[11.5vw] font-bold leading-[0.9] tracking-[-0.03em] sm:text-[11vw] lg:text-[8rem]"
         >
           <Rocket className="h-[0.7em] w-[0.7em] shrink-0 text-accent" />
           <span className="text-gradient-anim">GASPEROHLAB</span>
