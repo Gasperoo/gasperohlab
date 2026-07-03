@@ -13,7 +13,7 @@ export default function Home() {
     <>
       <Background />
       <Nav />
-      <main className="relative z-10 flex-1">
+      <main id="main-content" tabIndex={-1} className="relative z-10 flex-1 focus:outline-none">
         <Hero />
         <Marquee />
         <Disciplines />
