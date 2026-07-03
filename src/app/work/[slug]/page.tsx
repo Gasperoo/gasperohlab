@@ -10,6 +10,7 @@ import { CTA } from "@/components/CTA";
 import { Reveal } from "@/components/Reveal";
 import { CaseGallery } from "@/components/CaseGallery";
 import { CountUp } from "@/components/CountUp";
+import { BetaWaitlist } from "@/components/BetaWaitlist";
 import {
   disciplineIcon,
   getProject,
@@ -332,6 +333,15 @@ export default async function CaseStudyPage({
               </div>
             </Reveal>
           </section>
+        )}
+
+        {/* Beta waitlist */}
+        {cs.waitlist && (
+          <BetaWaitlist
+            project={project.name}
+            platforms={cs.waitlist.platforms}
+            blurb={cs.waitlist.blurb}
+          />
         )}
 
         {/* More work */}

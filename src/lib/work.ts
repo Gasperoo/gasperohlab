@@ -40,6 +40,13 @@ export type CaseStudy = {
   stack?: string[];
   liveUrl?: string;
   liveLabel?: string;
+  /** Beta signup block — invites people to join the waitlist for this project. */
+  waitlist?: {
+    /** Platforms the beta will target, offered as pickers on the form. */
+    platforms?: string[];
+    /** Optional custom line under the heading. */
+    blurb?: string;
+  };
 };
 
 export type Project = {
@@ -252,23 +259,23 @@ export const projects: Project[] = [
     discipline: "Game",
     status: "In Production",
     blurb:
-      "A native iOS card game where you rip open packs, build a collection, track live market prices and trade with other collectors.",
+      "A native mobile card game for iOS and Android where you rip open packs, build a collection, track live market prices and trade with other collectors.",
     progress: 40,
     year: "2026",
     cover: "/yugidex/cover.jpg",
     caseStudy: {
       tagline: "Rip packs, build the collection, watch the market move.",
-      role: "Game design, native iOS build, live pricing",
+      role: "Game design, native iOS + Android build, live pricing",
       timeframe: "2026 — in production",
       heroVideo: "/yugidex/motion/packs.mp4",
       heroImage: "/yugidex/motion/packs.jpg",
       heroVideoPortrait: true,
       overview: [
-        "YuGi-Dex is a native iOS game about the best part of trading cards — the rip. You open packs, pull cards, build a collection, and watch what it's worth as real market prices move underneath it.",
+        "YuGi-Dex is a native mobile game about the best part of trading cards — the rip. You open packs, pull cards, build a collection, and watch what it's worth as real market prices move underneath it. It's built for iOS and Android.",
         "The core loop — packs, collection and the forge — is playable today. Live market data and collector-to-collector trading are taking shape in the lab now.",
       ],
       metrics: [
-        { value: "iOS", label: "Native, built for the platform" },
+        { value: "iOS + Android", label: "Native on both platforms" },
         { value: "Live", label: "Real market pricing" },
         { value: "40%", label: "Build progress" },
       ],
@@ -311,7 +318,12 @@ export const projects: Project[] = [
         { src: "/yugidex/profile.jpg", label: "Profile" },
       ],
       galleryPhone: true,
-      stack: ["Swift", "iOS", "Live market data"],
+      stack: ["Swift", "iOS", "Android", "Live market data"],
+      waitlist: {
+        platforms: ["iOS", "Android"],
+        blurb:
+          "Leave your email to join the beta waitlist. When it opens we'll notify you with your invite and everything you need to start ripping packs.",
+      },
     },
   },
   {
@@ -320,21 +332,23 @@ export const projects: Project[] = [
     discipline: "Game",
     status: "In Production",
     blurb:
-      "A systemic survival game about rebuilding a world that keeps breaking. The core simulation loop is prototyped and playable — content and polish underway.",
-    progress: 45,
+      "A systemic survival game about rebuilding a world that keeps breaking. Launching on PC first, with iOS and Android ports to follow after release. The core simulation loop is prototyped and playable — content and polish underway.",
+    progress: 30,
     year: "2026",
+    cover: "/work/halcyon/cover.png",
     caseStudy: {
       tagline: "A world that keeps breaking, and the systems to rebuild it.",
       role: "Game design, simulation engineering",
       timeframe: "2026 — in production",
       overview: [
         "Halcyon is our systemic survival game — less about a scripted story, more about a simulation that pushes back. You rebuild a world that keeps finding new ways to fall apart, and the interesting decisions come out of the systems colliding, not out of a quest log.",
+        "It's coming to PC first. Once the PC release lands, iOS and Android ports follow so you can take the simulation with you.",
         "The core loop is prototyped and playable. What's left is the long tail: content, balance and the polish that turns a working simulation into a game worth living in.",
       ],
       metrics: [
+        { value: "PC first", label: "iOS + Android to follow" },
         { value: "Systemic", label: "Emergent, not scripted" },
-        { value: "Playable", label: "Core loop prototyped" },
-        { value: "45%", label: "Build progress" },
+        { value: "30%", label: "Build progress" },
       ],
       sections: [
         {
@@ -351,6 +365,11 @@ export const projects: Project[] = [
         },
       ],
       stack: ["Custom simulation", "Procedural systems"],
+      waitlist: {
+        platforms: ["PC", "iOS", "Android"],
+        blurb:
+          "PC comes first, with mobile ports to follow. Join the beta waitlist and we'll email you the moment it's ready to play, with instructions on how to get in.",
+      },
     },
   },
   {
@@ -391,6 +410,10 @@ export const projects: Project[] = [
         },
       ],
       stack: ["TypeScript", "React", "Next.js"],
+      waitlist: {
+        blurb:
+          "We're opening a private beta to a small group of teams later this year. Leave your email and we'll reach out with an invite and instructions when a spot opens up.",
+      },
     },
   },
 ];
