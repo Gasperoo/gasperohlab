@@ -8,10 +8,12 @@ import {
   BrainCircuit,
   TerminalSquare,
   ArrowUpRight,
+  Images,
   Lock,
   type LucideIcon,
 } from "lucide-react";
 import { Reveal } from "./Reveal";
+import { ProjectGalleryModal, type Shot } from "./ProjectGalleryModal";
 
 type Status = "In Production" | "Released" | "Coming Soon";
 type Discipline = "Game" | "App" | "AI" | "Program";
@@ -25,6 +27,7 @@ type Project = {
   year: string;
   href?: string;
   external?: boolean; // opens in a new tab
+  gallery?: Shot[]; // screenshots shown in a modal on click
 };
 
 const disciplineIcon: Record<Discipline, LucideIcon> = {
@@ -75,6 +78,22 @@ const projects: Project[] = [
     year: "2026",
   },
   {
+    name: "YuGi-Dex",
+    discipline: "Game",
+    status: "In Production",
+    blurb:
+      "A native iOS card game where you rip open Yu-Gi-Oh! packs, build a collection, track live market prices and trade with other collectors. Core loop — packs, collection and trades — is playable; live market and multiplayer taking shape in the lab.",
+    progress: 40,
+    year: "2026",
+    gallery: [
+      { src: "/yugidex/packs.jpg", label: "Packs" },
+      { src: "/yugidex/collection.jpg", label: "Collection" },
+      { src: "/yugidex/forge.jpg", label: "Forge" },
+      { src: "/yugidex/market.jpg", label: "Market" },
+      { src: "/yugidex/profile.jpg", label: "Profile" },
+    ],
+  },
+  {
     name: "Orbit",
     discipline: "App",
     status: "In Production",
@@ -100,20 +119,36 @@ const cardVariants: Variants = {
   exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
 };
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectCard({
+  project,
+  onOpenGallery,
+}: {
+  project: Project;
+  onOpenGallery: (project: Project) => void;
+}) {
   const Icon = disciplineIcon[project.discipline];
   const status = statusStyles[project.status];
   const isComingSoon = project.status === "Coming Soon";
-  const Wrapper = project.href ? motion.a : motion.div;
+  const hasGallery = !project.href && !!project.gallery?.length;
+  const Wrapper = project.href ? motion.a : hasGallery ? motion.button : motion.div;
 
   return (
     <Wrapper
       {...(project.href ? { href: project.href } : {})}
       {...(project.external ? { target: "_blank", rel: "noreferrer" } : {})}
+      {...(hasGallery
+        ? {
+            type: "button" as const,
+            onClick: () => onOpenGallery(project),
+            "aria-label": `View ${project.name} screenshots`,
+          }
+        : {})}
       variants={cardVariants}
       layout
       exit="exit"
-      className="surface surface-hover-fx group relative flex h-full flex-col rounded-xl p-6 sm:p-7"
+      className={`surface surface-hover-fx group relative flex h-full flex-col rounded-xl p-6 text-left sm:p-7 ${
+        project.href || hasGallery ? "cursor-pointer" : ""
+      }`}
     >
       <div className="flex items-start justify-between">
         <span className="flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-background-elevated text-muted transition-colors group-hover:text-foreground">
@@ -141,6 +176,8 @@ function ProjectCard({ project }: { project: Project }) {
           <Lock className="h-4 w-4 text-faint" />
         ) : project.href ? (
           <ArrowUpRight className="h-4 w-4 text-faint transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
+        ) : hasGallery ? (
+          <Images className="h-4 w-4 text-faint transition-colors duration-300 group-hover:text-accent" />
         ) : null}
       </div>
       <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.16em] text-faint">
@@ -174,6 +211,7 @@ function ProjectCard({ project }: { project: Project }) {
 
 export function Projects() {
   const [filter, setFilter] = useState<Filter>("All");
+  const [gallery, setGallery] = useState<Project | null>(null);
   const visible =
     filter === "All" ? projects : projects.filter((p) => p.status === filter);
 
@@ -222,10 +260,18 @@ export function Projects() {
       >
         <AnimatePresence mode="popLayout">
           {visible.map((p) => (
-            <ProjectCard key={p.name} project={p} />
+            <ProjectCard key={p.name} project={p} onOpenGallery={setGallery} />
           ))}
         </AnimatePresence>
       </motion.div>
+
+      <ProjectGalleryModal
+        open={gallery != null}
+        onClose={() => setGallery(null)}
+        title={gallery?.name ?? ""}
+        meta={gallery ? `${gallery.discipline} · ${gallery.year}` : undefined}
+        shots={gallery?.gallery ?? []}
+      />
     </section>
   );
 }
