@@ -121,30 +121,53 @@ export default async function CaseStudyPage({
           {/* Hero media */}
           {heroMedia && (
             <Reveal className="mt-12">
-              <div className="surface relative overflow-hidden rounded-2xl">
-                <div className="relative aspect-[16/9] w-full">
-                  {cs.heroVideo ? (
-                    <video
-                      className="h-full w-full object-cover"
-                      src={cs.heroVideo}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      poster={cs.heroImage || project.cover}
-                    />
-                  ) : (
-                    <Image
-                      src={heroMedia}
-                      alt={`${project.name} — preview`}
-                      fill
-                      priority
-                      sizes="(max-width: 1024px) 100vw, 1024px"
-                      className="object-cover object-top"
-                    />
-                  )}
+              {cs.heroVideo && cs.heroVideoPortrait ? (
+                <div className="surface relative flex justify-center overflow-hidden rounded-2xl bg-black px-4 py-10 sm:py-14">
+                  {/* ambient accent glow behind the phone */}
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0"
+                    style={{
+                      background:
+                        "radial-gradient(55% 45% at 50% 42%, rgba(var(--accent-rgb),0.14), transparent 72%)",
+                    }}
+                  />
+                  <video
+                    className="relative h-[440px] w-auto rounded-[10px] shadow-2xl shadow-black/60 sm:h-[560px] lg:h-[620px]"
+                    src={cs.heroVideo}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    poster={cs.heroImage || project.cover}
+                  />
                 </div>
-              </div>
+              ) : (
+                <div className="surface relative overflow-hidden rounded-2xl">
+                  <div className="relative aspect-[16/9] w-full">
+                    {cs.heroVideo ? (
+                      <video
+                        className="h-full w-full object-cover"
+                        src={cs.heroVideo}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        poster={cs.heroImage || project.cover}
+                      />
+                    ) : (
+                      <Image
+                        src={heroMedia}
+                        alt={`${project.name} — preview`}
+                        fill
+                        priority
+                        sizes="(max-width: 1024px) 100vw, 1024px"
+                        className="object-cover object-top"
+                      />
+                    )}
+                  </div>
+                </div>
+              )}
             </Reveal>
           )}
         </article>
@@ -199,6 +222,41 @@ export default async function CaseStudyPage({
             </section>
           ))}
         </div>
+
+        {/* In motion */}
+        {cs.motion && cs.motion.length > 0 && (
+          <section className="mx-auto max-w-5xl px-5 py-12 sm:px-6 sm:py-16">
+            <Reveal>
+              <p className="eyebrow mb-4">In motion</p>
+              <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
+                The app, running
+              </h2>
+            </Reveal>
+            <div className="mt-8 grid gap-8 sm:grid-cols-3">
+              {cs.motion.map((clip, i) => (
+                <Reveal key={clip.label} delay={i * 0.08}>
+                  <figure className="flex flex-col items-center">
+                    <div className="relative w-full overflow-hidden rounded-2xl bg-black">
+                      <video
+                        className="mx-auto block h-auto w-full max-w-[300px]"
+                        src={clip.src}
+                        poster={clip.poster}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                      />
+                    </div>
+                    <figcaption className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
+                      {clip.label}
+                    </figcaption>
+                  </figure>
+                </Reveal>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Gallery */}
         {cs.gallery && cs.gallery.length > 0 && (

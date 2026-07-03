@@ -11,6 +11,9 @@ export type Discipline = "Game" | "App" | "AI" | "Program";
 
 export type Shot = { src: string; label: string };
 
+/** A short looping clip (portrait phone capture) shown in the "In motion" section. */
+export type Clip = { src: string; poster: string; label: string };
+
 /** One prose block inside a case study. */
 export type CaseSection = { heading: string; body: string[] };
 
@@ -23,9 +26,13 @@ export type CaseStudy = {
   timeframe: string;
   heroVideo?: string;
   heroImage?: string;
+  /** Render the hero video as a centred portrait phone rather than a 16:9 band. */
+  heroVideoPortrait?: boolean;
   overview: string[];
   metrics?: Metric[];
   sections: CaseSection[];
+  /** Short looping phone clips shown in an "In motion" section. */
+  motion?: Clip[];
   gallery?: Shot[];
   /** Portrait phone-frame gallery instead of landscape. */
   galleryPhone?: boolean;
@@ -248,11 +255,14 @@ export const projects: Project[] = [
       "A native iOS card game where you rip open packs, build a collection, track live market prices and trade with other collectors.",
     progress: 40,
     year: "2026",
-    cover: "/yugidex/packs.jpg",
+    cover: "/yugidex/cover.jpg",
     caseStudy: {
       tagline: "Rip packs, build the collection, watch the market move.",
       role: "Game design, native iOS build, live pricing",
       timeframe: "2026 — in production",
+      heroVideo: "/yugidex/motion/packs.mp4",
+      heroImage: "/yugidex/motion/packs.jpg",
+      heroVideoPortrait: true,
       overview: [
         "YuGi-Dex is a native iOS game about the best part of trading cards — the rip. You open packs, pull cards, build a collection, and watch what it's worth as real market prices move underneath it.",
         "The core loop — packs, collection and the forge — is playable today. Live market data and collector-to-collector trading are taking shape in the lab now.",
@@ -274,6 +284,23 @@ export const projects: Project[] = [
           body: [
             "Packs, the collection view, the forge and player profiles are built and playable. The live market feed and multiplayer trading — the parts that turn a solo collection into an economy — are in active development.",
           ],
+        },
+      ],
+      motion: [
+        {
+          src: "/yugidex/motion/collection.mp4",
+          poster: "/yugidex/motion/collection.jpg",
+          label: "Collection & slabs",
+        },
+        {
+          src: "/yugidex/motion/forge.mp4",
+          poster: "/yugidex/motion/forge.jpg",
+          label: "The forge",
+        },
+        {
+          src: "/yugidex/motion/market.mp4",
+          poster: "/yugidex/motion/market.jpg",
+          label: "Live market",
         },
       ],
       gallery: [
