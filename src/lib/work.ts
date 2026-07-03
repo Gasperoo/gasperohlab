@@ -119,12 +119,13 @@ export const projects: Project[] = [
     year: "2025",
     href: "https://marapone.com/construction",
     external: true,
-    cover: "/work/construction/dashboard.jpg",
+    cover: "/work/construction/summary.jpg",
     caseStudy: {
       tagline: "Reads the drawings, clears the backlog, flags the risk.",
       role: "Product design, model training, mobile + desktop build",
       timeframe: "2025",
-      heroVideo: "/work/construction/hero-loop.mp4",
+      heroVideo: "/work/construction/blueprint-auditor.mp4",
+      heroImage: "/work/construction/blueprint-auditor-poster.jpg",
       liveUrl: "https://marapone.com/construction",
       liveLabel: "marapone.com/construction",
       overview: [
@@ -160,7 +161,7 @@ export const projects: Project[] = [
         },
       ],
       gallery: [
-        { src: "/work/construction/dashboard.jpg", label: "Project dashboard" },
+        { src: "/work/construction/summary.jpg", label: "Audit summary" },
         { src: "/work/construction/rfi-backlog.jpg", label: "RFI backlog" },
         { src: "/work/construction/scope-gap.jpg", label: "Scope gap finder" },
         { src: "/work/construction/tender-risk.jpg", label: "Tender risk scanner" },
@@ -182,10 +183,13 @@ export const projects: Project[] = [
     year: "2025",
     href: "https://marapone.com/logistics",
     external: true,
+    cover: "/work/logistics/app-tour-poster.jpg",
     caseStudy: {
       tagline: "The paperwork, audited. The risk, surfaced. On your own hardware.",
       role: "Desktop application, model training, trade-data integrations",
       timeframe: "2025",
+      heroVideo: "/work/logistics/app-tour.mp4",
+      heroImage: "/work/logistics/app-tour-poster.jpg",
       liveUrl: "https://marapone.com/logistics",
       liveLabel: "marapone.com/logistics",
       overview: [
@@ -218,6 +222,16 @@ export const projects: Project[] = [
             "A shipped, owned logistics brain that never phones home — released and in use, with the whole thing running on the customer's own hardware.",
           ],
         },
+      ],
+      gallery: [
+        { src: "/work/logistics/quote.jpg", label: "Instant freight quote" },
+        { src: "/work/logistics/customs.jpg", label: "Customs & duty calculator" },
+        { src: "/work/logistics/risk.jpg", label: "Risk & disruption engine" },
+        { src: "/work/logistics/sanctions.jpg", label: "Sanctions screening" },
+        { src: "/work/logistics/routes.jpg", label: "Routes & live rates" },
+        { src: "/work/logistics/sea-tracking.jpg", label: "Live vessel tracking" },
+        { src: "/work/logistics/ports.jpg", label: "Port intelligence" },
+        { src: "/work/logistics/markets.jpg", label: "Live markets" },
       ],
       integrations: [
         { name: "SeaRates", src: "/work/logistics/searates-logo-white.svg" },
