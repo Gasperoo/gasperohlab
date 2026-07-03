@@ -1,108 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import {
-  Gamepad2,
-  LayoutGrid,
-  BrainCircuit,
-  TerminalSquare,
-  ArrowUpRight,
-  Images,
-  Lock,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "./Reveal";
-import { ProjectGalleryModal, type Shot } from "./ProjectGalleryModal";
-
-type Status = "In Production" | "Released" | "Coming Soon";
-type Discipline = "Game" | "App" | "AI" | "Program";
-
-type Project = {
-  name: string;
-  discipline: Discipline;
-  status: Status;
-  blurb: string;
-  progress?: number; // 0-100, shown while In Production
-  year: string;
-  href?: string;
-  external?: boolean; // opens in a new tab
-  gallery?: Shot[]; // screenshots shown in a modal on click
-};
-
-const disciplineIcon: Record<Discipline, LucideIcon> = {
-  Game: Gamepad2,
-  App: LayoutGrid,
-  AI: BrainCircuit,
-  Program: TerminalSquare,
-};
-
-const projects: Project[] = [
-  {
-    name: "MaraponeAI",
-    discipline: "AI",
-    status: "Released",
-    blurb:
-      "Private AI solutions for the construction and logistics industries — secure, domain-tuned models built on real operational data. Part of Marapone.",
-    year: "2025",
-    href: "https://marapone.com",
-    external: true,
-  },
-  {
-    name: "Marapone Construction Suite",
-    discipline: "App",
-    status: "Released",
-    blurb:
-      "Private construction AI that audits blueprints, clears RFI backlogs and flags tender risk before it costs you — owned outright, no cloud, no subscriptions. Part of Marapone.",
-    year: "2025",
-    href: "https://marapone.com/construction",
-    external: true,
-  },
-  {
-    name: "Marapone Logistics Suite",
-    discipline: "App",
-    status: "Released",
-    blurb:
-      "Private AI for freight, import/export and trade compliance — automating the paperwork and surfacing risk across every shipment. Owned and on-prem. Part of Marapone.",
-    year: "2025",
-    href: "https://marapone.com/logistics",
-    external: true,
-  },
-  {
-    name: "Project Halcyon",
-    discipline: "Game",
-    status: "In Production",
-    blurb:
-      "A systemic survival game about rebuilding a world that keeps breaking. Core simulation loop is prototyped and playable — content and polish underway in the lab.",
-    progress: 45,
-    year: "2026",
-  },
-  {
-    name: "YuGi-Dex",
-    discipline: "Game",
-    status: "In Production",
-    blurb:
-      "A native iOS card game where you rip open Yu-Gi-Oh! packs, build a collection, track live market prices and trade with other collectors. Core loop — packs, collection and trades — is playable; live market and multiplayer taking shape in the lab.",
-    progress: 40,
-    year: "2026",
-    gallery: [
-      { src: "/yugidex/packs.jpg", label: "Packs" },
-      { src: "/yugidex/collection.jpg", label: "Collection" },
-      { src: "/yugidex/forge.jpg", label: "Forge" },
-      { src: "/yugidex/market.jpg", label: "Market" },
-      { src: "/yugidex/profile.jpg", label: "Profile" },
-    ],
-  },
-  {
-    name: "Orbit",
-    discipline: "App",
-    status: "In Production",
-    blurb:
-      "A calm planning tool for small teams who resent project software. Design is locked and the build is in flight — private beta later this year.",
-    progress: 70,
-    year: "2026",
-  },
-];
+import {
+  projects,
+  disciplineIcon,
+  type Project,
+  type Status,
+} from "@/lib/work";
 
 const filters = ["All", "In Production", "Released"] as const;
 type Filter = (typeof filters)[number];
@@ -113,105 +22,132 @@ const statusStyles: Record<Status, { dot: string; text: string; live?: boolean }
   "Coming Soon": { dot: "bg-muted", text: "text-muted" },
 };
 
+// Discipline-tinted procedural cover for cards without a screenshot.
+const disciplineTint: Record<Project["discipline"], string> = {
+  Game: "from-violet-500/25",
+  App: "from-sky-500/25",
+  AI: "from-accent/25",
+  Program: "from-emerald-500/25",
+};
+
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } },
   exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
 };
 
-function ProjectCard({
-  project,
-  onOpenGallery,
-}: {
-  project: Project;
-  onOpenGallery: (project: Project) => void;
-}) {
+function ProjectCover({ project }: { project: Project }) {
   const Icon = disciplineIcon[project.discipline];
-  const status = statusStyles[project.status];
-  const isComingSoon = project.status === "Coming Soon";
-  const hasGallery = !project.href && !!project.gallery?.length;
-  const Wrapper = project.href ? motion.a : hasGallery ? motion.button : motion.div;
-
   return (
-    <Wrapper
-      {...(project.href ? { href: project.href } : {})}
-      {...(project.external ? { target: "_blank", rel: "noreferrer" } : {})}
-      {...(hasGallery
-        ? {
-            type: "button" as const,
-            onClick: () => onOpenGallery(project),
-            "aria-label": `View ${project.name} screenshots`,
-          }
-        : {})}
-      variants={cardVariants}
-      layout
-      exit="exit"
-      className={`surface surface-hover-fx group relative flex h-full flex-col rounded-xl p-6 text-left sm:p-7 ${
-        project.href || hasGallery ? "cursor-pointer" : ""
-      }`}
-    >
-      <div className="flex items-start justify-between">
-        <span className="flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-background-elevated text-muted transition-colors group-hover:text-foreground">
-          <Icon className="h-5 w-5" strokeWidth={1.7} />
-        </span>
-
-        <span
-          className={`inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs ${status.text}`}
-        >
-          <span className="relative flex h-1.5 w-1.5">
-            {status.live && (
-              <span
-                className={`animate-ping-ring absolute inline-flex h-full w-full rounded-full ${status.dot}`}
-              />
-            )}
-            <span className={`relative inline-flex h-1.5 w-1.5 rounded-full ${status.dot}`} />
-          </span>
-          {project.status}
-        </span>
-      </div>
-
-      <div className="mt-6 flex items-center gap-2">
-        <h3 className="text-lg font-semibold tracking-tight">{project.name}</h3>
-        {isComingSoon ? (
-          <Lock className="h-4 w-4 text-faint" />
-        ) : project.href ? (
-          <ArrowUpRight className="h-4 w-4 text-faint transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
-        ) : hasGallery ? (
-          <Images className="h-4 w-4 text-faint transition-colors duration-300 group-hover:text-accent" />
-        ) : null}
-      </div>
-      <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.16em] text-faint">
-        {project.discipline} · {project.year}
-      </p>
-
-      <p className="mt-4 flex-1 text-pretty text-sm leading-relaxed text-muted">
-        {project.blurb}
-      </p>
-
-      {project.status === "In Production" && project.progress != null && (
-        <div className="mt-6">
-          <div className="mb-1.5 flex justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-faint">
-            <span>Build progress</span>
-            <span className="text-accent">{project.progress}%</span>
-          </div>
-          <div className="h-1 overflow-hidden rounded-full bg-white/[0.06]">
-            <motion.div
-              className="h-full rounded-full bg-accent"
-              initial={{ width: 0 }}
-              whileInView={{ width: `${project.progress}%` }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            />
-          </div>
+    <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-border bg-background-elevated">
+      {project.cover ? (
+        <Image
+          src={project.cover}
+          alt={`${project.name} preview`}
+          fill
+          sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
+          className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
+        />
+      ) : (
+        <div className={`relative flex h-full w-full items-center justify-center bg-gradient-to-br ${disciplineTint[project.discipline]} to-transparent`}>
+          <div className="absolute inset-0 grid-bg opacity-60" />
+          <Icon
+            className="relative h-14 w-14 text-foreground/70 transition-transform duration-500 group-hover:scale-110"
+            strokeWidth={1.2}
+          />
         </div>
       )}
-    </Wrapper>
+      {/* Top gradient so status pill stays readable over any image */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/40 to-transparent" />
+    </div>
+  );
+}
+
+function ProjectCard({ project }: { project: Project }) {
+  const Icon = disciplineIcon[project.discipline];
+  const status = statusStyles[project.status];
+
+  const onMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
+  };
+
+  return (
+    <motion.div variants={cardVariants} layout exit="exit" className="h-full">
+      <Link
+        href={`/work/${project.slug}`}
+        onMouseMove={onMove}
+        className="surface surface-hover-fx group relative flex h-full flex-col overflow-hidden rounded-xl"
+      >
+        {/* Pointer-tracked accent glow */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          style={{
+            background:
+              "radial-gradient(320px circle at var(--mx, 50%) var(--my, 0%), rgba(var(--accent-rgb),0.10), transparent 60%)",
+          }}
+        />
+        <ProjectCover project={project} />
+
+        <div className="flex flex-1 flex-col p-6 sm:p-7">
+          <div className="flex items-start justify-between">
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background-elevated text-muted transition-colors group-hover:text-foreground">
+              <Icon className="h-5 w-5" strokeWidth={1.7} />
+            </span>
+            <span
+              className={`inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs ${status.text}`}
+            >
+              <span className="relative flex h-1.5 w-1.5">
+                {status.live && (
+                  <span
+                    className={`animate-ping-ring absolute inline-flex h-full w-full rounded-full ${status.dot}`}
+                  />
+                )}
+                <span className={`relative inline-flex h-1.5 w-1.5 rounded-full ${status.dot}`} />
+              </span>
+              {project.status}
+            </span>
+          </div>
+
+          <div className="mt-5 flex items-center gap-2">
+            <h3 className="text-lg font-semibold tracking-tight">{project.name}</h3>
+            <ArrowUpRight className="h-4 w-4 text-faint transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
+          </div>
+          <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.16em] text-faint">
+            {project.discipline} · {project.year}
+          </p>
+
+          <p className="mt-4 flex-1 text-pretty text-sm leading-relaxed text-muted">
+            {project.blurb}
+          </p>
+
+          {project.status === "In Production" && project.progress != null && (
+            <div className="mt-6">
+              <div className="mb-1.5 flex justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-faint">
+                <span>Build progress</span>
+                <span className="text-accent">{project.progress}%</span>
+              </div>
+              <div className="h-1 overflow-hidden rounded-full bg-white/[0.06]">
+                <motion.div
+                  className="h-full rounded-full bg-accent"
+                  initial={{ width: 0 }}
+                  whileInView={{ width: `${project.progress}%` }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      </Link>
+    </motion.div>
   );
 }
 
 export function Projects() {
   const [filter, setFilter] = useState<Filter>("All");
-  const [gallery, setGallery] = useState<Project | null>(null);
   const visible =
     filter === "All" ? projects : projects.filter((p) => p.status === filter);
 
@@ -228,6 +164,7 @@ export function Projects() {
           </h2>
           <p className="mt-4 max-w-md text-pretty text-muted">
             Products in production today — with more taking shape in the lab.
+            Open any project for the full story.
           </p>
         </div>
 
@@ -260,18 +197,10 @@ export function Projects() {
       >
         <AnimatePresence mode="popLayout">
           {visible.map((p) => (
-            <ProjectCard key={p.name} project={p} onOpenGallery={setGallery} />
+            <ProjectCard key={p.slug} project={p} />
           ))}
         </AnimatePresence>
       </motion.div>
-
-      <ProjectGalleryModal
-        open={gallery != null}
-        onClose={() => setGallery(null)}
-        title={gallery?.name ?? ""}
-        meta={gallery ? `${gallery.discipline} · ${gallery.year}` : undefined}
-        shots={gallery?.gallery ?? []}
-      />
     </section>
   );
 }

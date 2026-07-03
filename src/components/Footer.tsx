@@ -36,8 +36,8 @@ function XMark({ className }: IconProps) {
   );
 }
 
-const socials: { label: string; Icon: ComponentType<IconProps> }[] = [
-  { label: "Instagram", Icon: InstagramMark },
+const socials: { label: string; Icon: ComponentType<IconProps>; href?: string }[] = [
+  { label: "Instagram", Icon: InstagramMark, href: "https://www.instagram.com/gasperohlab/" },
   { label: "Facebook", Icon: FacebookMark },
   { label: "X", Icon: XMark },
   { label: "GitHub", Icon: GithubMark },
@@ -68,16 +68,30 @@ export function Footer() {
             About
           </Link>
           <span className="mx-1 h-4 w-px bg-border" aria-hidden />
-          {socials.map(({ label, Icon }) => (
-            <span
-              key={label}
-              aria-label={label}
-              title={`${label} — coming soon`}
-              className="flex h-9 w-9 cursor-default items-center justify-center rounded-full border border-border text-muted"
-            >
-              <Icon className="h-4 w-4" />
-            </span>
-          ))}
+          {socials.map(({ label, Icon, href }) =>
+            href ? (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={label}
+                title={label}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted transition-colors hover:border-border-strong hover:text-foreground"
+              >
+                <Icon className="h-4 w-4" />
+              </a>
+            ) : (
+              <span
+                key={label}
+                aria-label={`${label} — coming soon`}
+                title={`${label} — coming soon`}
+                className="flex h-9 w-9 cursor-default items-center justify-center rounded-full border border-border text-faint"
+              >
+                <Icon className="h-4 w-4" />
+              </span>
+            )
+          )}
         </div>
       </div>
     </footer>

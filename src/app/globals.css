@@ -8,7 +8,9 @@
   --surface-hover: #16181b;
   --foreground: #f4f5f6;
   --muted: #9a9ca1;
-  --faint: #6b6d73;
+  /* Faint metadata text — lightened to clear WCAG AA (5.7:1 on the near-black
+     background) while staying visibly quieter than --muted. */
+  --faint: #868990;
   --border: rgba(255, 255, 255, 0.09);
   --border-strong: rgba(255, 255, 255, 0.16);
 
@@ -56,6 +58,19 @@ body {
 ::selection {
   background: rgba(var(--accent-rgb), 0.28);
   color: #fff;
+}
+
+/* Keyboard focus — a single, branded ring for every interactive element.
+   Only shows for keyboard users (not on mouse click) via :focus-visible. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+/* The skip link and inputs manage their own focus styling. */
+input:focus-visible,
+textarea:focus-visible {
+  outline: none;
 }
 
 /* Thin, neutral scrollbar */

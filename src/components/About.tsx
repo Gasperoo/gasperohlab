@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Reveal } from "./Reveal";
 
 const story = [
@@ -30,19 +31,46 @@ export function About() {
     <>
       {/* Hero */}
       <section className="relative mx-auto max-w-6xl px-5 pt-36 pb-16 sm:px-6 sm:pt-44 sm:pb-20">
-        <Reveal>
-          <p className="eyebrow mb-4">About the lab</p>
-          <h1 className="max-w-3xl font-display text-balance text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
-            A small lab with a<span className="text-accent"> long</span> attention
-            span.
-          </h1>
-          <p className="mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-muted sm:text-xl">
-            GASPEROHLAB is an independent software lab. We take hard, interesting
-            problems from a single question all the way to production — across
-            games, applications, AI models and the systems that hold them
-            together.
-          </p>
-        </Reveal>
+        <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16">
+          <Reveal>
+            <p className="eyebrow mb-4">About the lab</p>
+            <h1 className="max-w-3xl font-display text-balance text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
+              A small lab with a<span className="text-accent"> long</span> attention
+              span.
+            </h1>
+            <p className="mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-muted sm:text-xl">
+              GASPEROHLAB is an independent software lab. We take hard, interesting
+              problems from a single question all the way to production — across
+              games, applications, AI models and the systems that hold them
+              together.
+            </p>
+          </Reveal>
+
+          {/* Framed character visual */}
+          <Reveal delay={0.1}>
+            <div className="surface relative aspect-square overflow-hidden rounded-2xl">
+              <div className="absolute inset-0 grid-bg opacity-70" />
+              <div
+                className="absolute inset-0 -z-0 blur-3xl"
+                style={{
+                  background:
+                    "radial-gradient(closest-side, rgba(var(--accent-rgb),0.22), transparent 70%)",
+                }}
+              />
+              <Image
+                src="/hero/hero-character-fire.png"
+                alt="GASPEROHLAB voxel character"
+                fill
+                priority
+                sizes="(max-width: 1024px) 90vw, 40vw"
+                className="object-contain object-bottom p-6"
+              />
+              <span className="absolute left-5 top-5 font-mono text-[10px] uppercase tracking-[0.18em] text-faint">
+                Est. 2025 · Independent
+              </span>
+            </div>
+          </Reveal>
+        </div>
       </section>
 
       {/* Story */}

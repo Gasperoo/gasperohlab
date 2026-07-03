@@ -98,6 +98,7 @@ const jsonLd = {
       logo: `${siteUrl}/icon.svg`,
       description:
         "A collective engineering games, apps, AI models and programs.",
+      sameAs: ["https://www.instagram.com/gasperohlab/"],
     },
     {
       "@type": "WebSite",

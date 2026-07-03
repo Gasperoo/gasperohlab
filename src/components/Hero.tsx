@@ -47,14 +47,19 @@ export function Hero() {
     if (!section || !stage || !fire) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const noHover = window.matchMedia("(hover: none)").matches;
-    if (reduce || noHover) return;
+    if (reduce) return;
 
-    const R = 190; // spotlight radius (px)
+    // Touch/no-hover devices have no cursor to chase, so instead of showing a
+    // dead effect we run an automatic spotlight that sweeps across the
+    // character on a slow loop — the fire reveal still happens on a phone.
+    const auto = window.matchMedia("(hover: none)").matches;
+
+    const R = auto ? 150 : 190; // spotlight radius (px)
     const target = { x: -9999, y: -9999 };
     const smooth = { x: -9999, y: -9999 };
-    let active = false;
+    let active = auto; // auto mode is always "on"
     let raf = 0;
+    const start = performance.now();
 
     // Track over the whole section; express coordinates relative to the
     // character stage so the mask lines up with the fire layer.
@@ -72,21 +77,34 @@ export function Hero() {
       active = false;
     };
 
-    const loop = () => {
+    const loop = (now: number) => {
+      if (auto) {
+        // A gentle figure-eight-ish sweep over the character stage.
+        const rect = stage.getBoundingClientRect();
+        const t = (now - start) / 1000;
+        target.x = rect.width * (0.5 + 0.34 * Math.sin(t * 0.8));
+        target.y = rect.height * (0.5 + 0.26 * Math.sin(t * 1.15 + 1));
+        if (smooth.x < -1000) {
+          smooth.x = target.x;
+          smooth.y = target.y;
+        }
+      }
       smooth.x += (target.x - smooth.x) * 0.14;
       smooth.y += (target.y - smooth.y) * 0.14;
       const mask = active
         ? `radial-gradient(circle ${R}px at ${smooth.x.toFixed(1)}px ${smooth.y.toFixed(
-            1,
-          )}px, #000 0%, #000 40%, rgba(0,0,0,0.55) 62%, rgba(0,0,0,0.18) 80%, transparent 92%)`
+          1,
+        )}px, #000 0%, #000 40%, rgba(0,0,0,0.55) 62%, rgba(0,0,0,0.18) 80%, transparent 92%)`
         : "radial-gradient(circle 0px at -200px -200px, #000, transparent)";
       fire.style.webkitMaskImage = mask;
       fire.style.maskImage = mask;
       raf = requestAnimationFrame(loop);
     };
 
-    section.addEventListener("pointermove", onMove);
-    section.addEventListener("pointerleave", onLeave);
+    if (!auto) {
+      section.addEventListener("pointermove", onMove);
+      section.addEventListener("pointerleave", onLeave);
+    }
     raf = requestAnimationFrame(loop);
     return () => {
       cancelAnimationFrame(raf);

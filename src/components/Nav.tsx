@@ -8,9 +8,9 @@ import { ArrowUpRight, Menu, Rocket, X } from "lucide-react";
 // Section ids live on the home page; prefix with `/` so the links also work
 // from other routes (e.g. /about) by navigating home and then scrolling.
 const links = [
-  { label: "Disciplines", id: "disciplines", href: "/#disciplines" },
   { label: "Work", id: "projects", href: "/#projects" },
   { label: "Ethos", id: "ethos", href: "/#ethos" },
+  { label: "Lab", id: "lab", href: "/lab" },
 ];
 
 function Logo({ onClick }: { onClick?: () => void }) {
