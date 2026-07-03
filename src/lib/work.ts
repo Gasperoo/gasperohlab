@@ -291,11 +291,6 @@ export const projects: Project[] = [
         },
       ],
       stack: ["Swift", "iOS", "Android", "Private LLM", "On-prem"],
-      waitlist: {
-        platforms: ["iOS", "Android"],
-        blurb:
-          "The companion app is in production now. Leave your email to join the beta waitlist and we'll reach out with an invite when it's ready.",
-      },
     },
   },
   {
@@ -336,11 +331,6 @@ export const projects: Project[] = [
         },
       ],
       stack: ["Swift", "iOS", "Android", "Private LLM", "On-prem"],
-      waitlist: {
-        platforms: ["iOS", "Android"],
-        blurb:
-          "The companion app is in production now. Leave your email to join the beta waitlist and we'll reach out with an invite when it's ready.",
-      },
     },
   },
   {
