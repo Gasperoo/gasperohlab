@@ -37,6 +37,8 @@ export type CaseStudy = {
   /** Portrait phone-frame gallery instead of landscape. */
   galleryPhone?: boolean;
   integrations?: { name: string; src: string }[];
+  /** Engine/platform the project is built on, shown as a logo + name block. */
+  engine?: { name: string; src: string; note?: string };
   stack?: string[];
   liveUrl?: string;
   liveLabel?: string;
@@ -421,7 +423,7 @@ export const projects: Project[] = [
       role: "Game design, simulation engineering",
       timeframe: "2026 — in production",
       overview: [
-        "Halcyon is our systemic survival game — less about a scripted story, more about a simulation that pushes back. You rebuild a world that keeps finding new ways to fall apart, and the interesting decisions come out of the systems colliding, not out of a quest log.",
+        "Halcyon is our systemic survival game — less about a scripted story, more about a simulation that pushes back. You rebuild a world that keeps finding new ways to fall apart, and the interesting decisions come out of the systems colliding, not out of a quest log. It's built in Unreal Engine 5.",
         "It's coming to PC first. Once the PC release lands, iOS and Android ports follow so you can take the simulation with you.",
         "The core loop is prototyped and playable. What's left is the long tail: content, balance and the polish that turns a working simulation into a game worth living in.",
       ],
@@ -444,7 +446,12 @@ export const projects: Project[] = [
           ],
         },
       ],
-      stack: ["Custom simulation", "Procedural systems"],
+      engine: {
+        name: "Unreal Engine 5",
+        src: "/work/halcyon/unreal-engine-logo.svg",
+        note: "Built in Unreal Engine 5",
+      },
+      stack: ["Unreal Engine 5", "Custom simulation", "Procedural systems"],
       waitlist: {
         platforms: ["PC", "iOS", "Android"],
         blurb:

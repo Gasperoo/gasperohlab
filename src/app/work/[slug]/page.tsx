@@ -296,6 +296,32 @@ export default async function CaseStudyPage({
           </section>
         )}
 
+        {/* Engine */}
+        {cs.engine && (
+          <section className="mx-auto max-w-5xl px-5 py-8 sm:px-6">
+            <Reveal className="surface rounded-2xl p-8 sm:p-10">
+              <p className="eyebrow mb-6">Powered by</p>
+              <div className="flex items-center gap-5">
+                <div className="relative h-12 w-12 shrink-0">
+                  <Image
+                    src={cs.engine.src}
+                    alt={cs.engine.name}
+                    fill
+                    sizes="48px"
+                    className="object-contain"
+                  />
+                </div>
+                <div>
+                  <p className="font-medium text-foreground">{cs.engine.name}</p>
+                  {cs.engine.note && (
+                    <p className="text-sm text-muted">{cs.engine.note}</p>
+                  )}
+                </div>
+              </div>
+            </Reveal>
+          </section>
+        )}
+
         {/* Stack */}
         {cs.stack && cs.stack.length > 0 && (
           <section className="mx-auto max-w-3xl px-5 py-8 sm:px-6">
