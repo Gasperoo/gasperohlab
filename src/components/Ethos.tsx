@@ -14,6 +14,14 @@ const principles = [
     title: "Ship what matters",
     body: "Not everything survives the lab — and that's the point. We keep the work that earns its place in production.",
   },
+  {
+    title: "Depth over breadth",
+    body: "We'd rather build one thing properly than ten things halfway. Focus is a feature, and saying no is part of the craft.",
+  },
+  {
+    title: "Own the whole stack",
+    body: "From the model to the metal, we build and hold our own tools. No black boxes we can't open, no dependencies we can't replace.",
+  },
 ];
 
 const stats: { count?: number; value?: string; suffix?: string; label: string }[] = [
@@ -40,6 +48,12 @@ export function Ethos() {
             systems freely, letting each discipline sharpen the others. The goal
             isn&apos;t volume — it&apos;s finding the ideas that deserve to become
             real, and building them properly.
+          </p>
+          <p className="mt-4 max-w-md text-pretty leading-relaxed text-muted">
+            A factory optimises for throughput. A lab optimises for
+            learning. We stay small on purpose, keep the loop between idea and
+            working software as short as we can, and let the work that survives
+            that pressure be the work we put our name on.
           </p>
 
           <dl className="mt-12 grid grid-cols-2 overflow-hidden rounded-2xl border border-border">

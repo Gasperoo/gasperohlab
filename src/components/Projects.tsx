@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { Reveal } from "./Reveal";
 
-type Status = "In Development" | "Released" | "Coming Soon";
+type Status = "In Production" | "Released" | "Coming Soon";
 type Discipline = "Game" | "App" | "AI" | "Program";
 
 type Project = {
@@ -21,7 +21,7 @@ type Project = {
   discipline: Discipline;
   status: Status;
   blurb: string;
-  progress?: number; // 0-100, shown for In Development
+  progress?: number; // 0-100, shown while In Production
   year: string;
   href?: string;
   external?: boolean; // opens in a new tab
@@ -65,13 +65,31 @@ const projects: Project[] = [
     href: "https://marapone.com/logistics",
     external: true,
   },
+  {
+    name: "Project Halcyon",
+    discipline: "Game",
+    status: "In Production",
+    blurb:
+      "A systemic survival game about rebuilding a world that keeps breaking. Core simulation loop is prototyped and playable — content and polish underway in the lab.",
+    progress: 45,
+    year: "2026",
+  },
+  {
+    name: "Orbit",
+    discipline: "App",
+    status: "In Production",
+    blurb:
+      "A calm planning tool for small teams who resent project software. Design is locked and the build is in flight — private beta later this year.",
+    progress: 70,
+    year: "2026",
+  },
 ];
 
-const filters = ["All", "Released"] as const;
+const filters = ["All", "In Production", "Released"] as const;
 type Filter = (typeof filters)[number];
 
 const statusStyles: Record<Status, { dot: string; text: string; live?: boolean }> = {
-  "In Development": { dot: "bg-accent", text: "text-accent", live: true },
+  "In Production": { dot: "bg-accent", text: "text-accent", live: true },
   Released: { dot: "bg-emerald-400", text: "text-emerald-400" },
   "Coming Soon": { dot: "bg-muted", text: "text-muted" },
 };
@@ -133,7 +151,7 @@ function ProjectCard({ project }: { project: Project }) {
         {project.blurb}
       </p>
 
-      {project.status === "In Development" && project.progress != null && (
+      {project.status === "In Production" && project.progress != null && (
         <div className="mt-6">
           <div className="mb-1.5 flex justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-faint">
             <span>Build progress</span>

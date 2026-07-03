@@ -1,25 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import { ArrowUpRight, Menu, Rocket, X } from "lucide-react";
 
+// Section ids live on the home page; prefix with `/` so the links also work
+// from other routes (e.g. /about) by navigating home and then scrolling.
 const links = [
-  { label: "Disciplines", href: "#disciplines" },
-  { label: "Work", href: "#projects" },
-  { label: "Ethos", href: "#ethos" },
+  { label: "Disciplines", id: "disciplines", href: "/#disciplines" },
+  { label: "Work", id: "projects", href: "/#projects" },
+  { label: "Ethos", id: "ethos", href: "/#ethos" },
 ];
 
 function Logo({ onClick }: { onClick?: () => void }) {
   return (
-    <a href="#top" onClick={onClick} className="group flex items-center gap-2.5">
+    <Link href="/" onClick={onClick} className="group flex items-center gap-2.5">
       <span className="flex h-7 w-7 items-center justify-center rounded-md bg-accent text-white ring-1 ring-white/10">
         <Rocket className="h-4 w-4 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2} />
       </span>
       <span className="font-display text-sm font-bold tracking-[0.12em]">
         GASPEROH<span className="text-accent">LAB</span>
       </span>
-    </a>
+    </Link>
   );
 }
 
@@ -42,7 +45,7 @@ export function Nav() {
   }, []);
 
   useEffect(() => {
-    const ids = links.map((l) => l.href.slice(1));
+    const ids = links.map((l) => l.id);
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -108,7 +111,7 @@ export function Nav() {
 
           <div className="hidden items-center gap-1 md:flex">
             {links.map((l) => {
-              const isActive = active === l.href.slice(1);
+              const isActive = active === l.id;
               return (
                 <a
                   key={l.href}
@@ -201,7 +204,7 @@ export function Nav() {
             >
               <nav className="flex flex-col">
                 {links.map((l, i) => {
-                  const isActive = active === l.href.slice(1);
+                  const isActive = active === l.id;
                   return (
                     <motion.a
                       key={l.href}

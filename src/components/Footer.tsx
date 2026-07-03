@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import Link from "next/link";
 import { Rocket } from "lucide-react";
 
 type IconProps = { className?: string };
@@ -60,6 +61,13 @@ export function Footer() {
         </p>
 
         <div className="flex items-center gap-2">
+          <Link
+            href="/about"
+            className="rounded-lg border border-border px-3.5 py-1.5 text-sm text-muted transition-colors hover:border-border-strong hover:text-foreground"
+          >
+            About
+          </Link>
+          <span className="mx-1 h-4 w-px bg-border" aria-hidden />
           {socials.map(({ label, Icon }) => (
             <span
               key={label}
