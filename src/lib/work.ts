@@ -254,6 +254,96 @@ export const projects: Project[] = [
     },
   },
   {
+    slug: "marapone-construction-app",
+    name: "Marapone Construction App",
+    discipline: "App",
+    status: "In Production",
+    blurb:
+      "The mobile companion to the Construction Suite — take the blueprint auditor, RFIs and daily logs on the go. Native for iOS and Android.",
+    progress: 70,
+    year: "2026",
+    caseStudy: {
+      tagline: "The Construction Suite, in your pocket, on site.",
+      role: "Mobile product design, native iOS + Android build",
+      timeframe: "2026 — in production",
+      overview: [
+        "The Construction App is the companion to Marapone's Construction Suite, built so a crew can carry its tools onto the site instead of leaving them on a desktop back in the trailer.",
+        "It works alongside the suite: scan a plan, clear an RFI, file a daily log or pull up a code audit from a phone in the field. Native on iOS and Android, it keeps the same private, owned engine — nothing leaves the site.",
+      ],
+      metrics: [
+        { value: "iOS + Android", label: "Native on both platforms" },
+        { value: "Companion", label: "Pairs with the Construction Suite" },
+        { value: "70%", label: "Build progress" },
+      ],
+      sections: [
+        {
+          heading: "Why a companion app",
+          body: [
+            "The Construction Suite lives where the documents do — but the work happens on site, hands full, no desk. The app closes that gap: the same audits, RFIs and logs, on the device already in the superintendent's pocket.",
+            "It's built to work alongside the suite rather than replace it, so a firm's tools travel with the crew instead of staying behind.",
+          ],
+        },
+        {
+          heading: "Where it is",
+          body: [
+            "In production at roughly 70%, with the core on-the-go workflows — blueprint scanning, RFI triage and daily logs — coming together natively on both platforms.",
+          ],
+        },
+      ],
+      stack: ["Swift", "iOS", "Android", "Private LLM", "On-prem"],
+      waitlist: {
+        platforms: ["iOS", "Android"],
+        blurb:
+          "The companion app is in production now. Leave your email to join the beta waitlist and we'll reach out with an invite when it's ready.",
+      },
+    },
+  },
+  {
+    slug: "marapone-logistics-app",
+    name: "Marapone Logistics App",
+    discipline: "App",
+    status: "In Production",
+    blurb:
+      "The mobile companion to the Logistics Suite — quoting, tracking and document audits wherever the freight is. Native for iOS and Android.",
+    progress: 70,
+    year: "2026",
+    caseStudy: {
+      tagline: "The Logistics Suite, wherever the freight is.",
+      role: "Mobile product design, native iOS + Android build",
+      timeframe: "2026 — in production",
+      overview: [
+        "The Logistics App is the companion to Marapone's Logistics Suite, built for the forwarders and importers who aren't sitting at a desk when a shipment needs a decision.",
+        "It works alongside the suite: quote freight, track a vessel, and run a document or invoice audit from a phone. Native on iOS and Android, on the same private engine that never phones home.",
+      ],
+      metrics: [
+        { value: "iOS + Android", label: "Native on both platforms" },
+        { value: "Companion", label: "Pairs with the Logistics Suite" },
+        { value: "70%", label: "Build progress" },
+      ],
+      sections: [
+        {
+          heading: "Why a companion app",
+          body: [
+            "Freight doesn't wait for anyone to get back to their desk. The app puts the suite's quoting, tracking and document intelligence on the device the team already carries, so a call can be made where the shipment is.",
+            "It's built to work alongside the Logistics Suite rather than replace it — the same tools, on the go.",
+          ],
+        },
+        {
+          heading: "Where it is",
+          body: [
+            "In production at roughly 70%, bringing the core workflows — instant quoting, live tracking and invoice audits — to both platforms natively.",
+          ],
+        },
+      ],
+      stack: ["Swift", "iOS", "Android", "Private LLM", "On-prem"],
+      waitlist: {
+        platforms: ["iOS", "Android"],
+        blurb:
+          "The companion app is in production now. Leave your email to join the beta waitlist and we'll reach out with an invite when it's ready.",
+      },
+    },
+  },
+  {
     slug: "yugidex",
     name: "YuGi-Dex",
     discipline: "Game",
