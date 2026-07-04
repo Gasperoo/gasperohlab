@@ -43,6 +43,13 @@ const socials: { label: string; Icon: ComponentType<IconProps>; href?: string }[
   { label: "GitHub", Icon: GithubMark },
 ];
 
+const pageLinks: { label: string; href: string }[] = [
+  { label: "About", href: "/about" },
+  { label: "Privacy", href: "/privacy" },
+  { label: "Terms", href: "/terms" },
+  { label: "Cookies", href: "/cookies" },
+];
+
 export function Footer() {
   return (
     <footer className="relative mt-auto border-t border-border">
@@ -61,14 +68,17 @@ export function Footer() {
           <span className="mt-0.5 block text-faint">Toronto, Canada</span>
         </p>
 
-        <div className="flex items-center gap-2">
-          <Link
-            href="/about"
-            className="rounded-lg border border-border px-3.5 py-1.5 text-sm text-muted transition-colors hover:border-border-strong hover:text-foreground"
-          >
-            About
-          </Link>
-          <span className="mx-1 h-4 w-px bg-border" aria-hidden />
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {pageLinks.map(({ label, href }) => (
+            <Link
+              key={label}
+              href={href}
+              className="rounded-lg border border-border px-3.5 py-1.5 text-sm text-muted transition-colors hover:border-border-strong hover:text-foreground"
+            >
+              {label}
+            </Link>
+          ))}
+          <span className="mx-1 hidden h-4 w-px bg-border sm:block" aria-hidden />
           {socials.map(({ label, Icon, href }) =>
             href ? (
               <a
