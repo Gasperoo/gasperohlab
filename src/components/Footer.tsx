@@ -58,6 +58,7 @@ export function Footer() {
 
         <p className="text-center text-sm text-muted">
           © 2026 Gasperohlab. All Rights Reserved.
+          <span className="mt-0.5 block text-faint">Toronto, Canada</span>
         </p>
 
         <div className="flex items-center gap-2">
