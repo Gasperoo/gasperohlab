@@ -83,6 +83,7 @@ export const projects: Project[] = [
     blurb:
       "Private AI you own outright — domain-tuned models deployed on your own hardware, no cloud and no subscriptions. The platform behind Marapone's construction and logistics suites.",
     year: "2025",
+    cover: "/work/maraponeai/cover.png",
     href: "https://marapone.com",
     external: true,
     caseStudy: {
