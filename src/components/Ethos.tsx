@@ -1,35 +1,8 @@
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "./Reveal";
 import { CountUp } from "./CountUp";
-
-const principles = [
-  {
-    title: "Curiosity first",
-    body: "Every project begins with a question, not a spec. We chase the interesting problem and see where it leads.",
-  },
-  {
-    title: "Build to learn",
-    body: "Prototypes over pitch decks. The fastest way to understand an idea is to make it real and press on it.",
-  },
-  {
-    title: "Ship what matters",
-    body: "Not everything survives the lab — and that's the point. We keep the work that earns its place in production.",
-  },
-  {
-    title: "Depth over breadth",
-    body: "We'd rather build one thing properly than ten things halfway. Focus is a feature, and saying no is part of the craft.",
-  },
-  {
-    title: "Own the whole stack",
-    body: "From the model to the metal, we build and hold our own tools. No black boxes we can't open, no dependencies we can't replace.",
-  },
-];
-
-const stats: { count?: number; value?: string; suffix?: string; label: string }[] = [
-  { count: 3, label: "Products in production" },
-  { count: 4, label: "Disciplines under one roof" },
-  { value: "2025", label: "Founded" },
-  { count: 100, suffix: "%", label: "Independently owned" },
-];
+import { principles, stats } from "@/lib/ethos";
 
 export function Ethos() {
   return (
@@ -55,6 +28,14 @@ export function Ethos() {
             working software as short as we can, and let the work that survives
             that pressure be the work we put our name on.
           </p>
+
+          <Link
+            href="/ethos"
+            className="group mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-foreground"
+          >
+            Read the full ethos
+            <ArrowUpRight className="h-4 w-4 text-accent transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </Link>
 
           <dl className="mt-12 grid grid-cols-2 overflow-hidden rounded-2xl border border-border">
             {stats.map((s, i) => (

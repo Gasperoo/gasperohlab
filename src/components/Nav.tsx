@@ -9,7 +9,7 @@ import { ArrowUpRight, Menu, Rocket, X } from "lucide-react";
 // from other routes (e.g. /about) by navigating home and then scrolling.
 const links = [
   { label: "Work", id: "projects", href: "/work" },
-  { label: "Ethos", id: "ethos", href: "/#ethos" },
+  { label: "Ethos", id: "ethos", href: "/ethos" },
   { label: "Lab", id: "lab", href: "/lab" },
 ];
 
