@@ -35,31 +35,41 @@ export default function LabIndex() {
         tabIndex={-1}
         className="relative z-10 flex-1 focus:outline-none"
       >
-        <section className="relative isolate mx-auto max-w-5xl px-5 pt-36 pb-12 sm:px-6 sm:pt-44">
-          {/* Lab character — faint accent bleeding off the top-right */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -top-8 right-0 -z-10 hidden w-[320px] lg:block xl:-right-16 xl:w-[380px]"
-          >
-            <Image
-              src="/alt/alt1.jpg"
-              alt=""
-              width={1152}
-              height={900}
-              className="w-full select-none opacity-[0.16] mask-[radial-gradient(closest-side,black,transparent_78%)]"
-            />
+        <section className="mx-auto max-w-5xl px-5 pt-36 pb-12 sm:px-6 sm:pt-44">
+          <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-14">
+            <Reveal>
+              <p className="eyebrow mb-4">The lab notebook</p>
+              <h1 className="max-w-3xl font-display text-balance text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
+                What we&apos;re learning,<span className="text-accent"> out loud.</span>
+              </h1>
+              <p className="mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-muted sm:text-xl">
+                We build to learn. This is where some of that gets written down —
+                devlogs, engineering notes, and the reasoning behind what makes it
+                out of the lab and what doesn&apos;t.
+              </p>
+            </Reveal>
+
+            {/* Lab character — framed visual beside the intro */}
+            <Reveal delay={0.1}>
+              <div className="surface relative hidden aspect-square overflow-hidden rounded-2xl lg:block">
+                <div className="absolute inset-0 grid-bg opacity-70" />
+                <div
+                  className="absolute inset-0 -z-0 blur-3xl"
+                  style={{
+                    background:
+                      "radial-gradient(closest-side, rgba(var(--accent-rgb),0.22), transparent 70%)",
+                  }}
+                />
+                <Image
+                  src="/alt/alt1.jpg"
+                  alt="GASPEROHLAB voxel character, molten variant"
+                  fill
+                  sizes="(max-width: 1024px) 0px, 40vw"
+                  className="object-contain object-bottom p-5"
+                />
+              </div>
+            </Reveal>
           </div>
-          <Reveal>
-            <p className="eyebrow mb-4">The lab notebook</p>
-            <h1 className="max-w-3xl font-display text-balance text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
-              What we&apos;re learning,<span className="text-accent"> out loud.</span>
-            </h1>
-            <p className="mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-muted sm:text-xl">
-              We build to learn. This is where some of that gets written down —
-              devlogs, engineering notes, and the reasoning behind what makes it
-              out of the lab and what doesn&apos;t.
-            </p>
-          </Reveal>
         </section>
 
         <section className="mx-auto max-w-5xl px-5 pb-8 sm:px-6">
