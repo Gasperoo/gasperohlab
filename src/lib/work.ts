@@ -469,6 +469,7 @@ export const projects: Project[] = [
       "A calm planning tool for small teams who resent project software. Design is locked and the build is in flight — private beta later this year.",
     progress: 70,
     year: "2026",
+    cover: "/work/orbit/cover.png",
     caseStudy: {
       tagline: "Planning software for people who hate planning software.",
       role: "Product design, full-stack build",
@@ -497,6 +498,17 @@ export const projects: Project[] = [
           ],
         },
       ],
+      gallery: [
+        { src: "/work/orbit/onboarding.png", label: "Onboarding" },
+        { src: "/work/orbit/now.png", label: "Now" },
+        { src: "/work/orbit/gravity.png", label: "Gravity" },
+        { src: "/work/orbit/initiative.png", label: "Center of Gravity" },
+        { src: "/work/orbit/task.png", label: "Task detail" },
+        { src: "/work/orbit/ideas.png", label: "Ideas" },
+        { src: "/work/orbit/drift.png", label: "Drift" },
+        { src: "/work/orbit/settings.png", label: "Settings" },
+      ],
+      galleryPhone: true,
       stack: ["TypeScript", "React", "Next.js"],
       waitlist: {
         blurb:
