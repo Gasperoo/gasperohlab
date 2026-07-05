@@ -81,6 +81,25 @@ export function About() {
             <h2 className="font-display text-balance text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
               Why a lab, not a studio.
             </h2>
+
+            {/* Character — a cooler counterpart to the fire hero above */}
+            <div className="surface relative mt-8 hidden aspect-square max-w-[240px] overflow-hidden rounded-2xl lg:block">
+              <div className="absolute inset-0 grid-bg opacity-60" />
+              <div
+                className="absolute inset-0 -z-0 blur-3xl"
+                style={{
+                  background:
+                    "radial-gradient(closest-side, rgba(120,180,255,0.20), transparent 70%)",
+                }}
+              />
+              <Image
+                src="/alt/alt3.jpg"
+                alt="GASPEROHLAB voxel character, frozen variant"
+                fill
+                sizes="240px"
+                className="object-contain object-bottom p-4"
+              />
+            </div>
           </Reveal>
 
           <div className="flex flex-col gap-5">

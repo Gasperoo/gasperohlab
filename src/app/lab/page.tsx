@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Background } from "@/components/Background";
@@ -34,7 +35,20 @@ export default function LabIndex() {
         tabIndex={-1}
         className="relative z-10 flex-1 focus:outline-none"
       >
-        <section className="mx-auto max-w-5xl px-5 pt-36 pb-12 sm:px-6 sm:pt-44">
+        <section className="relative isolate mx-auto max-w-5xl px-5 pt-36 pb-12 sm:px-6 sm:pt-44">
+          {/* Lab character — faint accent bleeding off the top-right */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -top-8 right-0 -z-10 hidden w-[320px] lg:block xl:-right-16 xl:w-[380px]"
+          >
+            <Image
+              src="/alt/alt1.jpg"
+              alt=""
+              width={1152}
+              height={900}
+              className="w-full select-none opacity-[0.16] mask-[radial-gradient(closest-side,black,transparent_78%)]"
+            />
+          </div>
           <Reveal>
             <p className="eyebrow mb-4">The lab notebook</p>
             <h1 className="max-w-3xl font-display text-balance text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl">

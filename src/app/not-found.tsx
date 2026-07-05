@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Rocket, ArrowLeft } from "lucide-react";
 import { Background } from "@/components/Background";
@@ -14,8 +15,23 @@ export default function NotFound() {
       <Background />
       <main
         id="main-content"
-        className="relative z-10 flex min-h-[100svh] flex-1 flex-col items-center justify-center px-5 py-24 text-center sm:px-6"
+        className="relative isolate z-10 flex min-h-[100svh] flex-1 flex-col items-center justify-center px-5 py-24 text-center sm:px-6"
       >
+        {/* Corrupted lab character — faint backdrop for the error state */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center overflow-hidden"
+        >
+          <Image
+            src="/alt/alt2.jpg"
+            alt=""
+            width={1152}
+            height={900}
+            priority
+            className="w-[min(620px,92vw)] max-w-none select-none opacity-[0.09] [mask-image:radial-gradient(closest-side,black,transparent_72%)]"
+          />
+        </div>
+
         <Link href="/" className="group mb-10 flex items-center gap-2.5">
           <span className="flex h-8 w-8 items-center justify-center rounded-md bg-accent text-white ring-1 ring-white/10">
             <Rocket
