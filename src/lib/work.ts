@@ -474,6 +474,9 @@ export const projects: Project[] = [
       tagline: "Planning software for people who hate planning software.",
       role: "Product design, full-stack build",
       timeframe: "2026 — in production",
+      heroVideo: "/work/orbit/orbit-map.mp4",
+      heroImage: "/work/orbit/system.png",
+      heroVideoPortrait: true,
       overview: [
         "Orbit is a planning tool for small teams who've bounced off every heavyweight project app — the ones with a hundred fields nobody fills in. It optimises for the opposite: the smallest amount of structure that still keeps a team pointed the same way.",
         "The design is locked and the build is well underway. A private beta is planned for later this year.",
@@ -499,11 +502,9 @@ export const projects: Project[] = [
         },
       ],
       gallery: [
-        { src: "/work/orbit/onboarding.png", label: "Onboarding" },
         { src: "/work/orbit/now.png", label: "Now" },
         { src: "/work/orbit/gravity.png", label: "Gravity" },
-        { src: "/work/orbit/initiative.png", label: "Center of Gravity" },
-        { src: "/work/orbit/task.png", label: "Task detail" },
+        { src: "/work/orbit/system.png", label: "System" },
         { src: "/work/orbit/ideas.png", label: "Ideas" },
         { src: "/work/orbit/drift.png", label: "Drift" },
         { src: "/work/orbit/settings.png", label: "Settings" },
