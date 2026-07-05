@@ -47,6 +47,11 @@ export const metadata: Metadata = {
   publisher: "GASPEROHLAB",
   alternates: {
     canonical: "/",
+    types: {
+      "application/rss+xml": [
+        { url: "/feed.xml", title: "GASPEROHLAB — The Lab" },
+      ],
+    },
   },
   openGraph: {
     type: "website",

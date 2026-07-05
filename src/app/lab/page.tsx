@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Rss } from "lucide-react";
 import { Background } from "@/components/Background";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
@@ -13,7 +13,14 @@ export const metadata: Metadata = {
   title: "The Lab",
   description:
     "Notes from GASPEROHLAB — devlogs, engineering write-ups and the thinking behind what we build and what we cut.",
-  alternates: { canonical: "/lab" },
+  alternates: {
+    canonical: "/lab",
+    types: {
+      "application/rss+xml": [
+        { url: "/feed.xml", title: "GASPEROHLAB — The Lab" },
+      ],
+    },
+  },
   openGraph: {
     type: "website",
     url: "https://gasperohlab.com/lab",
@@ -47,6 +54,13 @@ export default function LabIndex() {
                 devlogs, engineering notes, and the reasoning behind what makes it
                 out of the lab and what doesn&apos;t.
               </p>
+              <a
+                href="/feed.xml"
+                className="group mt-6 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-faint transition-colors hover:text-foreground"
+              >
+                <Rss className="h-3.5 w-3.5 text-accent" />
+                Subscribe via RSS
+              </a>
             </Reveal>
 
             {/* Lab character — framed visual beside the intro */}
