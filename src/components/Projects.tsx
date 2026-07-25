@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { AnimatePresence } from "framer-motion";
+import * as m from "framer-motion/m";
 import { Reveal } from "./Reveal";
 import { ProjectCard } from "./ProjectCard";
 import { projects } from "@/lib/work";
@@ -37,12 +39,12 @@ export function Projects() {
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`relative rounded-md px-3.5 py-1.5 text-xs font-medium transition-colors ${
+              className={`relative isolate inline-flex min-h-11 items-center justify-center rounded-md px-4 text-xs font-medium transition-colors sm:min-h-0 sm:px-3.5 sm:py-1.5 ${
                 filter === f ? "text-white" : "text-muted hover:text-foreground"
               }`}
             >
               {filter === f && (
-                <motion.span
+                <m.span
                   layoutId="project-filter"
                   className="absolute inset-0 -z-10 rounded-md bg-accent"
                   transition={{ type: "spring", stiffness: 350, damping: 30 }}
@@ -54,7 +56,7 @@ export function Projects() {
         </div>
       </Reveal>
 
-      <motion.div
+      <m.div
         layout
         className="mt-12 grid gap-4 sm:mt-14 sm:grid-cols-2 lg:grid-cols-3"
       >
@@ -63,17 +65,17 @@ export function Projects() {
             <ProjectCard key={p.slug} project={p} />
           ))}
         </AnimatePresence>
-      </motion.div>
+      </m.div>
 
       {/* Full archive link */}
       <Reveal className="mt-10 flex justify-center">
-        <a
+        <Link
           href="/work"
           className="group inline-flex items-center gap-2 rounded-lg border border-border-strong bg-surface px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-surface-hover"
         >
           View all work
           <span className="text-faint transition-colors group-hover:text-accent">→</span>
-        </a>
+        </Link>
       </Reveal>
     </section>
   );

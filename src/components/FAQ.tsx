@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
+import * as m from "framer-motion/m";
 import { Plus } from "lucide-react";
 import { Reveal } from "./Reveal";
 
@@ -55,7 +56,7 @@ function Item({ q, a, index }: { q: string; a: string; index: number }) {
       </button>
       <AnimatePresence initial={false}>
         {open && (
-          <motion.div
+          <m.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -65,7 +66,7 @@ function Item({ q, a, index }: { q: string; a: string; index: number }) {
             <p className="max-w-2xl pb-6 text-pretty leading-relaxed text-muted">
               {a}
             </p>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

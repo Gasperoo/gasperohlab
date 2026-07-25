@@ -9,8 +9,11 @@ import { Footer } from "@/components/Footer";
 import { CTA } from "@/components/CTA";
 import { Reveal } from "@/components/Reveal";
 import { CaseGallery } from "@/components/CaseGallery";
+import { AutoVideo } from "@/components/AutoVideo";
 import { CountUp } from "@/components/CountUp";
 import { BetaWaitlist } from "@/components/BetaWaitlist";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbs, graph, orgRef } from "@/lib/schema";
 import {
   disciplineIcon,
   getProject,
@@ -57,6 +60,48 @@ export default async function CaseStudyPage({
   const Icon = disciplineIcon[project.discipline];
   const heroMedia = cs.heroVideo || cs.heroImage || project.cover;
 
+  // The page is an article; the thing it's about is the product. Games and apps
+  // model cleanly as SoftwareApplication — the AI models and internal programs
+  // don't, so those stay the more general CreativeWork.
+  const isSoftware =
+    project.discipline === "App" || project.discipline === "Game";
+
+  const jsonLd = graph(
+    {
+      "@type": "Article",
+      "@id": `${siteUrl}/work/${slug}#article`,
+      headline: `${project.name} — case study`,
+      description: cs.tagline,
+      image: `${siteUrl}/work/${slug}/opengraph-image`,
+      inLanguage: "en",
+      author: orgRef,
+      publisher: orgRef,
+      isPartOf: { "@id": `${siteUrl}/#website` },
+      mainEntityOfPage: `${siteUrl}/work/${slug}`,
+      about: { "@id": `${siteUrl}/work/${slug}#project` },
+    },
+    {
+      "@type": isSoftware ? "SoftwareApplication" : "CreativeWork",
+      "@id": `${siteUrl}/work/${slug}#project`,
+      name: project.name,
+      description: cs.tagline,
+      url: `${siteUrl}/work/${slug}`,
+      ...(cs.liveUrl ? { sameAs: [cs.liveUrl] } : {}),
+      ...(project.cover ? { image: `${siteUrl}${project.cover}` } : {}),
+      creator: orgRef,
+      genre: project.discipline,
+      dateCreated: String(project.year),
+      ...(isSoftware
+        ? { applicationCategory: project.discipline }
+        : {}),
+      ...(cs.stack?.length ? { keywords: cs.stack.join(", ") } : {}),
+    },
+    breadcrumbs([
+      { name: "Work", path: "/work" },
+      { name: project.name, path: `/work/${slug}` },
+    ])
+  );
+
   // "More work" — a couple of other case studies to keep people moving.
   const more = projects
     .filter((p) => p.slug !== slug && p.caseStudy)
@@ -66,6 +111,7 @@ export default async function CaseStudyPage({
     <>
       <Background />
       <Nav />
+      <JsonLd data={jsonLd} />
       <main
         id="main-content"
         tabIndex={-1}
@@ -133,35 +179,30 @@ export default async function CaseStudyPage({
                         "radial-gradient(55% 45% at 50% 42%, rgba(var(--accent-rgb),0.14), transparent 72%)",
                     }}
                   />
-                  <video
+                  <AutoVideo
                     className="relative h-[440px] w-auto rounded-[10px] shadow-2xl shadow-black/60 sm:h-[560px] lg:h-[620px]"
                     src={cs.heroVideo}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
                     poster={cs.heroImage || project.cover}
+                    label={`${project.name} — app preview`}
                   />
                 </div>
               ) : (
                 <div className="surface relative overflow-hidden rounded-2xl">
                   <div className="relative aspect-[16/9] w-full">
                     {cs.heroVideo ? (
-                      <video
+                      <AutoVideo
                         className="h-full w-full object-cover"
                         src={cs.heroVideo}
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
                         poster={cs.heroImage || project.cover}
+                        label={`${project.name} — preview`}
                       />
                     ) : (
                       <Image
                         src={heroMedia}
                         alt={`${project.name} — preview`}
                         fill
-                        priority
+                        // This one genuinely is the LCP element of the page.
+                        preload
                         sizes="(max-width: 1024px) 100vw, 1024px"
                         className="object-cover object-top"
                       />
@@ -238,15 +279,11 @@ export default async function CaseStudyPage({
                 <Reveal key={clip.label} delay={i * 0.08}>
                   <figure className="flex flex-col items-center">
                     <div className="relative w-full overflow-hidden rounded-2xl bg-black">
-                      <video
+                      <AutoVideo
                         className="mx-auto block h-auto w-full max-w-[300px]"
                         src={clip.src}
                         poster={clip.poster}
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        preload="metadata"
+                        label={`${project.name} — ${clip.label}`}
                       />
                     </div>
                     <figcaption className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">

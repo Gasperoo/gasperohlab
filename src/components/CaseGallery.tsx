@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
+import * as m from "framer-motion/m";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Shot } from "@/lib/work";
 
@@ -44,6 +45,7 @@ export function CaseGallery({ shots, phone = false }: Props) {
   }, [open, go]);
 
   const active = shots[index];
+  const multiple = shots.length > 1;
 
   return (
     <>
@@ -87,7 +89,7 @@ export function CaseGallery({ shots, phone = false }: Props) {
 
       <AnimatePresence>
         {open && active && (
-          <motion.div
+          <m.div
             className="fixed inset-0 z-[90] flex items-center justify-center p-4 sm:p-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -104,7 +106,7 @@ export function CaseGallery({ shots, phone = false }: Props) {
               type="button"
               onClick={() => setOpen(false)}
               aria-label="Close"
-              className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 text-muted backdrop-blur transition-colors hover:bg-white/10 hover:text-foreground"
+              className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background/70 text-muted backdrop-blur transition-colors hover:bg-white/10 hover:text-foreground"
             >
               <X className="h-5 w-5" />
             </button>
@@ -121,33 +123,50 @@ export function CaseGallery({ shots, phone = false }: Props) {
                 }`}
               >
                 <AnimatePresence initial={false} custom={dir} mode="popLayout">
-                  <motion.div
+                  <m.div
                     key={index}
-                    className="absolute inset-0"
+                    className={`absolute inset-0${
+                      multiple ? " cursor-grab active:cursor-grabbing" : ""
+                    }`}
                     custom={dir}
                     initial={{ opacity: 0, x: dir === 0 ? 0 : dir * 60 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: dir * -60 }}
                     transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                    // On a phone the arrow buttons are the only way through the
+                    // gallery, which is a poor fit for the gesture people
+                    // already expect from an image viewer.
+                    drag={multiple ? "x" : false}
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.2}
+                    dragMomentum={false}
+                    onDragEnd={(_, info) => {
+                      // Either a decisive flick or a deliberate long drag.
+                      const flicked = Math.abs(info.velocity.x) > 400;
+                      const dragged = Math.abs(info.offset.x) > 70;
+                      if (!flicked && !dragged) return;
+                      go(info.offset.x < 0 ? 1 : -1);
+                    }}
                   >
                     <Image
                       src={active.src}
                       alt={active.label}
                       fill
+                      draggable={false}
                       sizes="(max-width: 1024px) 100vw, 1024px"
                       className={phone ? "object-cover object-top" : "object-contain"}
                     />
-                  </motion.div>
+                  </m.div>
                 </AnimatePresence>
               </div>
 
               <div className="mt-4 flex items-center gap-4">
-                {shots.length > 1 && (
+                {multiple && (
                   <button
                     type="button"
                     onClick={() => go(-1)}
                     aria-label="Previous"
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 text-muted backdrop-blur transition-colors hover:bg-white/10 hover:text-foreground"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background/70 text-muted backdrop-blur transition-colors hover:bg-white/10 hover:text-foreground"
                   >
                     <ChevronLeft className="h-5 w-5" />
                   </button>
@@ -158,19 +177,19 @@ export function CaseGallery({ shots, phone = false }: Props) {
                     {index + 1}/{shots.length}
                   </span>
                 </p>
-                {shots.length > 1 && (
+                {multiple && (
                   <button
                     type="button"
                     onClick={() => go(1)}
                     aria-label="Next"
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 text-muted backdrop-blur transition-colors hover:bg-white/10 hover:text-foreground"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background/70 text-muted backdrop-blur transition-colors hover:bg-white/10 hover:text-foreground"
                   >
                     <ChevronRight className="h-5 w-5" />
                   </button>
                 )}
               </div>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>

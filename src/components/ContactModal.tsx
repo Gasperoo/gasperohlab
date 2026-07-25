@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
+import * as m from "framer-motion/m";
 import { Check, Loader2, X } from "lucide-react";
 
 type Props = {
@@ -87,7 +88,7 @@ export function ContactModal({ open, onClose }: Props) {
   return (
     <AnimatePresence>
       {open && (
-        <motion.div
+        <m.div
           className="fixed inset-0 z-[80] flex items-center justify-center p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -101,7 +102,7 @@ export function ContactModal({ open, onClose }: Props) {
             aria-hidden
           />
 
-          <motion.div
+          <m.div
             role="dialog"
             aria-modal="true"
             aria-label="Contact us"
@@ -243,8 +244,8 @@ export function ContactModal({ open, onClose }: Props) {
                 </form>
               </>
             )}
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

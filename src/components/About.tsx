@@ -61,7 +61,8 @@ export function About() {
                 src="/hero/hero-character-fire.png"
                 alt="GASPEROHLAB voxel character"
                 fill
-                priority
+                loading="eager"
+                fetchPriority="high"
                 sizes="(max-width: 1024px) 90vw, 40vw"
                 className="object-contain object-bottom p-6"
               />

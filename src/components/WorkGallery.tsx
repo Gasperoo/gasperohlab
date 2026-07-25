@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
+import * as m from "framer-motion/m";
 import { ProjectCard } from "./ProjectCard";
 import { projects, type Discipline } from "@/lib/work";
 
@@ -26,12 +27,12 @@ export function WorkGallery() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`relative rounded-md px-3.5 py-1.5 text-xs font-medium transition-colors ${
+            className={`relative isolate inline-flex min-h-11 items-center justify-center rounded-md px-4 text-xs font-medium transition-colors sm:min-h-0 sm:px-3.5 sm:py-1.5 ${
               filter === f ? "text-white" : "text-muted hover:text-foreground"
             }`}
           >
             {filter === f && (
-              <motion.span
+              <m.span
                 layoutId="work-filter"
                 className="absolute inset-0 -z-10 rounded-md bg-accent"
                 transition={{ type: "spring", stiffness: 350, damping: 30 }}
@@ -42,7 +43,7 @@ export function WorkGallery() {
         ))}
       </div>
 
-      <motion.div
+      <m.div
         layout
         className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
       >
@@ -51,7 +52,7 @@ export function WorkGallery() {
             <ProjectCard key={p.slug} project={p} />
           ))}
         </AnimatePresence>
-      </motion.div>
+      </m.div>
     </>
   );
 }

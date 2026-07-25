@@ -2,12 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  type Variants,
-} from "framer-motion";
+import { useScroll, useTransform, type Variants } from "framer-motion";
+import * as m from "framer-motion/m";
 import { ArrowRight } from "lucide-react";
 
 const container: Variants = {
@@ -40,6 +36,11 @@ export function Hero() {
   // Cursor spotlight: a soft radial mask follows the pointer and reveals the
   // "on fire" character layered over the calm base. Driven by a smoothed rAF
   // loop writing the CSS mask directly — cheap, no canvas re-serialization.
+  //
+  // The loop only runs while the hero is genuinely on screen and the tab is
+  // visible. Rewriting `mask-image` forces a repaint every frame, so left
+  // ungated it would keep doing that forever — including long after the reader
+  // has scrolled past — which is exactly the wrong trade on a phone.
   useEffect(() => {
     const section = ref.current;
     const stage = stageRef.current;
@@ -55,10 +56,19 @@ export function Hero() {
     const auto = window.matchMedia("(hover: none)").matches;
 
     const R = auto ? 150 : 190; // spotlight radius (px)
+    // The auto sweep is a slow drift, so half rate is indistinguishable from
+    // full rate and halves the repaints. Pointer tracking stays at full rate,
+    // where any lag behind the cursor is obvious.
+    const minFrameMs = auto ? 1000 / 30 : 0;
+    const OFFSCREEN_MASK =
+      "radial-gradient(circle 0px at -200px -200px, #000, transparent)";
+
     const target = { x: -9999, y: -9999 };
     const smooth = { x: -9999, y: -9999 };
     let active = auto; // auto mode is always "on"
     let raf = 0;
+    let running = false;
+    let lastFrame = 0;
     const start = performance.now();
 
     // Track over the whole section; express coordinates relative to the
@@ -78,6 +88,10 @@ export function Hero() {
     };
 
     const loop = (now: number) => {
+      raf = requestAnimationFrame(loop);
+      if (now - lastFrame < minFrameMs) return;
+      lastFrame = now;
+
       if (auto) {
         // A gentle figure-eight-ish sweep over the character stage.
         const rect = stage.getBoundingClientRect();
@@ -95,19 +109,54 @@ export function Hero() {
         ? `radial-gradient(circle ${R}px at ${smooth.x.toFixed(1)}px ${smooth.y.toFixed(
           1,
         )}px, #000 0%, #000 40%, rgba(0,0,0,0.55) 62%, rgba(0,0,0,0.18) 80%, transparent 92%)`
-        : "radial-gradient(circle 0px at -200px -200px, #000, transparent)";
+        : OFFSCREEN_MASK;
       fire.style.webkitMaskImage = mask;
       fire.style.maskImage = mask;
+    };
+
+    const startLoop = () => {
+      if (running) return;
+      running = true;
+      // Only hint the compositor while we're actually animating; a permanent
+      // will-change pins a layer for a layer that spends most of its life idle.
+      fire.style.willChange = "mask-image";
+      lastFrame = 0;
       raf = requestAnimationFrame(loop);
     };
+
+    const stopLoop = () => {
+      if (!running) return;
+      running = false;
+      cancelAnimationFrame(raf);
+      fire.style.willChange = "";
+    };
+
+    // Visible = the hero is in the viewport *and* the tab is in the foreground.
+    let onScreen = false;
+    const sync = () => {
+      if (onScreen && !document.hidden) startLoop();
+      else stopLoop();
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        sync();
+      },
+      { threshold: 0 }
+    );
+    observer.observe(section);
+    document.addEventListener("visibilitychange", sync);
 
     if (!auto) {
       section.addEventListener("pointermove", onMove);
       section.addEventListener("pointerleave", onLeave);
     }
-    raf = requestAnimationFrame(loop);
+
     return () => {
-      cancelAnimationFrame(raf);
+      stopLoop();
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", sync);
       section.removeEventListener("pointermove", onMove);
       section.removeEventListener("pointerleave", onLeave);
     };
@@ -121,7 +170,7 @@ export function Hero() {
     >
       {/* ---- Character with cursor-spotlight fire reveal (absolute so the
               wordmark can never squeeze it) ---- */}
-      <motion.div
+      <m.div
         style={{ opacity: contentOpacity }}
         initial={{ opacity: 0, scale: 1.08 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -146,7 +195,11 @@ export function Hero() {
             src="/hero/hero-character.png"
             alt="GasperohLab voxel character"
             fill
-            priority
+            // Loads immediately, but deliberately without `preload`: the LCP
+            // element here is the wordmark, and a head preload for what is a
+            // decorative backdrop would compete with the font it needs.
+            loading="eager"
+            fetchPriority="high"
             sizes="(max-width: 1024px) 90vw, 50vw"
             className="object-contain object-bottom lg:object-right-bottom"
           />
@@ -159,7 +212,6 @@ export function Hero() {
                 "radial-gradient(circle 0px at -200px -200px, #000, transparent)",
               WebkitMaskImage:
                 "radial-gradient(circle 0px at -200px -200px, #000, transparent)",
-              willChange: "mask-image",
             }}
           >
             <Image
@@ -171,11 +223,11 @@ export function Hero() {
             />
           </div>
         </div>
-      </motion.div>
+      </m.div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-6xl">
         {/* ---- Wordmark + copy ---- */}
-        <motion.div
+        <m.div
           style={{ y: contentY, opacity: contentOpacity }}
           variants={container}
           initial="hidden"
@@ -183,7 +235,7 @@ export function Hero() {
           className="flex w-full max-w-2xl flex-col items-center text-center lg:items-start lg:text-left"
         >
           {/* Status line — calm, factual */}
-          <motion.div
+          <m.div
             variants={item}
             className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-border bg-surface/60 px-3.5 py-1.5"
           >
@@ -194,33 +246,33 @@ export function Hero() {
             <span className="text-xs font-medium tracking-wide text-muted">
               Independent software lab
             </span>
-          </motion.div>
+          </m.div>
 
           {/* Wordmark — solid, tight, engineered */}
-          <motion.h1
+          <m.h1
             variants={item}
             className="font-display text-[13vw] font-bold leading-[0.9] tracking-[-0.04em] text-foreground sm:text-[7rem] lg:text-[5.5rem] xl:text-[6.25rem]"
           >
             GASPEROH<span className="text-accent">LAB</span>
-          </motion.h1>
+          </m.h1>
 
-          <motion.p
+          <m.p
             variants={item}
             className="mt-7 max-w-xl text-balance text-xl font-medium leading-snug text-foreground sm:text-2xl"
           >
             We design and ship games, applications and AI models.
-          </motion.p>
+          </m.p>
 
-          <motion.p
+          <m.p
             variants={item}
             className="mt-5 max-w-md text-pretty text-base leading-relaxed text-muted sm:text-lg"
           >
             An independent lab that takes hard problems from prototype to
             production — engineering software people actually use, not slide
             decks.
-          </motion.p>
+          </m.p>
 
-          <motion.div
+          <m.div
             variants={item}
             className="mt-10 flex w-full max-w-sm flex-col items-stretch gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:items-center"
           >
@@ -237,30 +289,30 @@ export function Hero() {
             >
               Start a project
             </a>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       </div>
 
       {/* Scroll hint */}
-      <motion.a
+      <m.a
         href="#disciplines"
         aria-label="Scroll to content"
         style={{ opacity: contentOpacity }}
         className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2"
       >
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.8 }}
           className="flex h-9 w-6 items-start justify-center rounded-full border border-border p-1.5"
         >
-          <motion.span
+          <m.span
             className="h-1.5 w-1.5 rounded-full bg-muted"
             animate={{ y: [0, 8, 0], opacity: [1, 0.3, 1] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
           />
-        </motion.div>
-      </motion.a>
+        </m.div>
+      </m.a>
     </section>
   );
 }

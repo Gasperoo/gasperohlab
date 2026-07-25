@@ -40,3 +40,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Working asset libraries — source captures, exports and social crops that the
+# site never serves. `media/` alone is several hundred MB, and a stray `git add`
+# would write all of it into history permanently. Only what lives under
+# `public/` is ever shipped.
+/media
+/instagram-posts

@@ -7,9 +7,9 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { CTA } from "@/components/CTA";
 import { Reveal } from "@/components/Reveal";
+import { JsonLd } from "@/components/JsonLd";
 import { notes, getNote, formatDate } from "@/lib/notes";
-
-const siteUrl = "https://gasperohlab.com";
+import { breadcrumbs, graph, orgRef, siteUrl } from "@/lib/schema";
 
 export function generateStaticParams() {
   return notes.map((n) => ({ slug: n.slug }));
@@ -54,25 +54,40 @@ export default async function NotePage({
 
   const others = notes.filter((n) => n.slug !== slug).slice(0, 2);
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: note.title,
-    description: note.excerpt,
-    datePublished: note.date,
-    author: { "@type": "Organization", name: "GASPEROHLAB" },
-    publisher: { "@type": "Organization", name: "GASPEROHLAB" },
-    mainEntityOfPage: `${siteUrl}/lab/${slug}`,
-  };
+  const jsonLd = graph(
+    {
+      "@type": "BlogPosting",
+      "@id": `${siteUrl}/lab/${slug}#post`,
+      headline: note.title,
+      description: note.excerpt,
+      datePublished: note.date,
+      dateModified: note.date,
+      articleSection: note.kind,
+      wordCount: note.body
+        .flatMap((b) =>
+          b.type === "list" ? b.items : "text" in b ? [b.text] : []
+        )
+        .join(" ")
+        .split(/\s+/).length,
+      timeRequired: `PT${note.readingTime}M`,
+      image: `${siteUrl}/lab/${slug}/opengraph-image`,
+      inLanguage: "en",
+      author: orgRef,
+      publisher: orgRef,
+      isPartOf: { "@id": `${siteUrl}/#website` },
+      mainEntityOfPage: `${siteUrl}/lab/${slug}`,
+    },
+    breadcrumbs([
+      { name: "Lab", path: "/lab" },
+      { name: note.title, path: `/lab/${slug}` },
+    ])
+  );
 
   return (
     <>
       <Background />
       <Nav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       <main
         id="main-content"
         tabIndex={-1}

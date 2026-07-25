@@ -27,7 +27,7 @@ export default function NotFound() {
             alt=""
             width={1152}
             height={900}
-            priority
+            loading="eager"
             className="w-[min(620px,92vw)] max-w-none select-none opacity-[0.09] [mask-image:radial-gradient(closest-side,black,transparent_72%)]"
           />
         </div>

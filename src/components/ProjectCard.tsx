@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion, type Variants } from "framer-motion";
+import { type Variants } from "framer-motion";
+import * as m from "framer-motion/m";
 import { ArrowUpRight } from "lucide-react";
 import { disciplineIcon, type Project, type Status } from "@/lib/work";
 
@@ -64,7 +65,7 @@ export function ProjectCard({ project }: { project: Project }) {
   };
 
   return (
-    <motion.div variants={cardVariants} layout exit="exit" className="h-full">
+    <m.div variants={cardVariants} layout exit="exit" className="h-full">
       <Link
         href={`/work/${project.slug}`}
         onMouseMove={onMove}
@@ -120,7 +121,7 @@ export function ProjectCard({ project }: { project: Project }) {
                 <span className="text-accent">{project.progress}%</span>
               </div>
               <div className="h-1 overflow-hidden rounded-full bg-white/[0.06]">
-                <motion.div
+                <m.div
                   className="h-full rounded-full bg-accent"
                   initial={{ width: 0 }}
                   whileInView={{ width: `${project.progress}%` }}
@@ -132,6 +133,6 @@ export function ProjectCard({ project }: { project: Project }) {
           )}
         </div>
       </Link>
-    </motion.div>
+    </m.div>
   );
 }

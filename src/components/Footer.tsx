@@ -73,7 +73,7 @@ export function Footer() {
             <Link
               key={label}
               href={href}
-              className="rounded-lg border border-border px-3.5 py-1.5 text-sm text-muted transition-colors hover:border-border-strong hover:text-foreground"
+              className="inline-flex min-h-11 items-center rounded-lg border border-border px-3.5 text-sm text-muted transition-colors hover:border-border-strong hover:text-foreground sm:min-h-0 sm:py-1.5"
             >
               {label}
             </Link>
@@ -88,7 +88,7 @@ export function Footer() {
                 rel="noreferrer"
                 aria-label={label}
                 title={label}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted transition-colors hover:border-border-strong hover:text-foreground"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-border text-muted transition-colors hover:border-border-strong hover:text-foreground"
               >
                 <Icon className="h-4 w-4" />
               </a>
@@ -97,7 +97,7 @@ export function Footer() {
                 key={label}
                 aria-label={`${label} — coming soon`}
                 title={`${label} — coming soon`}
-                className="flex h-9 w-9 cursor-default items-center justify-center rounded-full border border-border text-faint"
+                className="flex h-11 w-11 cursor-default items-center justify-center rounded-full border border-border text-faint"
               >
                 <Icon className="h-4 w-4" />
               </span>

@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
+import { AnimatePresence, useScroll, useSpring } from "framer-motion";
+import * as m from "framer-motion/m";
 import { ArrowUpRight, Menu, Rocket, X } from "lucide-react";
 
 // Section ids live on the home page; prefix with `/` so the links also work
@@ -11,6 +12,9 @@ const links = [
   { label: "Work", id: "projects", href: "/work" },
   { label: "Ethos", id: "ethos", href: "/ethos" },
   { label: "Lab", id: "lab", href: "/lab" },
+  // No matching home-page section, so `id` never lights up — it's a page in its
+  // own right, previously reachable only from the footer.
+  { label: "About", id: "about", href: "/about" },
 ];
 
 function Logo({ onClick }: { onClick?: () => void }) {
@@ -89,12 +93,12 @@ export function Nav() {
   return (
     <>
       {/* Scroll progress bar */}
-      <motion.div
+      <m.div
         className="fixed inset-x-0 top-0 z-[60] h-0.5 origin-left bg-accent"
         style={{ scaleX: progress }}
       />
 
-      <motion.header
+      <m.header
         initial={{ y: -24, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -116,12 +120,12 @@ export function Nav() {
                 <a
                   key={l.href}
                   href={l.href}
-                  className={`relative rounded-lg px-3.5 py-1.5 text-sm transition-colors ${
+                  className={`relative isolate rounded-lg px-3.5 py-1.5 text-sm transition-colors ${
                     isActive ? "text-foreground" : "text-muted hover:text-foreground"
                   }`}
                 >
                   {isActive && (
-                    <motion.span
+                    <m.span
                       layoutId="nav-active"
                       className="absolute inset-0 -z-10 rounded-lg bg-white/[0.06] ring-1 ring-white/10"
                       transition={{ type: "spring", stiffness: 350, damping: 30 }}
@@ -148,11 +152,11 @@ export function Nav() {
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-foreground transition-colors hover:bg-white/5 active:scale-95 md:hidden"
+              className="flex h-11 w-11 items-center justify-center rounded-lg border border-border text-foreground transition-colors hover:bg-white/5 active:scale-95 md:hidden"
             >
               <AnimatePresence mode="wait" initial={false}>
                 {menuOpen ? (
-                  <motion.span
+                  <m.span
                     key="close"
                     initial={{ rotate: -90, opacity: 0 }}
                     animate={{ rotate: 0, opacity: 1 }}
@@ -160,9 +164,9 @@ export function Nav() {
                     transition={{ duration: 0.15 }}
                   >
                     <X className="h-5 w-5" />
-                  </motion.span>
+                  </m.span>
                 ) : (
-                  <motion.span
+                  <m.span
                     key="open"
                     initial={{ rotate: 90, opacity: 0 }}
                     animate={{ rotate: 0, opacity: 1 }}
@@ -170,18 +174,18 @@ export function Nav() {
                     transition={{ duration: 0.15 }}
                   >
                     <Menu className="h-5 w-5" />
-                  </motion.span>
+                  </m.span>
                 )}
               </AnimatePresence>
             </button>
           </div>
         </nav>
-      </motion.header>
+      </m.header>
 
       {/* Mobile menu overlay + panel */}
       <AnimatePresence>
         {menuOpen && (
-          <motion.div
+          <m.div
             className="fixed inset-0 z-40 md:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -194,7 +198,7 @@ export function Nav() {
               aria-hidden
             />
 
-            <motion.div
+            <m.div
               id="mobile-menu"
               initial={{ opacity: 0, y: -12, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -206,7 +210,7 @@ export function Nav() {
                 {links.map((l, i) => {
                   const isActive = active === l.id;
                   return (
-                    <motion.a
+                    <m.a
                       key={l.href}
                       href={l.href}
                       onClick={() => setMenuOpen(false)}
@@ -221,12 +225,12 @@ export function Nav() {
                     >
                       {l.label}
                       <ArrowUpRight className="h-4 w-4 opacity-60" />
-                    </motion.a>
+                    </m.a>
                   );
                 })}
               </nav>
 
-              <motion.a
+              <m.a
                 href="#contact"
                 onClick={() => setMenuOpen(false)}
                 initial={{ opacity: 0, y: 8 }}
@@ -235,9 +239,9 @@ export function Nav() {
                 className="mt-2 flex items-center justify-center rounded-xl bg-accent px-4 py-3.5 text-sm font-semibold text-white transition-colors active:scale-95"
               >
                 Get in touch
-              </motion.a>
-            </motion.div>
-          </motion.div>
+              </m.a>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>
