@@ -47,3 +47,7 @@ next-env.d.ts
 # `public/` is ever shipped.
 /media
 /instagram-posts
+
+# Python bytecode from the brand-asset scripts
+__pycache__/
+*.pyc

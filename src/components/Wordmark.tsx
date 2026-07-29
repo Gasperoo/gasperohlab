@@ -1,14 +1,20 @@
 import Link from "next/link";
-import { Rocket } from "lucide-react";
+import { Logo } from "./Logo";
 
 /**
- * The one piece of the old design that stays: the rocket mark and the
- * GASPEROHLAB wordmark with LAB in accent.
+ * The brand lockup: the circuit-"G" monogram beside the GASPEROHLAB wordmark,
+ * with LAB in accent.
  *
- * Two of the site's four permitted uses of colour live here. Everything about
- * the mark's *setting* is new — the tile is squared off rather than pill-like,
- * the wordmark is medium weight instead of bold, and the letterspacing is
- * opened up so it reads as an identity rather than a headline.
+ * The mark replaces the previous rocket glyph and is now drawn in the accent
+ * itself rather than reversed out of an accent tile. Losing the tile matters —
+ * a filled square was the loudest object in a header built entirely from
+ * hairlines, and the monogram is distinctive enough not to need a badge around
+ * it.
+ *
+ * It is set taller than the rocket was. The mark is fine line art at roughly a
+ * 3% stroke-to-width ratio, so below about 24px the strokes stop resolving; the
+ * app-icon tiles solve the same problem the other way, by reversing the mark
+ * out of a solid field.
  */
 export function Wordmark({
   size = "sm",
@@ -24,16 +30,11 @@ export function Wordmark({
 
   const inner = (
     <>
-      <span
-        className={`flex items-center justify-center rounded-[5px] bg-accent text-white ${
-          lg ? "h-8 w-8" : "h-6 w-6"
+      <Logo
+        className={`w-auto shrink-0 text-accent transition-opacity duration-300 group-hover:opacity-80 ${
+          lg ? "h-9" : "h-7"
         }`}
-      >
-        <Rocket
-          className={`${lg ? "h-4 w-4" : "h-3.5 w-3.5"} transition-transform duration-500 group-hover:-translate-y-px group-hover:translate-x-px`}
-          strokeWidth={2}
-        />
-      </span>
+      />
       <span
         className={`font-medium tracking-[0.14em] ${lg ? "text-base" : "text-[0.8125rem]"}`}
       >

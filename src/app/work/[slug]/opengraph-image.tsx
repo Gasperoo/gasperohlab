@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { Logo } from "@/components/Logo";
 import { getProject, caseStudySlugs } from "@/lib/work";
 
 export const alt = "GASPEROHLAB case study";
@@ -35,15 +36,7 @@ export default async function OgImage({
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <div
-            style={{
-              display: "flex",
-              width: 40,
-              height: 40,
-              borderRadius: 10,
-              background: "#c4302a",
-            }}
-          />
+          <Logo width={34} height={44} fill="#c4302a" />
           <div style={{ display: "flex", fontSize: 26, fontWeight: 500, letterSpacing: 2 }}>
             <span>GASPEROH</span>
             <span style={{ color: "#c4302a" }}>LAB</span>

@@ -99,7 +99,19 @@ const jsonLd = {
       name: "GASPEROHLAB",
       legalName: "GASPEROHLAB Inc.",
       url: siteUrl,
-      logo: `${siteUrl}/icon.svg`,
+      // Google wants a fetchable raster here, not an SVG, and applies a 112px
+      // minimum — this is the square 512px tile. Declared as an ImageObject
+      // with explicit dimensions so it can be validated without a fetch.
+      logo: {
+        "@type": "ImageObject",
+        "@id": `${siteUrl}/#logo`,
+        url: `${siteUrl}/icons/logo-512.png`,
+        contentUrl: `${siteUrl}/icons/logo-512.png`,
+        width: 512,
+        height: 512,
+        caption: "GASPEROHLAB",
+      },
+      image: { "@id": `${siteUrl}/#logo` },
       description:
         "A collective engineering games, apps, AI models and programs.",
       sameAs: ["https://www.instagram.com/gasperohlab/"],
