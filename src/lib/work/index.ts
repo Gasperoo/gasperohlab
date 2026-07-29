@@ -1,13 +1,9 @@
 import type { Project, Discipline } from "./types";
 
 import { maraponeai } from "./projects/maraponeai";
-import { maraponeConstruction } from "./projects/marapone-construction";
 import { blueprintAuditor } from "./projects/blueprint-auditor";
 import { aiEstimator } from "./projects/ai-estimator";
 import { scopeguard } from "./projects/scopeguard";
-import { maraponeLogistics } from "./projects/marapone-logistics";
-import { maraponeConstructionApp } from "./projects/marapone-construction-app";
-import { maraponeLogisticsApp } from "./projects/marapone-logistics-app";
 import { yugidex } from "./projects/yugidex";
 import { nexusmind } from "./projects/nexusmind";
 import { orbit } from "./projects/orbit";
@@ -23,18 +19,23 @@ export * from "./types";
  * module under `projects/`, and this list is the only place their order is
  * decided.
  *
- * Order is editorial, not chronological: the platform first, then the suites
- * built on it, then the tools, then the work still in the lab.
+ * Order is editorial, not chronological: the platform first, then the tools
+ * built on it, then the work still in the lab.
+ *
+ * Four entries used to sit here that no longer do. The Construction and
+ * Logistics suites are now chapters inside the MaraponeAI case study, and the
+ * two mobile companions are `companion` blocks inside those chapters — each was
+ * restating the platform's argument at less depth, and the construction page in
+ * particular was showing the Blueprint Auditor's screens as its own. What's left
+ * is one system page and the three tools that go deep enough to be worth their
+ * own read. Both retired suite URLs redirect to their chapter anchor; see
+ * `redirects` in next.config.ts.
  */
 export const projects: Project[] = [
   maraponeai,
-  maraponeConstruction,
   blueprintAuditor,
   aiEstimator,
   scopeguard,
-  maraponeLogistics,
-  maraponeConstructionApp,
-  maraponeLogisticsApp,
   yugidex,
   nexusmind,
   orbit,
@@ -73,12 +74,23 @@ export function projectNeighbours(slug: string) {
  * related to what you'd just read only by coincidence. Now it prefers the same
  * discipline, then falls back to filling the remaining slots from the rest of
  * the archive so the section never renders half-empty.
+ *
+ * `exclude` keeps the footer from re-offering links the page already made: the
+ * MaraponeAI chapters link the three construction tools directly, and without
+ * this the "more work" list underneath was the identical three rows.
  */
-export function relatedProjects(slug: string, limit = 3): Project[] {
+export function relatedProjects(
+  slug: string,
+  limit = 3,
+  exclude: Iterable<string> = []
+): Project[] {
   const current = getProject(slug);
   if (!current) return [];
 
-  const candidates = projects.filter((p) => p.slug !== slug && p.caseStudy);
+  const skip = new Set(exclude);
+  const candidates = projects.filter(
+    (p) => p.slug !== slug && p.caseStudy && !skip.has(p.slug)
+  );
   const sameDiscipline = candidates.filter(
     (p) => p.discipline === current.discipline
   );

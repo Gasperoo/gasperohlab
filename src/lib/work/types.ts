@@ -22,6 +22,62 @@ export type Metric = { value: string; label: string };
  */
 export type Partner = { name: string; href?: string; note: string };
 
+/**
+ * A mobile companion that ships alongside a product rather than as work of its
+ * own.
+ *
+ * The two Marapone companion apps each had a case study for a while, which was
+ * hard to justify: the story was "the suite, on a phone" told twice, in an
+ * archive already eight Marapone entries deep. Folding them in puts the screens
+ * and the on-site argument inside the product they belong to, where the reader
+ * already has the context to care.
+ */
+export type Companion = {
+  heading: string;
+  body: string[];
+  /** Platform and build state, e.g. "iOS + Android · in production, ~70%". */
+  status?: string;
+  /** Phone captures, shown in the portrait-frame gallery. */
+  shots?: Shot[];
+};
+
+/**
+ * A product built on a platform, told inside the platform's case study.
+ *
+ * The Construction and Logistics suites had case studies of their own, and both
+ * were largely "MaraponeAI, applied to an industry": the same partner note, the
+ * same ownership argument, the same on-prem guarantee, restated a third and
+ * fourth time. Worse, the construction page overlapped the Blueprint Auditor's
+ * so heavily that its gallery was literally that tool's screens.
+ *
+ * A chapter carries everything a suite needs to stand on its own — its own
+ * heading, prose, video, figures, gallery, integrations, companion app and live
+ * link — as a self-contained block under one platform argument. The deep tool
+ * write-ups stay separate; `tools` links out to them by slug rather than
+ * restating them, because a chapter is an orientation and a case study is a
+ * proof, and collapsing the two would lose the proof.
+ */
+export type Chapter = {
+  /** Anchor id — also the fragment the old suite URL redirects to. */
+  id: string;
+  name: string;
+  /** Serves as the chapter's heading. */
+  tagline: string;
+  body: string[];
+  heroVideo?: string;
+  heroImage?: string;
+  metrics?: Metric[];
+  gallery?: Shot[];
+  integrations?: { name: string; src: string }[];
+  /** A mobile companion shipping alongside this suite; see Companion. */
+  companion?: Companion;
+  /** Slugs of the case studies that go deeper on tools inside this suite. */
+  tools?: string[];
+  liveUrl?: string;
+  liveLabel?: string;
+  stack?: string[];
+};
+
 export type CaseStudy = {
   /** One-line hero subtitle for the case page. */
   tagline: string;
@@ -43,6 +99,8 @@ export type CaseStudy = {
   gallery?: Shot[];
   /** Portrait phone-frame gallery instead of landscape. */
   galleryPhone?: boolean;
+  /** Products built on this one, each told as a self-contained block; see Chapter. */
+  chapters?: Chapter[];
   integrations?: { name: string; src: string }[];
   /** Engine/platform the project is built on, shown as a logo + name block. */
   engine?: { name: string; src: string; note?: string };

@@ -32,6 +32,13 @@ export const log: LogEntry[] = [
   {
     date: "2026-07-29",
     kind: "Changed",
+    title: "Six Marapone entries become four",
+    body: "The two suites and their two mobile companions had case studies of their own, each retelling the platform's argument at less depth than the platform did. All four are now chapters and companion blocks inside the MaraponeAI case study; the Blueprint Auditor, AI Estimator and ScopeGuard write-ups stay where they are, because those go deep enough to be worth the click.",
+    href: "/work/maraponeai",
+  },
+  {
+    date: "2026-07-29",
+    kind: "Changed",
     title: "The site gets a second face",
     body: "Every colour on the site moved behind a token, which made a dark theme a palette rather than a rewrite. Picked up a command palette, a durable waitlist and a shipping log — the page you're reading — on the way through.",
   },
@@ -39,8 +46,7 @@ export const log: LogEntry[] = [
     date: "2026-07-29",
     kind: "Cut",
     title: "The voxel character, and the fire that followed the cursor",
-    body: "The landing page had a character with an on-fire layer revealed by a cursor-tracked mask on a requestAnimationFrame loop. It was the nicest thing on the site and the least honest — a lab that sells restraint shouldn't open with its loudest trick. The write-up survives it.",
-    href: "/lab/cursor-fire-hero",
+    body: "The landing page had a character with an on-fire layer revealed by a cursor-tracked mask. It was cheap to run and people liked it, but it was the loudest thing on a site whose argument is restraint, and it was the first thing every visitor met.",
   },
   {
     date: "2026-07-29",
@@ -114,7 +120,7 @@ export const log: LogEntry[] = [
     kind: "Shipped",
     title: "Marapone Construction & Logistics Suites",
     body: "The two industry suites built on MaraponeAI, deployed on customers' own infrastructure.",
-    href: "/work/marapone-construction",
+    href: "/work/maraponeai#construction",
   },
   {
     date: "2025",

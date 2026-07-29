@@ -82,6 +82,36 @@ const nextConfig: NextConfig = {
     localPatterns: [{ pathname: "/**", search: "" }],
   },
 
+  // The Construction and Logistics suites were case studies of their own before
+  // they became chapters of the MaraponeAI one. Both URLs were in the sitemap
+  // and linked from the shipping log, so they redirect to their chapter anchor
+  // rather than 404 — permanently, because the move is not provisional.
+  async redirects() {
+    return [
+      {
+        source: "/work/marapone-construction",
+        destination: "/work/maraponeai#construction",
+        permanent: true,
+      },
+      {
+        source: "/work/marapone-logistics",
+        destination: "/work/maraponeai#logistics",
+        permanent: true,
+      },
+      // The two companion apps folded into those same chapters a step earlier.
+      {
+        source: "/work/marapone-construction-app",
+        destination: "/work/maraponeai#construction",
+        permanent: true,
+      },
+      {
+        source: "/work/marapone-logistics-app",
+        destination: "/work/maraponeai#logistics",
+        permanent: true,
+      },
+    ];
+  },
+
   async headers() {
     return [
       {

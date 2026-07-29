@@ -10,6 +10,7 @@ import { Footer } from "@/components/Footer";
 import { CTA } from "@/components/CTA";
 import { Reveal } from "@/components/Reveal";
 import { CaseGallery } from "@/components/CaseGallery";
+import { CaseChapter } from "@/components/CaseChapter";
 import { AutoVideo } from "@/components/AutoVideo";
 import { BetaWaitlist } from "@/components/BetaWaitlist";
 import { JsonLd } from "@/components/JsonLd";
@@ -110,8 +111,10 @@ export default async function CaseStudyPage({
   );
 
   // Other case studies worth reading after this one — same discipline first,
-  // rather than whichever three happen to sit at the top of the archive.
-  const more = relatedProjects(slug);
+  // rather than whichever three happen to sit at the top of the archive, and
+  // never repeating a tool the chapters above already linked.
+  const linkedInChapters = cs.chapters?.flatMap((c) => c.tools ?? []) ?? [];
+  const more = relatedProjects(slug, 3, linkedInChapters);
   const { previous, next } = projectNeighbours(slug);
 
   const meta = [
@@ -427,6 +430,47 @@ export default async function CaseStudyPage({
               )}
             </Reveal>
           </section>
+        )}
+
+        {/* ---- Chapters: the products built on this one ----
+
+            The index comes first and is deliberately plain: a reader who landed
+            here from a redirected suite URL needs to see, in one screen, that
+            the suite they asked for is on this page and where. Without it the
+            chapters are just more scroll. */}
+        {cs.chapters && cs.chapters.length > 0 && (
+          <>
+            <section className={`${WRAP} pt-20`}>
+              <Reveal className="border-t border-border pt-10">
+                <p className="eyebrow">Built on the platform</p>
+                <h2 className="t-h2 mt-5 text-[1.75rem] text-balance sm:text-[2rem]">
+                  Two industry suites, one engine.
+                </h2>
+                <nav aria-label="Suites on this page" className="mt-8 border-t border-border">
+                  {cs.chapters.map((chapter, i) => (
+                    <a
+                      key={chapter.id}
+                      href={`#${chapter.id}`}
+                      className="group row-hover grid gap-1.5 border-b border-border py-5 sm:grid-cols-[15rem_1fr] sm:items-baseline sm:gap-10"
+                    >
+                      <span className="eyebrow">
+                        {String(i + 1).padStart(2, "0")}
+                        <span className="mx-2 opacity-40">/</span>
+                        {chapter.name}
+                      </span>
+                      <span className="t-body text-pretty text-[0.9375rem] transition-colors group-hover:text-foreground">
+                        {chapter.tagline}
+                      </span>
+                    </a>
+                  ))}
+                </nav>
+              </Reveal>
+            </section>
+
+            {cs.chapters.map((chapter, i) => (
+              <CaseChapter key={chapter.id} chapter={chapter} index={i + 1} />
+            ))}
+          </>
         )}
 
         {/* ---- Beta waitlist ---- */}
