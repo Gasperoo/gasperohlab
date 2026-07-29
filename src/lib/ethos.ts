@@ -1,4 +1,5 @@
 /** Shared source for the ethos — used by the home-page section and /ethos. */
+import { projects } from "./work";
 
 export type Principle = { title: string; body: string };
 
@@ -25,13 +26,27 @@ export const principles: Principle[] = [
   },
 ];
 
-/** Figures render as written. The count/suffix split existed only to feed the
- *  scroll-triggered <CountUp>, which no longer exists. */
+/**
+ * Figures render as written — the count/suffix split existed only to feed the
+ * scroll-triggered <CountUp>, which no longer exists.
+ *
+ * The first two are counted from the archive rather than typed. "3 products in
+ * production" was written when there were three; there are now eleven, and it
+ * had been quietly wrong for months while sitting two sections below a list
+ * that contradicted it. Anything derivable from the work should be derived
+ * from the work.
+ */
 export type Stat = { value: string; label: string };
 
 export const stats: Stat[] = [
-  { value: "3", label: "Products in production" },
-  { value: "4", label: "Disciplines under one roof" },
+  {
+    value: String(projects.filter((p) => p.status === "Released").length),
+    label: "Products in production",
+  },
+  {
+    value: String(new Set(projects.map((p) => p.discipline)).size),
+    label: "Disciplines with work behind them",
+  },
   { value: "2025", label: "Founded" },
   { value: "100%", label: "Independently owned" },
 ];

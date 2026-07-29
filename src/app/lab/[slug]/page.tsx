@@ -1,14 +1,27 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { Background } from "@/components/Background";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { CTA } from "@/components/CTA";
 import { Reveal } from "@/components/Reveal";
 import { JsonLd } from "@/components/JsonLd";
-import { notes, getNote, formatDate } from "@/lib/notes";
+import { ReadingProgress } from "@/components/ReadingProgress";
+import {
+  notes,
+  getNote,
+  formatDate,
+  author,
+  headingId,
+  noteNeighbours,
+  relatedNotes,
+  tableOfContents,
+  type Note,
+  type NoteBlock,
+} from "@/lib/notes";
 import { breadcrumbs, graph, orgRef, siteUrl } from "@/lib/schema";
 
 export function generateStaticParams() {
@@ -27,6 +40,7 @@ export async function generateMetadata({
   return {
     title: note.title,
     description: note.excerpt,
+    keywords: note.tags,
     alternates: { canonical: `/lab/${slug}` },
     openGraph: {
       type: "article",
@@ -34,6 +48,8 @@ export async function generateMetadata({
       title: `${note.title} · GASPEROHLAB`,
       description: note.excerpt,
       publishedTime: note.date,
+      authors: [author],
+      tags: note.tags,
     },
     twitter: {
       card: "summary_large_image",
@@ -52,7 +68,9 @@ export default async function NotePage({
   const note = getNote(slug);
   if (!note) notFound();
 
-  const others = notes.filter((n) => n.slug !== slug).slice(0, 2);
+  const toc = tableOfContents(note);
+  const related = relatedNotes(slug);
+  const { newer, older } = noteNeighbours(slug);
 
   const jsonLd = graph(
     {
@@ -63,12 +81,19 @@ export default async function NotePage({
       datePublished: note.date,
       dateModified: note.date,
       articleSection: note.kind,
+      ...(note.tags?.length ? { keywords: note.tags.join(", ") } : {}),
+      // Code listings are excluded — a word count that includes source is a
+      // reading-time estimate nobody can act on.
       wordCount: note.body
-        .flatMap((b) =>
-          b.type === "list" ? b.items : "text" in b ? [b.text] : []
-        )
+        .flatMap((b) => {
+          if (b.type === "list") return b.items;
+          if (b.type === "code") return [];
+          if (b.type === "figure") return [b.caption ?? ""];
+          return [b.text];
+        })
         .join(" ")
-        .split(/\s+/).length,
+        .split(/\s+/)
+        .filter(Boolean).length,
       timeRequired: `PT${note.readingTime}M`,
       image: `${siteUrl}/lab/${slug}/opengraph-image`,
       inLanguage: "en",
@@ -87,6 +112,7 @@ export default async function NotePage({
     <>
       <Background />
       <Nav />
+      <ReadingProgress />
       <JsonLd data={jsonLd} />
       <main
         id="main-content"
@@ -114,7 +140,33 @@ export default async function NotePage({
             </p>
             <h1 className="t-h1 mt-6 text-balance">{note.title}</h1>
             <p className="t-lede mt-6 text-pretty">{note.excerpt}</p>
+            <p className="mt-7 text-sm text-muted">By {author}</p>
           </Reveal>
+
+          {/* Contents. A ruled block rather than a floating sidebar — these
+              posts are short enough that a sticky rail would be furniture, but
+              long enough that a reader deciding whether to commit wants to see
+              the shape first. */}
+          {toc.length > 1 && (
+            <Reveal className="mt-10 border-y border-border py-6">
+              <p className="eyebrow">Contents</p>
+              <ol className="mt-4 flex flex-col gap-2.5">
+                {toc.map((item, i) => (
+                  <li key={item.id} className="flex gap-4">
+                    <span className="eyebrow shrink-0 pt-1">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <a
+                      href={`#${item.id}`}
+                      className="text-pretty text-sm text-muted transition-colors hover:text-foreground"
+                    >
+                      {item.text}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </Reveal>
+          )}
 
           <div className="mt-12 border-t border-border pt-10">
             {note.body.map((block, i) => (
@@ -123,17 +175,45 @@ export default async function NotePage({
               </Reveal>
             ))}
           </div>
+
+          {note.tags && note.tags.length > 0 && (
+            <Reveal className="mt-14 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-border pt-8">
+              <span className="eyebrow">Filed under</span>
+              {note.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-md border border-border px-2.5 py-1 text-xs text-muted"
+                >
+                  {tag}
+                </span>
+              ))}
+            </Reveal>
+          )}
         </article>
 
-        {others.length > 0 && (
+        {/* Sequential neighbours. Position in the archive is a real
+            relationship; "the first two other notes" was not. */}
+        {(newer || older) && (
+          <nav
+            aria-label="More notes"
+            className="mx-auto w-full max-w-2xl px-5 pb-4 sm:px-8"
+          >
+            <div className="grid border-y border-border sm:grid-cols-2">
+              {older ? <NeighbourLink note={older} direction="older" /> : <span />}
+              {newer && <NeighbourLink note={newer} direction="newer" />}
+            </div>
+          </nav>
+        )}
+
+        {related.length > 0 && (
           <section className="mx-auto w-full max-w-2xl px-5 pb-8 sm:px-8">
-            <p className="eyebrow border-t border-border pt-10">Keep reading</p>
+            <p className="eyebrow mt-10">Related</p>
             <div className="mt-6 border-t border-border">
-              {others.map((n) => (
+              {related.map((n) => (
                 <Link
                   key={n.slug}
                   href={`/lab/${n.slug}`}
-                  className="group flex items-baseline justify-between gap-6 border-b border-border py-5 transition-colors duration-300 hover:bg-black/[0.022]"
+                  className="group row-hover flex items-baseline justify-between gap-6 border-b border-border py-5"
                 >
                   <span className="t-h3 flex items-start gap-1.5">
                     {n.title}
@@ -153,11 +233,44 @@ export default async function NotePage({
   );
 }
 
-function NoteBlockView({ block }: { block: import("@/lib/notes").NoteBlock }) {
+function NeighbourLink({
+  note,
+  direction,
+}: {
+  note: Note;
+  direction: "older" | "newer";
+}) {
+  const older = direction === "older";
+  return (
+    <Link
+      href={`/lab/${note.slug}`}
+      rel={older ? "prev" : "next"}
+      className={`group row-hover flex flex-col gap-2 py-6 ${
+        older ? "sm:pr-6" : "sm:items-end sm:border-l sm:border-border sm:pl-6"
+      }`}
+    >
+      <span className="eyebrow flex items-center gap-2">
+        {older && <ArrowLeft className="h-3 w-3" />}
+        {older ? "Older" : "Newer"}
+        {!older && <ArrowRight className="h-3 w-3" />}
+      </span>
+      <span className={`t-h3 text-pretty ${older ? "" : "sm:text-right"}`}>
+        {note.title}
+      </span>
+    </Link>
+  );
+}
+
+function NoteBlockView({ block }: { block: NoteBlock }) {
   switch (block.type) {
     case "h2":
       return (
-        <h2 className="t-h3 mt-12 text-xl sm:text-2xl">{block.text}</h2>
+        <h2
+          id={headingId(block.text)}
+          className="t-h3 mt-12 scroll-mt-28 text-xl sm:text-2xl"
+        >
+          {block.text}
+        </h2>
       );
     case "quote":
       return (
@@ -178,9 +291,49 @@ function NoteBlockView({ block }: { block: import("@/lib/notes").NoteBlock }) {
           ))}
         </ul>
       );
-    default:
+    case "code":
       return (
-        <p className="t-body mt-6 text-pretty">{block.text}</p>
+        <figure className="mt-8">
+          <pre className="code-block">
+            <code>{block.code}</code>
+          </pre>
+          {/* The language sits in the caption rather than as a floating badge
+              over the corner of the block — a label is information, a badge is
+              a sticker. */}
+          {(block.caption || block.lang) && (
+            <figcaption className="eyebrow mt-3 flex flex-wrap items-center gap-2">
+              {block.lang && <span>{block.lang}</span>}
+              {block.caption && block.lang && <span className="opacity-40">/</span>}
+              {block.caption && (
+                <span className="normal-case tracking-normal">
+                  {block.caption}
+                </span>
+              )}
+            </figcaption>
+          )}
+        </figure>
       );
+    case "figure":
+      return (
+        <figure className="mt-8">
+          <div className="overflow-hidden rounded-lg border border-border bg-background-elevated">
+            <Image
+              src={block.src}
+              alt={block.alt}
+              width={1200}
+              height={800}
+              sizes="(max-width: 768px) 100vw, 42rem"
+              className="h-auto w-full object-contain"
+            />
+          </div>
+          {block.caption && (
+            <figcaption className="eyebrow mt-3 normal-case tracking-normal">
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>
+      );
+    default:
+      return <p className="t-body mt-6 text-pretty">{block.text}</p>;
   }
 }

@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { isRateLimited, record, hasDurableStore } from "@/lib/store";
 
 // This handler processes untrusted user input, so it must run per-request.
 export const runtime = "nodejs";
@@ -9,26 +10,12 @@ const TO_EMAIL = process.env.CONTACT_TO_EMAIL || "contact@gasperohlab.com";
 const FROM_EMAIL =
   process.env.CONTACT_FROM_EMAIL || "GASPEROHLAB <noreply@gasperohlab.com>";
 
-// --- Simple in-memory, per-IP rate limiter -------------------------------
-// Best-effort within a warm serverless instance. For strict distributed
-// limits across all Vercel regions, back this with Upstash/Vercel KV.
+// --- Rate limiting --------------------------------------------------------
+// Shared with the waitlist handler and backed by Redis when it's configured;
+// see lib/store.ts. The in-memory fallback there is the behaviour this file
+// used to implement inline, which was really "five per serverless instance".
 const RATE_LIMIT = 5; // submissions
-const RATE_WINDOW_MS = 10 * 60 * 1000; // per 10 minutes
-const hits = new Map<string, number[]>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(ip) || []).filter((t) => now - t < RATE_WINDOW_MS);
-  recent.push(now);
-  hits.set(ip, recent);
-  // Opportunistic cleanup so the map can't grow unbounded.
-  if (hits.size > 5000) {
-    for (const [key, times] of hits) {
-      if (times.every((t) => now - t >= RATE_WINDOW_MS)) hits.delete(key);
-    }
-  }
-  return recent.length > RATE_LIMIT;
-}
+const RATE_WINDOW_SECONDS = 10 * 60;
 
 function clientIp(req: Request): string {
   const fwd = req.headers.get("x-forwarded-for");
@@ -88,7 +75,7 @@ export async function POST(req: Request) {
   }
 
   // 3) Rate limit per IP.
-  if (isRateLimited(clientIp(req))) {
+  if (await isRateLimited(`rl:waitlist:${clientIp(req)}`, RATE_LIMIT, RATE_WINDOW_SECONDS)) {
     return Response.json(
       { error: "Too many signups. Please try again later." },
       { status: 429 }
@@ -113,16 +100,46 @@ export async function POST(req: Request) {
     );
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.error("RESEND_API_KEY is not set — cannot record waitlist signup.");
+  // 5) Persist before sending anything.
+  //
+  //    This is the whole point of the store. A signup used to exist only as an
+  //    email: if Resend was down, or the message landed in the wrong folder,
+  //    the address was gone — and the person who typed it had already been
+  //    told they were on the list. Writing it down first means the email is a
+  //    notification rather than the record.
+  const stored = await record("waitlist", {
+    project,
+    name,
+    email,
+    platform,
+    note,
+  });
+
+  if (!stored && hasDurableStore) {
+    // Configured but unreachable. Better to ask them to try again than to
+    // accept a signup we know we've lost.
+    console.error("Waitlist store is configured but the write failed.");
     return Response.json(
-      { error: "Signups aren't configured yet. Please try again later." },
-      { status: 503 }
+      { error: "Could not add you to the waitlist. Please try again." },
+      { status: 502 }
     );
   }
 
-  // 5) Build a safe email. Recipient is fixed; the visitor's address only
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    // With a durable store the signup is safe even with no mail configured, so
+    // this is only fatal when the email *is* the only record.
+    console.error("RESEND_API_KEY is not set — cannot notify about signup.");
+    if (!stored) {
+      return Response.json(
+        { error: "Signups aren't configured yet. Please try again later." },
+        { status: 503 }
+      );
+    }
+    return Response.json({ ok: true });
+  }
+
+  // 6) Build a safe email. Recipient is fixed; the visitor's address only
   //    appears as reply-to and as escaped text in the body.
   const html = `
     <h2 style="margin:0 0 12px">New beta waitlist signup</h2>
@@ -150,19 +167,18 @@ export async function POST(req: Request) {
       html,
       text,
     });
-    if (error) {
-      console.error("Resend error:", error);
+    if (error) throw error;
+  } catch (err) {
+    console.error("Waitlist notification failed:", err);
+    // The signup is already on disk, so it succeeded — the failure is ours to
+    // chase in the logs, not theirs to retry. Telling them otherwise would
+    // produce a duplicate entry and an accurate impression that we lost it.
+    if (!stored) {
       return Response.json(
         { error: "Could not add you to the waitlist. Please try again." },
         { status: 502 }
       );
     }
-  } catch (err) {
-    console.error("Waitlist signup failed:", err);
-    return Response.json(
-      { error: "Could not add you to the waitlist. Please try again." },
-      { status: 502 }
-    );
   }
 
   return Response.json({ ok: true });

@@ -21,6 +21,19 @@ function blockToHtml(block: NoteBlock): string {
       return `<blockquote><p>${esc(block.text)}</p></blockquote>`;
     case "list":
       return `<ul>${block.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>`;
+    case "code":
+      // Readers strip class attributes and style, so the caption goes in as a
+      // sibling paragraph rather than a <figcaption> nobody would render.
+      return (
+        `<pre><code>${esc(block.code)}</code></pre>` +
+        (block.caption ? `<p><em>${esc(block.caption)}</em></p>` : "")
+      );
+    case "figure":
+      // Absolute src — a feed item is read far away from this origin.
+      return (
+        `<p><img src="${siteUrl}${esc(block.src)}" alt="${esc(block.alt)}" /></p>` +
+        (block.caption ? `<p><em>${esc(block.caption)}</em></p>` : "")
+      );
     default:
       return `<p>${esc(block.text)}</p>`;
   }
@@ -39,6 +52,7 @@ export function GET() {
       <guid isPermaLink="true">${url}</guid>
       <pubDate>${new Date(note.date + "T00:00:00Z").toUTCString()}</pubDate>
       <category>${esc(note.kind)}</category>
+${(note.tags ?? []).map((t) => `      <category>${esc(t)}</category>`).join("\n")}
       <description>${esc(note.excerpt)}</description>
       <content:encoded><![CDATA[${content}]]></content:encoded>
     </item>`;

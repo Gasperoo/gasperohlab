@@ -3,16 +3,29 @@
 /* ============================================================================
    GASPEROHLAB — "Paper & Ink"
 
-   A near-monochrome system. Paper is a warm off-white; ink is a cool, neutral
-   near-black. The contrast between the two is what carries the design — colour
-   is not a layout tool here. The single red accent is rationed to four places:
-   the rocket mark, LAB in the wordmark, a primary action, and a live dot.
+   A near-monochrome system with two faces. Paper is a warm off-white and ink a
+   cool near-black; at night the two swap and the sheet becomes the ink. The
+   contrast between them is what carries the design — colour is not a layout
+   tool here. The single red accent is rationed to four places: the monogram,
+   LAB in the wordmark, a primary action, and a live dot.
 
    Structure comes from hairline rules and a mono index, not from cards,
    shadows or gradients.
+
+   THEMING
+   Everything theme-dependent resolves through a token below — no component
+   hard-codes a colour, and nothing uses Tailwind's `dark:` variant. That is
+   deliberate: the theme is chosen by an inline script that stamps
+   `data-theme` on <html> before first paint, but a reader with JavaScript
+   disabled gets no stamp at all. Driving the whole system from variables lets
+   the `prefers-color-scheme` block below serve those readers the correct face
+   anyway, which a utility-variant approach could not.
    ============================================================================ */
 
-:root {
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+
   /* --- Paper: warm off-white. Deliberately not #fff — pure white reads as an
          unstyled document, and the warmth is what stops the page feeling like
          a spreadsheet. --- */
@@ -50,6 +63,114 @@
      real shadow, so dialogs get one and nothing else does. */
   --shadow-panel: 0 1px 2px rgba(22, 22, 26, 0.06),
     0 12px 32px -8px rgba(22, 22, 26, 0.16);
+
+  /* --- Derived surfaces ---
+     The tints that used to be written inline as `black/[0.022]` and friends.
+     Naming them is what makes a second theme possible at all: an ink wash over
+     paper has to become a bone wash over ink, and a literal `black/2%` can't. */
+  --hover-tint: rgba(22, 22, 26, 0.022);
+  --press-tint: rgba(22, 22, 26, 0.05);
+  --field-bg: rgba(22, 22, 26, 0.015);
+  --field-bg-focus: rgba(22, 22, 26, 0.03);
+  --panel-bg: rgba(250, 249, 247, 0.96);
+  --panel-bg-blur: rgba(250, 249, 247, 0.72);
+  --scrollbar: rgba(22, 22, 26, 0.16);
+  --scrollbar-hover: rgba(22, 22, 26, 0.28);
+  --backdrop: rgba(0, 0, 0, 0.4);
+
+  /* Partner and integration logos ship as black-on-transparent art, so light
+     mode only has to flatten them to a single ink value. */
+  --logo-filter: brightness(0);
+  --grain-blend: multiply;
+  --grain-opacity: 0.045;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Ink, now as the sheet. Kept cool and slightly blue so the paper theme's
+     warmth is legible as a *choice* when you switch back, rather than the two
+     reading as the same grey at different brightnesses. */
+  --background: #101013;
+  --background-elevated: #17171b;
+  --surface: #1a1a1f;
+  --surface-hover: #212128;
+
+  --foreground: #ececef;
+  --muted: #a2a2ac;
+  --faint: #8b8b95;
+
+  --border: rgba(236, 236, 239, 0.12);
+  --border-strong: rgba(236, 236, 239, 0.24);
+
+  /* The accent splits in two here. As a *fill* it has to stay dark enough for
+     white label text (4.9:1) while clearing 3:1 against the sheet, which lands
+     it barely brighter than the paper red. As *type* it has to do the opposite
+     and go much lighter (7.5:1), so small accent text gets its own value
+     instead of being read off the fill. */
+  --accent: #cf3a33;
+  --accent-hover: #e04a42;
+  --accent-text: #ff7a70;
+  --accent-rgb: 207, 58, 51;
+
+  /* Almost nothing lifts on a dark sheet, but the contact dialog still sits
+     over a dimmed page and needs an edge. */
+  --shadow-panel: 0 1px 2px rgba(0, 0, 0, 0.5),
+    0 16px 40px -12px rgba(0, 0, 0, 0.65);
+
+  --hover-tint: rgba(236, 236, 239, 0.035);
+  --press-tint: rgba(236, 236, 239, 0.08);
+  --field-bg: rgba(236, 236, 239, 0.03);
+  --field-bg-focus: rgba(236, 236, 239, 0.06);
+  --panel-bg: rgba(16, 16, 19, 0.96);
+  --panel-bg-blur: rgba(16, 16, 19, 0.72);
+  --scrollbar: rgba(236, 236, 239, 0.18);
+  --scrollbar-hover: rgba(236, 236, 239, 0.3);
+  --backdrop: rgba(0, 0, 0, 0.6);
+
+  /* Same black art, now flattened and reversed so it reads as bone. */
+  --logo-filter: brightness(0) invert(1);
+  /* Multiply over a near-black sheet does nothing visible; screen is the
+     equivalent move in the other direction. Dialled down because grain is far
+     more obvious against dark than against paper. */
+  --grain-blend: screen;
+  --grain-opacity: 0.028;
+}
+
+/* Readers without JavaScript never get a `data-theme` stamp, so honour the OS
+   preference directly for them. Anyone with the script gets an explicit
+   attribute, which takes precedence over this by specificity. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --background: #101013;
+    --background-elevated: #17171b;
+    --surface: #1a1a1f;
+    --surface-hover: #212128;
+    --foreground: #ececef;
+    --muted: #a2a2ac;
+    --faint: #8b8b95;
+    --border: rgba(236, 236, 239, 0.12);
+    --border-strong: rgba(236, 236, 239, 0.24);
+    --accent: #cf3a33;
+    --accent-hover: #e04a42;
+    --accent-text: #ff7a70;
+    --accent-rgb: 207, 58, 51;
+    --shadow-panel: 0 1px 2px rgba(0, 0, 0, 0.5),
+      0 16px 40px -12px rgba(0, 0, 0, 0.65);
+    --hover-tint: rgba(236, 236, 239, 0.035);
+    --press-tint: rgba(236, 236, 239, 0.08);
+    --field-bg: rgba(236, 236, 239, 0.03);
+    --field-bg-focus: rgba(236, 236, 239, 0.06);
+    --panel-bg: rgba(16, 16, 19, 0.96);
+    --panel-bg-blur: rgba(16, 16, 19, 0.72);
+    --scrollbar: rgba(236, 236, 239, 0.18);
+    --scrollbar-hover: rgba(236, 236, 239, 0.3);
+    --backdrop: rgba(0, 0, 0, 0.6);
+    --logo-filter: brightness(0) invert(1);
+    --grain-blend: screen;
+    --grain-opacity: 0.028;
+  }
 }
 
 @theme inline {
@@ -90,6 +211,16 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  /* Only ever animates on a manual theme switch — see .theme-anim. */
+  transition: none;
+}
+
+/* The switch itself is worth a beat. Stamped on <html> by the toggle for the
+   length of one crossfade and then removed, so it never taxes normal scrolling
+   or the initial paint. */
+html.theme-anim,
+html.theme-anim body {
+  transition: background-color 0.35s ease, color 0.35s ease;
 }
 
 ::selection {
@@ -117,13 +248,13 @@ select:focus-visible {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(22, 22, 26, 0.16);
+  background: var(--scrollbar);
   border-radius: 999px;
   border: 3px solid transparent;
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(22, 22, 26, 0.28);
+  background: var(--scrollbar-hover);
   background-clip: content-box;
 }
 
@@ -230,32 +361,79 @@ select:focus-visible {
    which is the easiest way to make a phone drop frames. Mobile gets a nearly
    opaque panel instead: same job, no per-frame cost. */
 .panel {
-  background: rgba(250, 249, 247, 0.96);
+  background: var(--panel-bg);
 }
 @media (min-width: 768px) {
   .panel {
-    background: rgba(250, 249, 247, 0.72);
+    background: var(--panel-bg-blur);
     backdrop-filter: blur(16px) saturate(120%);
   }
+}
+
+/* The wash under a hovered index row — every ruled list on the site uses it. */
+.row-hover {
+  transition: background-color 0.3s ease;
+}
+.row-hover:hover {
+  background: var(--hover-tint);
+}
+
+/* A quieter press state for icon buttons that have no border of their own. */
+.ghost-hover:hover {
+  background: var(--press-tint);
+}
+
+/* Form control. Was repeated as a shared `inputClass` string in two files. */
+.field {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--field-bg);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: var(--foreground);
+  outline: none;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+.field::placeholder {
+  color: var(--faint);
+}
+.field:focus {
+  border-color: var(--border-strong);
+  background: var(--field-bg-focus);
+}
+
+/* Partner / integration marks: black-on-transparent art flattened to a single
+   ink value, reversed to bone under the dark theme. */
+.logo-mark {
+  filter: var(--logo-filter);
+  opacity: 0.55;
+  transition: opacity 0.3s ease;
+}
+.logo-mark:hover {
+  opacity: 1;
 }
 
 /* ============================================================================
    Background grain
 
-   A single, very faint fractal-noise layer giving the flat paper a tooth at
+   A single, very faint fractal-noise layer giving the flat sheet a tooth at
    close range while staying invisible at a glance.
 
    Two details matter on a light base that didn't on a dark one. The noise is
    desaturated (feColorMatrix), because raw feTurbulence is *colour* noise —
    over near-black it reads as neutral film grain, but over paper it reads as
    a dirty screen. And it multiplies rather than overlays, so the texture
-   darkens the sheet slightly instead of blowing it out toward white.
+   darkens the sheet slightly instead of blowing it out toward white. Under the
+   dark theme both of those invert, which is why the blend mode is a token.
    ============================================================================ */
 
 .grain {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.045;
-  mix-blend-mode: multiply;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: var(--grain-blend);
 }
 
 /* ============================================================================
@@ -295,6 +473,69 @@ select:focus-visible {
 }
 
 /* ============================================================================
+   Code
+
+   Notes can carry source. No highlighter ships with the site — a tokeniser is
+   a large dependency and a second colour system, and neither survives a
+   palette this disciplined. Monospace on a ruled surface is enough.
+   ============================================================================ */
+
+.code-block {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 1.125rem 1.25rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: var(--foreground);
+  -webkit-font-smoothing: auto;
+  tab-size: 2;
+}
+
+.code-inline {
+  border-radius: 4px;
+  background: var(--surface);
+  padding: 0.1em 0.4em;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.875em;
+  color: var(--foreground);
+}
+
+/* ============================================================================
+   View transitions
+
+   Two moves only. The project cover morphs from card to case-study hero, so a
+   click reads as "the same thing, opened" rather than as a page swap; and the
+   fixed header is pinned out of every transition, because a sliding header
+   removes the one anchor telling the reader that the *content* moved.
+   ============================================================================ */
+
+::view-transition-group(.cover-morph) {
+  animation-duration: 380ms;
+}
+::view-transition-image-pair(.cover-morph) {
+  animation-name: morph-blur;
+}
+@keyframes morph-blur {
+  30% {
+    filter: blur(3px);
+  }
+}
+
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+/* ============================================================================
    Reduced motion
    ============================================================================ */
 @media (prefers-reduced-motion: reduce) {
@@ -308,5 +549,15 @@ select:focus-visible {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+  html.theme-anim,
+  html.theme-anim body {
+    transition: none;
+  }
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
   }
 }

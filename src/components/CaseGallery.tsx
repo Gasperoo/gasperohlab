@@ -97,7 +97,9 @@ export function CaseGallery({ shots, phone = false }: Props) {
             transition={{ duration: 0.2 }}
           >
             <div
-              className="absolute inset-0 bg-black/88 backdrop-blur-[3px]"
+              // The lightbox dims hard in both themes — a viewer is one image, and the
+              // page behind it should stop competing entirely.
+              className="absolute inset-0 bg-black/[0.88] backdrop-blur-[3px]"
               onClick={() => setOpen(false)}
               aria-hidden
             />

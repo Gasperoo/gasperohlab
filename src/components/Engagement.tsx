@@ -34,11 +34,11 @@ const models = [
   },
 ];
 
-export function Engagement() {
+export function Engagement({ index = "07" }: { index?: string }) {
   return (
     <Section id="engagement">
       <SectionHead
-        index="07"
+        index={index}
         label="Ways to work with us"
         title="Three ways in"
         lede="Most engagements start small and earn their way forward. Pick the one that fits where you are — or just tell us the problem and we'll say which makes sense."

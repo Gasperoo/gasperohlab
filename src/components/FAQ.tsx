@@ -83,7 +83,7 @@ function Item({ q, a, index }: { q: string; a: string; index: number }) {
   );
 }
 
-export function FAQ() {
+export function FAQ({ index = "10" }: { index?: string }) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -101,7 +101,7 @@ export function FAQ() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <SectionHead
-        index="10"
+        index={index}
         label="Before you ask"
         title="How working with the lab works"
         lede="The short version of the questions we get most. Anything not here, just ask us directly."

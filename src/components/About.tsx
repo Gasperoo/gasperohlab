@@ -2,6 +2,7 @@ import { Reveal } from "./Reveal";
 import { Section, SectionHead } from "./Section";
 import { PageHero } from "./PageHero";
 import { steps } from "./HowWeWork";
+import { founder } from "@/lib/site";
 
 const story = [
   "GASPEROHLAB started in 2025 out of a simple frustration: too much good software dies in slide decks. We wanted a place where an idea could be built, pressed on, and either earn its keep or be cut — without a committee standing in the way.",
@@ -56,9 +57,53 @@ export function About() {
         </div>
       </Section>
 
+      {/* "A small lab with a long attention span" is a story about people, and
+          the page told it without naming any. This renders only once there's a
+          real person in lib/site.ts — an invented founder would be worse than
+          the omission it fixes. */}
+      {founder && (
+        <Section id="founder">
+          <div className="grid gap-6 lg:grid-cols-[13rem_1fr] lg:gap-16">
+            <Reveal>
+              <p className="eyebrow lg:pt-2.5">
+                <span className="text-muted">02</span>
+                <span className="mx-2 opacity-40">/</span>
+                Who&apos;s behind it
+              </p>
+            </Reveal>
+
+            <div className="max-w-2xl">
+              <Reveal>
+                <h2 className="t-h2 text-balance">{founder.name}</h2>
+                <p className="eyebrow mt-4">{founder.role}</p>
+                <p className="t-lede mt-7 text-pretty">{founder.bio}</p>
+              </Reveal>
+
+              {founder.sameAs && founder.sameAs.length > 0 && (
+                <Reveal delay={0.06}>
+                  <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
+                    {founder.sameAs.map((href) => (
+                      <a
+                        key={href}
+                        href={href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-sm text-muted underline decoration-border-strong underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
+                      >
+                        {new URL(href).hostname.replace(/^www\./, "")}
+                      </a>
+                    ))}
+                  </div>
+                </Reveal>
+              )}
+            </div>
+          </div>
+        </Section>
+      )}
+
       <Section id="method">
         <SectionHead
-          index="02"
+          index={founder ? "03" : "02"}
           label="How we work"
           title="From a question to production"
           lede="No two projects look the same, but they all move through the same four gates. Most ideas don't make it past the second — and that is exactly the point."

@@ -1,26 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
 import { MotionProvider } from "@/components/MotionProvider";
+import { ContactProvider } from "@/components/ContactProvider";
+import { CommandPalette } from "@/components/CommandPalette";
+import { searchIndex } from "@/lib/search";
+import { themeScript } from "@/lib/theme";
+import { founder, sameAs, siteUrl } from "@/lib/site";
 import "./globals.css";
 
 // One family across the whole site. Headings differ from body copy by weight
 // and tracking, not by face — a second display font was what made the old
-// design read louder than it needed to.
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-// Reserved for the structural voice: section indices, metadata, captions.
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const siteUrl = "https://gasperohlab.com";
+// design read louder than it needed to. The mono is reserved for the
+// structural voice: section indices, metadata, captions.
+//
+// Shipped from the `geist` package rather than fetched through
+// `next/font/google`. Both self-host the files, so nothing changes at runtime;
+// what it removes is a network fetch from the *build*, which was the one step
+// that could fail for reasons having nothing to do with this repository. The
+// package's variable names are already the ones globals.css expects, and both
+// faces are variable, so the four weights the design uses come from one file
+// each.
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -86,8 +87,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#faf9f7",
-  colorScheme: "light",
+  // One per face, so the browser chrome matches the sheet the reader is on
+  // instead of staying paper-coloured above a dark page.
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#faf9f7" },
+    { media: "(prefers-color-scheme: dark)", color: "#101013" },
+  ],
+  colorScheme: "light dark",
 };
 
 const jsonLd = {
@@ -114,8 +120,25 @@ const jsonLd = {
       image: { "@id": `${siteUrl}/#logo` },
       description:
         "A collective engineering games, apps, AI models and programs.",
-      sameAs: ["https://www.instagram.com/gasperohlab/"],
+      foundingDate: "2025",
+      sameAs,
+      // Only claimed when there's a real person to name; see lib/site.ts.
+      ...(founder ? { founder: { "@id": `${siteUrl}/#founder` } } : {}),
     },
+    ...(founder
+      ? [
+          {
+            "@type": "Person",
+            "@id": `${siteUrl}/#founder`,
+            name: founder.name,
+            jobTitle: founder.role,
+            description: founder.bio,
+            worksFor: { "@id": `${siteUrl}/#organization` },
+            url: `${siteUrl}/about`,
+            ...(founder.sameAs?.length ? { sameAs: founder.sameAs } : {}),
+          },
+        ]
+      : []),
     {
       "@type": "WebSite",
       "@id": `${siteUrl}/#website`,
@@ -135,8 +158,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${GeistSans.variable} ${GeistMono.variable} h-full antialiased`}
+      // The theme script writes `data-theme` here before paint, which React
+      // then sees as an attribute it didn't render.
+      suppressHydrationWarning
     >
+      <head>
+        {/* Must run before the body paints — see lib/theme.ts. */}
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <a
           href="#main-content"
@@ -153,7 +183,13 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <MotionProvider>{children}</MotionProvider>
+        {/* The index is built here, on the server, so the palette can search
+            the whole site without any of it reaching the client bundle. */}
+        <CommandPalette items={searchIndex()}>
+          <ContactProvider>
+            <MotionProvider>{children}</MotionProvider>
+          </ContactProvider>
+        </CommandPalette>
         <Analytics />
       </body>
     </html>

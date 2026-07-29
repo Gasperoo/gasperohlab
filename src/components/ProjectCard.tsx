@@ -1,7 +1,9 @@
+import { ViewTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import type { Project, Status } from "@/lib/work";
+import { coverTransitionName } from "@/lib/work";
 
 /**
  * Work card.
@@ -12,7 +14,12 @@ import type { Project, Status } from "@/lib/work";
  * the status label already says everything a reader needs). What's left is the
  * screenshot, a status, a name and a line of copy.
  *
- * Now a server component — nothing here was interactive except the glow.
+ * The cover carries a view-transition name shared with the case study's hero,
+ * so opening a project morphs the image into place instead of cutting to a new
+ * page. That is the only transition on the site, and it exists because it says
+ * something true: it's the same object, opened.
+ *
+ * Still a server component — nothing here was ever interactive except the glow.
  */
 
 // Only "in production" gets colour, and only on a 5px dot. Everything else is
@@ -33,13 +40,18 @@ export function ProjectCard({ project }: { project: Project }) {
     >
       <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-border bg-background-elevated">
         {project.cover ? (
-          <Image
-            src={project.cover}
-            alt={`${project.name} preview`}
-            fill
-            sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
-            className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
-          />
+          <ViewTransition
+            name={coverTransitionName(project.slug)}
+            share="cover-morph"
+          >
+            <Image
+              src={project.cover}
+              alt={`${project.name} preview`}
+              fill
+              sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
+              className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+            />
+          </ViewTransition>
         ) : (
           // No screenshot: set the name large in the frame instead of falling
           // back to a tinted gradient and a generic glyph.

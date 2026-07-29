@@ -7,11 +7,11 @@ import { notes, formatDate } from "@/lib/notes";
 // Surface the three most recent notes on the home page. /lab has the full set.
 const latest = notes.slice(0, 3);
 
-export function FromTheLab() {
+export function FromTheLab({ index = "09" }: { index?: string }) {
   return (
     <Section id="lab">
       <SectionHead
-        index="09"
+        index={index}
         label="From the lab"
         title="What we're learning, out loud"
         lede="Devlogs, engineering notes and the reasoning behind what makes it out of the lab — and what doesn't."
@@ -29,7 +29,7 @@ export function FromTheLab() {
           <Reveal key={note.slug} delay={i * 0.06}>
             <Link
               href={`/lab/${note.slug}`}
-              className="group grid gap-3 border-b border-border py-7 transition-colors duration-300 hover:bg-black/[0.022] lg:grid-cols-[13rem_1fr] lg:items-baseline lg:gap-16"
+              className="group row-hover grid gap-3 border-b border-border py-7 lg:grid-cols-[13rem_1fr] lg:items-baseline lg:gap-16"
             >
               <p className="eyebrow">
                 {note.kind}

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { ViewTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { Background } from "@/components/Background";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
@@ -12,8 +13,16 @@ import { CaseGallery } from "@/components/CaseGallery";
 import { AutoVideo } from "@/components/AutoVideo";
 import { BetaWaitlist } from "@/components/BetaWaitlist";
 import { JsonLd } from "@/components/JsonLd";
+import { ReadingProgress } from "@/components/ReadingProgress";
 import { breadcrumbs, graph, orgRef } from "@/lib/schema";
-import { getProject, projects, caseStudySlugs } from "@/lib/work";
+import {
+  getProject,
+  caseStudySlugs,
+  coverTransitionName,
+  projectNeighbours,
+  relatedProjects,
+  type Project,
+} from "@/lib/work";
 
 const siteUrl = "https://gasperohlab.com";
 
@@ -100,8 +109,10 @@ export default async function CaseStudyPage({
     ])
   );
 
-  // "More work" — a couple of other case studies to keep people moving.
-  const more = projects.filter((p) => p.slug !== slug && p.caseStudy).slice(0, 3);
+  // Other case studies worth reading after this one — same discipline first,
+  // rather than whichever three happen to sit at the top of the archive.
+  const more = relatedProjects(slug);
+  const { previous, next } = projectNeighbours(slug);
 
   const meta = [
     { label: "What we did", value: cs.role },
@@ -114,6 +125,7 @@ export default async function CaseStudyPage({
     <>
       <Background />
       <Nav />
+      <ReadingProgress />
       <JsonLd data={jsonLd} />
       <main
         id="main-content"
@@ -195,7 +207,7 @@ export default async function CaseStudyPage({
               {cs.heroVideo && cs.heroVideoPortrait ? (
                 // Portrait capture: centred on plain ink. The accent glow that
                 // used to sit behind the phone is gone.
-                <div className="flex justify-center overflow-hidden rounded-lg border border-border bg-background-elevated px-4 py-12 sm:py-16">
+                <div className="relative flex justify-center overflow-hidden rounded-lg border border-border bg-background-elevated px-4 py-12 sm:py-16">
                   <AutoVideo
                     className="h-[440px] w-auto rounded-[10px] sm:h-[560px] lg:h-[620px]"
                     src={cs.heroVideo}
@@ -213,15 +225,23 @@ export default async function CaseStudyPage({
                       label={`${project.name} — preview`}
                     />
                   ) : (
-                    <Image
-                      src={heroMedia}
-                      alt={`${project.name} — preview`}
-                      fill
-                      // This one genuinely is the LCP element of the page.
-                      preload
-                      sizes="(max-width: 1024px) 100vw, 1216px"
-                      className="object-cover object-top"
-                    />
+                    // Shares its transition name with the card that linked
+                    // here, so the cover morphs into place rather than the two
+                    // pages cutting.
+                    <ViewTransition
+                      name={coverTransitionName(slug)}
+                      share="cover-morph"
+                    >
+                      <Image
+                        src={heroMedia}
+                        alt={`${project.name} — preview`}
+                        fill
+                        // This one genuinely is the LCP element of the page.
+                        preload
+                        sizes="(max-width: 1024px) 100vw, 1216px"
+                        className="object-cover object-top"
+                      />
+                    </ViewTransition>
                   )}
                 </div>
               )}
@@ -307,7 +327,7 @@ export default async function CaseStudyPage({
               {cs.motion.map((clip, i) => (
                 <Reveal key={clip.label} delay={i * 0.07}>
                   <figure className="flex flex-col">
-                    <div className="overflow-hidden rounded-lg border border-border bg-background-elevated">
+                    <div className="relative overflow-hidden rounded-lg border border-border bg-background-elevated">
                       <AutoVideo
                         className={
                           cs.motionLandscape
@@ -351,7 +371,7 @@ export default async function CaseStudyPage({
                 {cs.integrations.map((it) => (
                   <div
                     key={it.name}
-                    className="relative h-7 w-28 opacity-50 brightness-0 transition-opacity duration-300 hover:opacity-100"
+                    className="logo-mark relative h-7 w-28"
                   >
                     <Image
                       src={it.src}
@@ -418,18 +438,35 @@ export default async function CaseStudyPage({
           />
         )}
 
+        {/* ---- Previous / next ---- */}
+        {(previous || next) && (
+          <nav aria-label="More case studies" className={`${WRAP} pt-20`}>
+            <div className="grid border-y border-border sm:grid-cols-2">
+              {previous ? (
+                <NeighbourLink project={previous} direction="previous" />
+              ) : (
+                <span />
+              )}
+              {next && <NeighbourLink project={next} direction="next" />}
+            </div>
+          </nav>
+        )}
+
         {/* ---- More work ---- */}
         {more.length > 0 && (
-          <section className={`${WRAP} pt-20 pb-8`}>
+          <section className={`${WRAP} pt-16 pb-8`}>
             <Reveal className="border-t border-border pt-10">
-              <p className="eyebrow">More from the lab</p>
+              <p className="eyebrow">
+                More {project.discipline === "App" ? "applications" : "work"}{" "}
+                from the lab
+              </p>
             </Reveal>
             <div className="mt-8 border-t border-border">
               {more.map((p, i) => (
                 <Reveal key={p.slug} delay={i * 0.06}>
                   <Link
                     href={`/work/${p.slug}`}
-                    className="group grid gap-2 border-b border-border py-7 transition-colors duration-300 hover:bg-black/[0.022] lg:grid-cols-[13rem_1fr] lg:items-baseline lg:gap-16"
+                    className="group row-hover grid gap-2 border-b border-border py-7 lg:grid-cols-[13rem_1fr] lg:items-baseline lg:gap-16"
                   >
                     <span className="eyebrow">
                       {p.discipline}
@@ -469,3 +506,36 @@ const metaRules = [
   "pr-5 lg:border-l lg:border-border lg:pl-6 lg:pr-6",
   "border-l border-border pl-5 lg:pl-6",
 ];
+
+function NeighbourLink({
+  project,
+  direction,
+}: {
+  project: Project;
+  direction: "previous" | "next";
+}) {
+  const prev = direction === "previous";
+  return (
+    <Link
+      href={`/work/${project.slug}`}
+      rel={prev ? "prev" : "next"}
+      className={`group row-hover flex flex-col gap-2 py-7 ${
+        prev ? "sm:pr-6" : "sm:items-end sm:border-l sm:border-border sm:pl-6"
+      }`}
+    >
+      <span className="eyebrow flex items-center gap-2">
+        {prev && <ArrowLeft className="h-3 w-3" />}
+        {prev ? "Previous" : "Next"}
+        {!prev && <ArrowRight className="h-3 w-3" />}
+      </span>
+      <span className={`t-h3 text-xl ${prev ? "" : "sm:text-right"}`}>
+        {project.name}
+      </span>
+      <span className="eyebrow">
+        {project.discipline}
+        <span className="mx-2 opacity-40">/</span>
+        {project.year}
+      </span>
+    </Link>
+  );
+}

@@ -30,5 +30,15 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    // This project lives under ~/Documents, which iCloud Drive syncs. When it
+    // resolves a conflict it leaves a copy beside the original named
+    // "routes.d 2.ts", and because .next/types is on the include path the
+    // compiler then sees every generated declaration twice and fails with
+    // duplicate-identifier errors that have nothing to do with the code.
+    "**/* [0-9].ts",
+    "**/* [0-9].tsx",
+    "**/* [0-9].d.ts"
+  ]
 }

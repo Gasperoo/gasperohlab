@@ -47,23 +47,29 @@ const socials: { label: string; Icon: ComponentType<IconProps>; href?: string }[
   { label: "GitHub", Icon: GithubMark },
 ];
 
+// The footer is where the pages that don't earn a header slot live — the log,
+// the uses page and the press kit are all things people go looking for rather
+// than things to put in front of them.
 const columns: { heading: string; links: { label: string; href: string }[] }[] = [
   {
     heading: "Lab",
     links: [
       { label: "Work", href: "/work" },
-      { label: "Ethos", href: "/ethos" },
       { label: "Notes", href: "/lab" },
+      { label: "Shipping log", href: "/log" },
+      { label: "Ethos", href: "/ethos" },
       { label: "About", href: "/about" },
     ],
   },
   {
-    heading: "Legal",
+    heading: "More",
     links: [
+      { label: "Uses", href: "/uses" },
+      { label: "Press kit", href: "/press" },
+      { label: "RSS", href: "/feed.xml" },
       { label: "Privacy", href: "/privacy" },
       { label: "Terms", href: "/terms" },
       { label: "Cookies", href: "/cookies" },
-      { label: "RSS", href: "/feed.xml" },
     ],
   },
 ];

@@ -58,6 +58,14 @@ const nextConfig: NextConfig = {
   // Remove the `X-Powered-By: Next.js` header (avoid leaking stack details).
   poweredByHeader: false,
 
+  experimental: {
+    // Enables React's <ViewTransition>. Used for exactly one thing: morphing a
+    // project's cover from its card into the case-study hero, so opening a
+    // project reads as the same object being opened rather than as two
+    // unrelated pages swapping. Browsers without support simply don't animate.
+    viewTransition: true,
+  },
+
   // Pin the workspace root to this project so Next doesn't get confused
   // by other lockfiles higher up in the filesystem.
   turbopack: {

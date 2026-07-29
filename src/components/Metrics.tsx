@@ -1,27 +1,43 @@
 import { Reveal } from "./Reveal";
 import { Section, SectionHead } from "./Section";
+import { projects } from "@/lib/work";
 
-// Outcome figures from the Marapone deployments running in production today.
-// NOTE: these are illustrative placeholders — swap in the real numbers before launch.
-//
-// The values are now plain text. They used to animate up from zero on scroll
-// via <CountUp>, which turns a factual claim into a slot machine; a number that
-// counts itself is asking to be watched rather than believed.
-const stats = [
-  { value: "12k+", label: "Documents & drawings audited on-prem" },
-  { value: "8×", label: "Faster tender & invoice turnaround" },
-  { value: "100%", label: "Runs on hardware the client already owns" },
-  { value: "0", label: "Bytes of client data that leave the building" },
-];
+/**
+ * Figures under a heading that says "Proof, not promises".
+ *
+ * The previous version shipped invented volumetrics — "12k+ documents audited",
+ * "8× faster turnaround" — under a comment admitting they were placeholders to
+ * be swapped before launch. They never were. Numbers like that are the easiest
+ * thing on a portfolio to disprove, and they were sitting directly beneath a
+ * claim of proof.
+ *
+ * Everything here is now true by construction rather than by measurement. Two
+ * of the four are counted from the work archive and cannot drift from it; the
+ * other two are architectural guarantees of how the work is built and
+ * delivered. Nothing asserts a speed-up or a volume, because nothing on this
+ * site can source one.
+ *
+ * Measured outcomes belong on the individual case studies, where a figure can
+ * be attributed to a specific deployment.
+ */
+export function Metrics({ index = "04" }: { index?: string }) {
+  const released = projects.filter((p) => p.status === "Released").length;
+  const building = projects.filter((p) => p.status === "In Production").length;
 
-export function Metrics() {
+  const stats = [
+    { value: String(released), label: "Products released into production" },
+    { value: String(building), label: "More being built in the lab right now" },
+    { value: "0", label: "Bytes of client data that leave the building" },
+    { value: "100%", label: "Source handed over — no black boxes" },
+  ];
+
   return (
     <Section id="metrics">
       <SectionHead
-        index="04"
+        index={index}
         label="The numbers"
         title="Proof, not promises"
-        lede="What the work is actually doing in production — measured on the customers' own machines, where it runs."
+        lede="What the lab has actually put into production, and the guarantees that come with it — counted from the archive, not estimated."
       />
 
       <div className="mt-16 grid border-t border-border sm:grid-cols-2 lg:grid-cols-4">

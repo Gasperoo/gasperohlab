@@ -11,7 +11,7 @@ import { projects } from "@/lib/work";
 const filters = ["All", "In Production", "Released"] as const;
 type Filter = (typeof filters)[number];
 
-export function Projects() {
+export function Projects({ index = "02" }: { index?: string }) {
   const [filter, setFilter] = useState<Filter>("All");
   const visible =
     filter === "All" ? projects : projects.filter((p) => p.status === filter);
@@ -19,7 +19,7 @@ export function Projects() {
   return (
     <Section id="work">
       <SectionHead
-        index="02"
+        index={index}
         label="Selected work"
         title="What we've shipped"
         lede="Products in production today, with more taking shape in the lab. Open any project for the full story."

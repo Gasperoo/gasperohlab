@@ -219,8 +219,8 @@ export function BetaWaitlist({ project, platforms, blurb }: Props) {
   );
 }
 
-const inputClass =
-  "w-full rounded-md border border-border bg-black/[0.015] px-3.5 py-2.5 text-sm text-foreground outline-none transition-colors placeholder:text-faint focus:border-border-strong focus:bg-black/[0.03]";
+// See ContactModal — same control, same reason it lives in CSS.
+const inputClass = "field";
 
 function Field({
   label,

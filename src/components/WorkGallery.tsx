@@ -4,12 +4,12 @@ import { useState } from "react";
 import { Reveal } from "./Reveal";
 import { ProjectCard } from "./ProjectCard";
 import { FilterBar } from "./FilterBar";
-import { projects, type Discipline } from "@/lib/work";
+import { projects, presentDisciplines, type Discipline } from "@/lib/work";
 
-const order: Discipline[] = ["Game", "App", "AI", "Program"];
-// Only offer a filter for disciplines that actually have work behind them.
-const present = order.filter((d) => projects.some((p) => p.discipline === d));
-const filters = ["All", ...present] as const;
+// Ordered heaviest-first, matching the home page's disciplines list, and only
+// offering a filter for disciplines that actually have work behind them.
+const order: Discipline[] = ["App", "AI", "Program", "Game"];
+const filters = ["All", ...presentDisciplines(order)] as const;
 type Filter = (typeof filters)[number];
 
 export function WorkGallery() {

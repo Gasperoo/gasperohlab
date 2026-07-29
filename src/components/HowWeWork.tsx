@@ -22,11 +22,11 @@ export const steps = [
   },
 ];
 
-export function HowWeWork() {
+export function HowWeWork({ index = "06" }: { index?: string }) {
   return (
     <Section id="process">
       <SectionHead
-        index="06"
+        index={index}
         label="How we work"
         title="From a question to production"
         lede="No two projects look the same, but they all move through the same four gates. Most ideas don't make it past the second — and that is exactly the point."

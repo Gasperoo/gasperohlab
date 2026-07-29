@@ -97,7 +97,8 @@ export function ContactModal({ open, onClose }: Props) {
         >
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"
+            className="absolute inset-0 backdrop-blur-[3px]"
+            style={{ background: "var(--backdrop)" }}
             onClick={onClose}
             aria-hidden
           />
@@ -118,7 +119,7 @@ export function ContactModal({ open, onClose }: Props) {
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-md text-faint transition-colors hover:bg-black/5 hover:text-foreground"
+              className="ghost-hover absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-md text-faint transition-colors hover:text-foreground"
             >
               <X className="h-4 w-4" />
             </button>
@@ -246,8 +247,9 @@ export function ContactModal({ open, onClose }: Props) {
   );
 }
 
-const inputClass =
-  "w-full rounded-md border border-border bg-black/[0.015] px-3.5 py-2.5 text-sm text-foreground outline-none transition-colors placeholder:text-faint focus:border-border-strong focus:bg-black/[0.03]";
+// The control itself is `.field` in globals.css — an ink wash over paper has
+// to become a bone wash over ink, which a literal `black/1.5%` cannot do.
+const inputClass = "field";
 
 function Field({
   label,

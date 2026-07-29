@@ -63,7 +63,7 @@ export default function LabIndex() {
               <Reveal key={note.slug} delay={Math.min(i, 6) * 0.05}>
                 <Link
                   href={`/lab/${note.slug}`}
-                  className="group grid gap-3 border-b border-border py-8 transition-colors duration-300 hover:bg-black/[0.022] lg:grid-cols-[13rem_1fr] lg:items-baseline lg:gap-16"
+                  className="group row-hover grid gap-3 border-b border-border py-8 lg:grid-cols-[13rem_1fr] lg:items-baseline lg:gap-16"
                 >
                   <p className="eyebrow">
                     {note.kind}
@@ -79,6 +79,13 @@ export default function LabIndex() {
                       <p className="t-body mt-3 text-pretty text-[0.9375rem]">
                         {note.excerpt}
                       </p>
+                      {note.tags && note.tags.length > 0 && (
+                        <p className="eyebrow mt-4 flex flex-wrap gap-x-3 gap-y-1.5">
+                          {note.tags.map((tag) => (
+                            <span key={tag}>{tag}</span>
+                          ))}
+                        </p>
+                      )}
                     </div>
                     <span className="eyebrow shrink-0">
                       {note.readingTime} min

@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { isRateLimited, record } from "@/lib/store";
 
 // This handler processes untrusted user input, so it must run per-request.
 export const runtime = "nodejs";
@@ -9,26 +10,12 @@ const TO_EMAIL = process.env.CONTACT_TO_EMAIL || "contact@gasperohlab.com";
 const FROM_EMAIL =
   process.env.CONTACT_FROM_EMAIL || "GASPEROHLAB <noreply@gasperohlab.com>";
 
-// --- Simple in-memory, per-IP rate limiter -------------------------------
-// Best-effort within a warm serverless instance. For strict distributed
-// limits across all Vercel regions, back this with Upstash/Vercel KV.
+// --- Rate limiting --------------------------------------------------------
+// Shared with the waitlist handler and backed by Redis when it's configured;
+// see lib/store.ts. The in-memory fallback there is the behaviour this file
+// used to implement inline, which was really "five per serverless instance".
 const RATE_LIMIT = 5; // submissions
-const RATE_WINDOW_MS = 10 * 60 * 1000; // per 10 minutes
-const hits = new Map<string, number[]>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(ip) || []).filter((t) => now - t < RATE_WINDOW_MS);
-  recent.push(now);
-  hits.set(ip, recent);
-  // Opportunistic cleanup so the map can't grow unbounded.
-  if (hits.size > 5000) {
-    for (const [key, times] of hits) {
-      if (times.every((t) => now - t >= RATE_WINDOW_MS)) hits.delete(key);
-    }
-  }
-  return recent.length > RATE_LIMIT;
-}
+const RATE_WINDOW_SECONDS = 10 * 60;
 
 function clientIp(req: Request): string {
   const fwd = req.headers.get("x-forwarded-for");
@@ -88,7 +75,7 @@ export async function POST(req: Request) {
   }
 
   // 3) Rate limit per IP.
-  if (isRateLimited(clientIp(req))) {
+  if (await isRateLimited(`rl:contact:${clientIp(req)}`, RATE_LIMIT, RATE_WINDOW_SECONDS)) {
     return Response.json(
       { error: "Too many messages. Please try again later." },
       { status: 429 }
@@ -118,6 +105,14 @@ export async function POST(req: Request) {
     return Response.json({ ok: true });
   }
 
+  // 6) Keep a copy, if a store is configured.
+  //
+  //    Unlike a waitlist signup, a contact message is genuinely *about* being
+  //    delivered — a copy sitting in Redis that nobody reads is not a reply.
+  //    So this is a backstop, not the source of truth, and a failure to write
+  //    it never blocks the send.
+  await record("contact", { name, email, phone, message });
+
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.error("RESEND_API_KEY is not set — cannot send contact email.");
@@ -127,7 +122,7 @@ export async function POST(req: Request) {
     );
   }
 
-  // 6) Build a safe email. Recipient is fixed; the visitor's address only
+  // 7) Build a safe email. Recipient is fixed; the visitor's address only
   //    appears as reply-to and as escaped text in the body.
   const html = `
     <h2 style="margin:0 0 12px">New contact form message</h2>
