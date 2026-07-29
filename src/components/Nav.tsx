@@ -120,7 +120,7 @@ export function Nav() {
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
-              className="-mr-2 flex h-11 w-11 items-center justify-center rounded-md text-foreground transition-colors hover:bg-white/5 md:hidden"
+              className="-mr-2 flex h-11 w-11 items-center justify-center rounded-md text-foreground transition-colors hover:bg-black/5 md:hidden"
             >
               {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -128,8 +128,8 @@ export function Nav() {
         </nav>
       </header>
 
-      {/* Mobile menu — a full-height ink sheet with the links set large, rather
-          than a small dropdown card. */}
+      {/* Mobile menu — a full-height paper sheet with the links set large,
+          rather than a small dropdown card. */}
       <AnimatePresence>
         {menuOpen && (
           <m.div

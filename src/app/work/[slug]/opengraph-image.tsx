@@ -28,8 +28,8 @@ export default async function OgImage({
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#0b0b0d",
-          color: "#edebe6",
+          background: "#faf9f7",
+          color: "#16161a",
           padding: 72,
           fontFamily: "sans-serif",
         }}
@@ -41,23 +41,23 @@ export default async function OgImage({
               width: 40,
               height: 40,
               borderRadius: 10,
-              background: "#d93b30",
+              background: "#c4302a",
             }}
           />
           <div style={{ display: "flex", fontSize: 26, fontWeight: 500, letterSpacing: 2 }}>
             <span>GASPEROH</span>
-            <span style={{ color: "#d93b30" }}>LAB</span>
+            <span style={{ color: "#c4302a" }}>LAB</span>
           </div>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", fontSize: 32, color: "#9c9a94", marginBottom: 16 }}>
+          <div style={{ display: "flex", fontSize: 32, color: "#5c5c65", marginBottom: 16 }}>
             {project?.discipline ?? "Case study"} · {project?.year ?? ""}
           </div>
           <div style={{ display: "flex", fontSize: 76, fontWeight: 500, letterSpacing: -2, lineHeight: 1 }}>
             {name}
           </div>
-          <div style={{ display: "flex", fontSize: 34, color: "#9c9a94", marginTop: 26, maxWidth: 940 }}>
+          <div style={{ display: "flex", fontSize: 34, color: "#5c5c65", marginTop: 26, maxWidth: 940 }}>
             {tagline}
           </div>
         </div>

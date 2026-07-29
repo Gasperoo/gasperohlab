@@ -1,46 +1,55 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   GASPEROHLAB — "Ink & Bone"
+   GASPEROHLAB — "Paper & Ink"
 
-   A near-monochrome system. Ink is a cool, neutral near-black; bone is a warm
-   off-white. The contrast between the two is what carries the design — colour
+   A near-monochrome system. Paper is a warm off-white; ink is a cool, neutral
+   near-black. The contrast between the two is what carries the design — colour
    is not a layout tool here. The single red accent is rationed to four places:
    the rocket mark, LAB in the wordmark, a primary action, and a live dot.
 
-   Structure comes from hairline rules and a mono index, not from cards, glows
-   or gradients.
+   Structure comes from hairline rules and a mono index, not from cards,
+   shadows or gradients.
    ============================================================================ */
 
 :root {
-  /* --- Ink: cool neutral, no warmth --- */
-  --background: #0b0b0d;
-  --background-elevated: #101013;
-  --surface: #121215;
-  --surface-hover: #17171b;
+  /* --- Paper: warm off-white. Deliberately not #fff — pure white reads as an
+         unstyled document, and the warmth is what stops the page feeling like
+         a spreadsheet. --- */
+  --background: #faf9f7;
+  /* The only genuinely white surface, reserved for things that must lift off
+     the page (dialogs, media frames). */
+  --background-elevated: #ffffff;
+  --surface: #f4f2ee;
+  --surface-hover: #eeebe4;
 
-  /* --- Bone: warm off-white. The warmth is the whole point; a pure white
-         here reads clinical and screen-lit, bone reads like paper. --- */
-  --foreground: #edebe6;
-  /* Body copy. 6.8:1 on ink. */
-  --muted: #9c9a94;
-  /* Metadata, timestamps, captions. 4.95:1 — clears AA with room to spare
-     while staying audibly quieter than --muted. */
-  --faint: #85837d;
+  /* --- Ink: cool neutral, so it stays distinct from the warm paper rather
+         than reading as one muddy brown scale. --- */
+  --foreground: #16161a;
+  /* Body copy. 6.4:1 on paper. */
+  --muted: #5c5c65;
+  /* Metadata, timestamps, captions. 4.9:1 — clears AA while staying audibly
+     quieter than --muted. */
+  --faint: #6e6e77;
 
-  /* Rules are bone at low alpha, never a flat grey — they inherit the warmth
-     so hairlines don't read blue against the ink. */
-  --border: rgba(237, 235, 230, 0.08);
-  --border-strong: rgba(237, 235, 230, 0.18);
+  /* Rules are ink at low alpha, never a flat grey, so hairlines pick up the
+     page's warmth instead of fighting it. */
+  --border: rgba(22, 22, 26, 0.11);
+  --border-strong: rgba(22, 22, 26, 0.22);
 
   /* --- The one accent --- */
-  /* Fill value. Carries white text at 4.7:1. */
-  --accent: #d93b30;
-  --accent-hover: #be3128;
-  /* Text value. The fill is too dark to read as small text on ink, so accent
-     *type* uses this lighter sibling instead (5.2:1). Same hue family. */
-  --accent-text: #f04a3e;
-  --accent-rgb: 217, 59, 48;
+  /* Darkened from the dark theme's red: on paper it has to clear AA both as
+     type (5.2:1) and as a fill under white text (5.5:1). */
+  --accent: #c4302a;
+  --accent-hover: #a82822;
+  /* Small accent type gets a touch more weight still (6.0:1). */
+  --accent-text: #b32a24;
+  --accent-rgb: 196, 48, 42;
+
+  /* Elevation. On a dark page a raised surface can glow; on paper it needs a
+     real shadow, so dialogs get one and nothing else does. */
+  --shadow-panel: 0 1px 2px rgba(22, 22, 26, 0.06),
+    0 12px 32px -8px rgba(22, 22, 26, 0.16);
 }
 
 @theme inline {
@@ -108,13 +117,13 @@ select:focus-visible {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(237, 235, 230, 0.12);
+  background: rgba(22, 22, 26, 0.16);
   border-radius: 999px;
   border: 3px solid transparent;
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(237, 235, 230, 0.2);
+  background: rgba(22, 22, 26, 0.28);
   background-clip: content-box;
 }
 
@@ -221,26 +230,32 @@ select:focus-visible {
    which is the easiest way to make a phone drop frames. Mobile gets a nearly
    opaque panel instead: same job, no per-frame cost. */
 .panel {
-  background: rgba(11, 11, 13, 0.96);
+  background: rgba(250, 249, 247, 0.96);
 }
 @media (min-width: 768px) {
   .panel {
-    background: rgba(11, 11, 13, 0.72);
-    backdrop-filter: blur(16px) saturate(130%);
+    background: rgba(250, 249, 247, 0.72);
+    backdrop-filter: blur(16px) saturate(120%);
   }
 }
 
 /* ============================================================================
    Background grain
 
-   Replaces the old grid + accent glow. A single, very faint fractal-noise
-   layer gives the flat ink a paper-like tooth at close range and is invisible
-   at a glance — the opposite of a decorative backdrop asking to be noticed.
+   A single, very faint fractal-noise layer giving the flat paper a tooth at
+   close range while staying invisible at a glance.
+
+   Two details matter on a light base that didn't on a dark one. The noise is
+   desaturated (feColorMatrix), because raw feTurbulence is *colour* noise —
+   over near-black it reads as neutral film grain, but over paper it reads as
+   a dirty screen. And it multiplies rather than overlays, so the texture
+   darkens the sheet slightly instead of blowing it out toward white.
    ============================================================================ */
 
 .grain {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.045;
+  mix-blend-mode: multiply;
 }
 
 /* ============================================================================

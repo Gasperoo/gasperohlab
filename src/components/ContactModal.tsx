@@ -97,7 +97,7 @@ export function ContactModal({ open, onClose }: Props) {
         >
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/75 backdrop-blur-[3px]"
+            className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"
             onClick={onClose}
             aria-hidden
           />
@@ -111,13 +111,14 @@ export function ContactModal({ open, onClose }: Props) {
             exit={{ opacity: 0, y: 8 }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             className="relative w-full max-w-md overflow-hidden rounded-lg border border-border bg-background-elevated p-8"
+            style={{ boxShadow: "var(--shadow-panel)" }}
           >
 
             <button
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-md text-faint transition-colors hover:bg-white/5 hover:text-foreground"
+              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-md text-faint transition-colors hover:bg-black/5 hover:text-foreground"
             >
               <X className="h-4 w-4" />
             </button>
@@ -246,7 +247,7 @@ export function ContactModal({ open, onClose }: Props) {
 }
 
 const inputClass =
-  "w-full rounded-md border border-border bg-white/[0.02] px-3.5 py-2.5 text-sm text-foreground outline-none transition-colors placeholder:text-faint focus:border-border-strong focus:bg-white/[0.04]";
+  "w-full rounded-md border border-border bg-black/[0.015] px-3.5 py-2.5 text-sm text-foreground outline-none transition-colors placeholder:text-faint focus:border-border-strong focus:bg-black/[0.03]";
 
 function Field({
   label,

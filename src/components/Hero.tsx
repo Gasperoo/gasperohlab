@@ -50,7 +50,7 @@ export function Hero() {
           className="rise t-hero mt-8 max-w-4xl text-balance"
           style={{ animationDelay: delays[1] }}
         >
-          We design and ship games, applications and AI models.
+          We design and ship applications, AI Models, and games.
         </h1>
 
         <p

@@ -48,7 +48,7 @@ export function Disciplines() {
           <Reveal
             key={d.title}
             delay={i * 0.05}
-            className="grid gap-3 border-b border-border py-8 transition-colors duration-300 hover:bg-white/[0.015] lg:grid-cols-[13rem_1fr] lg:items-baseline lg:gap-16"
+            className="grid gap-3 border-b border-border py-8 transition-colors duration-300 hover:bg-black/[0.022] lg:grid-cols-[13rem_1fr] lg:items-baseline lg:gap-16"
           >
             <p className="eyebrow">
               <span className="text-muted">0{i + 1}</span>

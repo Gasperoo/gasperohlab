@@ -11,10 +11,23 @@ export type CaseSection = { heading: string; body: string[] };
 
 export type Metric = { value: string; label: string };
 
+/**
+ * A named collaborator on a piece of work.
+ *
+ * Most of the Marapone catalogue was built *with* the Marapone team rather than
+ * handed to us as a brief, so presenting those case studies as sole authorship
+ * would overstate our part. Setting this makes the shared credit explicit on
+ * the card and at the top of the case study, instead of leaving it to be
+ * inferred from a role line nobody reads.
+ */
+export type Partner = { name: string; href?: string; note: string };
+
 export type CaseStudy = {
   /** One-line hero subtitle for the case page. */
   tagline: string;
   role: string; // what we did
+  /** Set when the work was a partnership; see Partner. */
+  partner?: Partner;
   timeframe: string;
   heroVideo?: string;
   heroImage?: string;
@@ -23,8 +36,10 @@ export type CaseStudy = {
   overview: string[];
   metrics?: Metric[];
   sections: CaseSection[];
-  /** Short looping phone clips shown in an "In motion" section. */
+  /** Short looping clips shown in an "In motion" section. */
   motion?: Clip[];
+  /** Desktop captures rather than portrait phone clips — laid out wide. */
+  motionLandscape?: boolean;
   gallery?: Shot[];
   /** Portrait phone-frame gallery instead of landscape. */
   galleryPhone?: boolean;
@@ -73,7 +88,13 @@ export const projects: Project[] = [
     external: true,
     caseStudy: {
       tagline: "Private, owned intelligence — not another AI subscription.",
-      role: "Model training, systems architecture, on-prem deployment",
+      role: "Model training, systems architecture, on-prem deployment — with Marapone",
+      partner: {
+        name: "Marapone",
+        href: "https://marapone.com",
+        note: "Built with the Marapone team — they brought the domain and the operational data, we brought the model and systems work.",
+      },
+
       timeframe: "2025 — ongoing",
       liveUrl: "https://marapone.com",
       liveLabel: "marapone.com",
@@ -124,7 +145,13 @@ export const projects: Project[] = [
     cover: "/work/construction/summary.jpg",
     caseStudy: {
       tagline: "Reads the drawings, clears the backlog, flags the risk.",
-      role: "Product design, model training, mobile + desktop build",
+      role: "Product design, model training, desktop build — with Marapone",
+      partner: {
+        name: "Marapone",
+        href: "https://marapone.com",
+        note: "Built with the Marapone team, who own the product and the construction domain expertise behind it.",
+      },
+
       timeframe: "2025",
       heroVideo: "/work/construction/blueprint-auditor.mp4",
       heroImage: "/work/construction/blueprint-auditor-poster.jpg",
@@ -174,6 +201,258 @@ export const projects: Project[] = [
     },
   },
   {
+    slug: "blueprint-auditor",
+    name: "Marapone Blueprint Auditor",
+    discipline: "App",
+    status: "Released",
+    blurb:
+      "Reads a drawing set the way a senior PM would — quantities off the page, code checks against the Ontario Building Code, and the risks in a tender flagged before it is priced.",
+    year: "2026",
+    cover: "/work/blueprint-auditor/blueprint-auditor-poster.jpg",
+    href: "https://marapone.com/construction/blueprint-auditor",
+    external: true,
+    caseStudy: {
+      tagline: "Takeoff, code review and tender risk, off the drawings.",
+      role: "Product design, vision pipeline, desktop + mobile build — with Marapone",
+      partner: {
+        name: "Marapone",
+        href: "https://marapone.com/construction",
+        note: "Built with the Marapone team, whose estimators defined what a useful audit actually looks like and tested every release against live tenders.",
+      },
+      timeframe: "2025 — 2026",
+      heroVideo: "/work/blueprint-auditor/blueprint-auditor-demo.mp4",
+      heroImage: "/work/blueprint-auditor/blueprint-auditor-poster.jpg",
+      liveUrl: "https://marapone.com/construction/blueprint-auditor",
+      liveLabel: "the product page",
+      overview: [
+        "A set of drawings holds everything you need to price a job and every reason you might lose money on it. Reading it properly takes a senior estimator days, and the things that hurt — a detail that contradicts the spec, a quantity nobody carried, a clause in the tender that shifts risk onto you — are exactly the ones that get missed at 11pm before a close.",
+        "The Blueprint Auditor reads the set instead. It measures, it cross-checks against the Ontario Building Code, and it says plainly what it found and where — page, detail, clause.",
+      ],
+      metrics: [
+        { value: "8", label: "Audit tools in one pass" },
+        { value: "100%", label: "On-device — drawings never leave" },
+        { value: "0", label: "Per-drawing or per-seat fees" },
+      ],
+      sections: [
+        {
+          heading: "Reading a drawing, not scraping a PDF",
+          body: [
+            "Construction drawings defeat generic document AI. Scale lives in a title block, meaning lives in line weight and hatch, and half the information is in details referenced from somewhere else in the set.",
+            "The pipeline handles the set as a set: it resolves scale, follows detail callouts, and keeps every measurement anchored to the sheet it came from — so a number you don't trust is always one click from the drawing that produced it.",
+          ],
+        },
+        {
+          heading: "Eight tools, one pass",
+          body: [
+            "Takeoff, code review, tender-risk scanning, RFI backlog triage, scope-gap finding, change-order risk, deficiency lists and meeting-minute tracking. Each one is a distinct question a project team asks of the same set of documents.",
+            "Running them together is the point. A scope gap is only interesting next to the quantity that should have covered it, and a tender clause only matters when you can see the drawing it applies to.",
+          ],
+        },
+        {
+          heading: "Owned, not rented",
+          body: [
+            "It runs on the estimator's own machine, on the MaraponeAI engine. Drawings — often the most commercially sensitive documents a contractor holds — never leave the office, and there is no per-drawing charge that makes people ration the tool they bought.",
+          ],
+        },
+      ],
+      motion: [
+        {
+          src: "/work/blueprint-auditor/blueprint-auditor-takeoff.mp4",
+          poster: "/work/blueprint-auditor/blueprint-auditor-takeoff-poster.jpg",
+          label: "Quantity takeoff",
+        },
+        {
+          src: "/work/blueprint-auditor/blueprint-auditor-review.mp4",
+          poster: "/work/blueprint-auditor/blueprint-auditor-review-poster.jpg",
+          label: "Code review",
+        },
+        {
+          src: "/work/blueprint-auditor/blueprint-auditor-tender-risk.mp4",
+          poster: "/work/blueprint-auditor/blueprint-auditor-tender-risk-poster.jpg",
+          label: "Tender risk",
+        },
+      ],
+      motionLandscape: true,
+      gallery: [
+        { src: "/work/blueprint-auditor/blueprint-auditor-assess-poster.jpg", label: "Assess" },
+        { src: "/work/blueprint-auditor/blueprint-auditor-pricing-poster.jpg", label: "Pricing" },
+        { src: "/work/blueprint-auditor/blueprint-auditor-deficiency-poster.jpg", label: "Deficiency list" },
+        { src: "/work/blueprint-auditor/blueprint-auditor-change-order-poster.jpg", label: "Change-order risk" },
+      ],
+      stack: ["Python", "PyQt6", "MaraponeAI", "On-device OCR", "macOS + Windows"],
+    },
+  },
+  {
+    slug: "ai-estimator",
+    name: "Marapone AI Estimator",
+    discipline: "App",
+    status: "Released",
+    blurb:
+      "Turns measured quantities into a bid you can defend — 57 assemblies, Toronto permits and development charges, a risk-weighted contingency and a margin ladder priced off your own win history.",
+    year: "2026",
+    cover: "/work/ai-estimator/dashboard.webp",
+    href: "https://marapone.com/construction/ai-estimator",
+    external: true,
+    caseStudy: {
+      tagline: "From measured quantities to a number you can stand behind.",
+      role: "Product design, estimating and risk engine, macOS build — with Marapone",
+      partner: {
+        name: "Marapone",
+        href: "https://marapone.com/construction",
+        note: "Built with the Marapone team — the Toronto cost data, the assembly library and the bid strategy that make it accurate are theirs.",
+      },
+      timeframe: "2026",
+      heroVideo: "/work/ai-estimator/ai-estimator-tour.mp4",
+      heroImage: "/work/ai-estimator/ai-estimator-tour-poster.jpg",
+      liveUrl: "https://marapone.com/construction/ai-estimator",
+      liveLabel: "the product page",
+      overview: [
+        "Takeoff tells you how much there is. It does not tell you what to charge. Between a measured quantity and a submitted bid sits everything that decides whether the job makes money: assemblies, crew productivity, permits, development charges, escalation, risk, and a margin call made against a competitor you cannot see.",
+        "The AI Estimator is the second half of that. It takes quantities as its input — from the Blueprint Auditor or a spreadsheet — and produces a priced, risk-adjusted, defensible bid.",
+      ],
+      metrics: [
+        { value: "57", label: "Assemblies across 20 CSI divisions" },
+        { value: "27", label: "Risk rules behind the contingency" },
+        { value: "100%", label: "Runs on the estimator's own machine" },
+      ],
+      sections: [
+        {
+          heading: "Your rates come first",
+          body: [
+            "Every estimating tool that leads with its own cost catalogue eventually gets ignored, because the estimator already knows what their drywall sub charges. So the rate sheet you import is the primary source, always. The bundled Toronto catalogue fills the gaps, validates what you brought, and drives contingency where your data is thin — it never overrules a number you know to be true.",
+            "Feed in completed jobs and it goes further: catalogue defaults get replaced by your crews' measured productivity and cost variance, weighted by how much history it actually has.",
+          ],
+        },
+        {
+          heading: "The soft costs nobody models",
+          body: [
+            "On a Toronto residential project the development charge routinely exceeds the entire finishes package, and it is the line most often carried as a guess. The estimator models it properly — permits on the current fee schedule with surcharges, DCs gross and reduced, parkland, the Community Benefits Charge, HST and the new housing rebate.",
+            "Municipal schedules change every year, so every figure is editable in-app and stored on the user's own machine. Nothing about staying current depends on us shipping an update.",
+          ],
+        },
+        {
+          heading: "A number with a reason attached",
+          body: [
+            "Twenty-seven risk rules produce a recommended contingency, each with a written reason and a mitigation rather than a single opaque percentage. On top sits what-if scenarios, tornado sensitivity, and a Monte Carlo distribution that answers the only question that matters — what is the chance this job loses money.",
+            "The bid strategy layer closes it out: a margin ladder with win probability drawn from the firm's own recorded outcomes, an expected-value optimum, a risk-adjusted floor and a walk-away number.",
+          ],
+        },
+      ],
+      motion: [
+        {
+          src: "/work/ai-estimator/clip-estimate.mp4",
+          poster: "/work/ai-estimator/clip-estimate-poster.jpg",
+          label: "Building the estimate",
+        },
+        {
+          src: "/work/ai-estimator/clip-risk.mp4",
+          poster: "/work/ai-estimator/clip-risk-poster.jpg",
+          label: "Risk & contingency",
+        },
+        {
+          src: "/work/ai-estimator/clip-strategy.mp4",
+          poster: "/work/ai-estimator/clip-strategy-poster.jpg",
+          label: "Bid strategy",
+        },
+      ],
+      motionLandscape: true,
+      gallery: [
+        { src: "/work/ai-estimator/estimate.webp", label: "Estimate" },
+        { src: "/work/ai-estimator/risk.webp", label: "Risk register" },
+        { src: "/work/ai-estimator/scenarios.webp", label: "What-if scenarios" },
+        { src: "/work/ai-estimator/softcosts.webp", label: "Soft costs" },
+        { src: "/work/ai-estimator/strategy.webp", label: "Bid strategy" },
+        { src: "/work/ai-estimator/history.webp", label: "Historical learning" },
+      ],
+      stack: ["Python", "PyQt6", "MaraponeAI", "Monte Carlo", "macOS"],
+    },
+  },
+  {
+    slug: "scopeguard",
+    name: "Marapone ScopeGuard",
+    discipline: "App",
+    status: "Released",
+    blurb:
+      "Reads every subcontractor proposal against the tender package and reports what nobody priced, what two trades both carried, and which wording will not survive a dispute.",
+    year: "2026",
+    cover: "/work/scopeguard/dashboard.webp",
+    href: "https://marapone.com/construction/scopeguard",
+    external: true,
+    caseStudy: {
+      tagline: "The scope gaps in a buyout, found before award.",
+      role: "Product design, cross-reference engine, macOS build — with Marapone",
+      partner: {
+        name: "Marapone",
+        href: "https://marapone.com/construction",
+        note: "Built with the Marapone team, whose buyout standards and Ontario trade knowledge define what the engine looks for.",
+      },
+      timeframe: "2026",
+      heroVideo: "/work/scopeguard/scopeguard-tour.mp4",
+      heroImage: "/work/scopeguard/scopeguard-tour-poster.jpg",
+      liveUrl: "https://marapone.com/construction/scopeguard",
+      liveLabel: "the product page",
+      overview: [
+        "You win a job, then send scopes to twenty trades. What comes back is prose — inclusions, exclusions and qualifications written by twenty different estimators, each protecting their own number. Buried in that pile is work the spec requires that nobody priced, work two trades are both carrying, and wording that will be read against you in an adjudication.",
+        "Most general contractors review this by hand, against a checklist, under time pressure, days before award. ScopeGuard turns it into a structured pass that produces a defensible record.",
+      ],
+      metrics: [
+        { value: "8", label: "Classes of finding, each with a citation" },
+        { value: "20", label: "Trade packages modelled" },
+        { value: "100%", label: "On-prem — proposals stay in the office" },
+      ],
+      sections: [
+        {
+          heading: "Reading exclusions, not just inclusions",
+          body: [
+            "The commercially dangerous sentence in a subcontractor proposal is almost never a line item. It is a clause: “excludes winter concreting” on a structure running November to March, or “fire alarm verification by others” on work that cannot be occupied without it.",
+            "The engine reads the master documents and every proposal, then cross-references them — missing scope, required scope explicitly excluded, double coverage between trades, interface grey zones, unusable pricing, and addenda that were never acknowledged.",
+          ],
+        },
+        {
+          heading: "Every finding is citable",
+          body: [
+            "A finding nobody can check is worse than no finding, because it costs an estimator an hour to disprove. So each one carries a plain-language explanation, a citation on both sides — the clause in the master documents and the page and line in the sub's letter — a confidence score, and a cost exposure range with its stated basis.",
+            "That structure is what makes the output usable in a buyout meeting rather than just interesting.",
+          ],
+        },
+        {
+          heading: "Proven on a real package",
+          body: [
+            "The app ships with a full Toronto buyout — a project manual, three addenda and fourteen real subcontractor proposals — that runs through the same reader, extractor and cross-reference engine a customer's own documents go through. Nothing about the demo is canned.",
+            "On that package it finds, among other things, an excluded fire pump that explains why the sprinkler price looks sharp, an air-barrier tie-in that both the glazing and envelope trades excluded, firestopping that nobody carried at all, and four proposals that never acknowledged Addendum 3.",
+          ],
+        },
+      ],
+      motion: [
+        {
+          src: "/work/scopeguard/clip-findings.mp4",
+          poster: "/work/scopeguard/clip-findings-poster.jpg",
+          label: "Findings",
+        },
+        {
+          src: "/work/scopeguard/clip-compare.mp4",
+          poster: "/work/scopeguard/clip-compare-poster.jpg",
+          label: "Comparing trades",
+        },
+        {
+          src: "/work/scopeguard/clip-clarifications.mp4",
+          poster: "/work/scopeguard/clip-clarifications-poster.jpg",
+          label: "Clarifications",
+        },
+      ],
+      motionLandscape: true,
+      gallery: [
+        { src: "/work/scopeguard/findings.webp", label: "Findings" },
+        { src: "/work/scopeguard/scopes.webp", label: "Scopes" },
+        { src: "/work/scopeguard/compare.webp", label: "Trade comparison" },
+        { src: "/work/scopeguard/clarifications.webp", label: "Clarifications" },
+        { src: "/work/scopeguard/intelligence.webp", label: "Intelligence" },
+        { src: "/work/scopeguard/trades.webp", label: "Trade packages" },
+      ],
+      stack: ["Python", "PyQt6", "MaraponeAI", "On-device OCR", "macOS"],
+    },
+  },
+  {
     slug: "marapone-logistics",
     name: "Marapone Logistics Suite",
     discipline: "App",
@@ -186,7 +465,13 @@ export const projects: Project[] = [
     cover: "/work/logistics/dashboard.jpg",
     caseStudy: {
       tagline: "The paperwork, audited. The risk, surfaced. On your own hardware.",
-      role: "Desktop application, model training, trade-data integrations",
+      role: "Desktop application, model training, integrations — with Marapone",
+      partner: {
+        name: "Marapone",
+        href: "https://marapone.com",
+        note: "Built with the Marapone team, who own the product and the freight and trade-compliance expertise behind it.",
+      },
+
       timeframe: "2025",
       heroVideo: "/work/logistics/dashboard.mp4",
       heroImage: "/work/logistics/dashboard.jpg",
@@ -252,7 +537,13 @@ export const projects: Project[] = [
     year: "2026",
     caseStudy: {
       tagline: "The Construction Suite, in your pocket, on site.",
-      role: "Mobile product design, native iOS + Android build",
+      role: "Mobile product design, native iOS + Android build — with Marapone",
+      partner: {
+        name: "Marapone",
+        href: "https://marapone.com",
+        note: "Built with the Marapone team as the mobile companion to their desktop suite.",
+      },
+
       timeframe: "2026 — in production",
       overview: [
         "The Construction App is the companion to Marapone's Construction Suite, built so a crew can carry its tools onto the site instead of leaving them on a desktop back in the trailer.",
@@ -301,7 +592,13 @@ export const projects: Project[] = [
     year: "2026",
     caseStudy: {
       tagline: "The Logistics Suite, wherever the freight is.",
-      role: "Mobile product design, native iOS + Android build",
+      role: "Mobile product design, native iOS + Android build — with Marapone",
+      partner: {
+        name: "Marapone",
+        href: "https://marapone.com",
+        note: "Built with the Marapone team as the mobile companion to their desktop suite.",
+      },
+
       timeframe: "2026 — in production",
       overview: [
         "The Logistics App is the companion to Marapone's Logistics Suite, built for the forwarders and importers who aren't sitting at a desk when a shipment needs a decision.",

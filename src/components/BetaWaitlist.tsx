@@ -220,7 +220,7 @@ export function BetaWaitlist({ project, platforms, blurb }: Props) {
 }
 
 const inputClass =
-  "w-full rounded-md border border-border bg-white/[0.02] px-3.5 py-2.5 text-sm text-foreground outline-none transition-colors placeholder:text-faint focus:border-border-strong focus:bg-white/[0.04]";
+  "w-full rounded-md border border-border bg-black/[0.015] px-3.5 py-2.5 text-sm text-foreground outline-none transition-colors placeholder:text-faint focus:border-border-strong focus:bg-black/[0.03]";
 
 function Field({
   label,

@@ -24,6 +24,8 @@ const statusTone: Record<Status, string> = {
 };
 
 export function ProjectCard({ project }: { project: Project }) {
+  const partner = project.caseStudy?.partner;
+
   return (
     <Link
       href={`/work/${project.slug}`}
@@ -53,6 +55,12 @@ export function ProjectCard({ project }: { project: Project }) {
             {project.discipline}
             <span className="mx-2 opacity-40">/</span>
             {project.year}
+            {partner && (
+              <>
+                <span className="mx-2 opacity-40">/</span>
+                with {partner.name}
+              </>
+            )}
           </span>
           <span className="flex items-center gap-2 text-[0.6875rem] tracking-wide text-muted">
             <span

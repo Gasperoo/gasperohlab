@@ -29,7 +29,7 @@ export function FromTheLab() {
           <Reveal key={note.slug} delay={i * 0.06}>
             <Link
               href={`/lab/${note.slug}`}
-              className="group grid gap-3 border-b border-border py-7 transition-colors duration-300 hover:bg-white/[0.015] lg:grid-cols-[13rem_1fr] lg:items-baseline lg:gap-16"
+              className="group grid gap-3 border-b border-border py-7 transition-colors duration-300 hover:bg-black/[0.022] lg:grid-cols-[13rem_1fr] lg:items-baseline lg:gap-16"
             >
               <p className="eyebrow">
                 {note.kind}

@@ -76,7 +76,7 @@ export function SocialProof() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={`${p.name} — visit live`}
-                  className="relative block h-7 w-36 opacity-45 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
+                  className="relative block h-7 w-36 opacity-55 brightness-0 transition-opacity duration-300 hover:opacity-100"
                 >
                   <Image
                     src={p.logo}

@@ -133,7 +133,7 @@ export default async function NotePage({
                 <Link
                   key={n.slug}
                   href={`/lab/${n.slug}`}
-                  className="group flex items-baseline justify-between gap-6 border-b border-border py-5 transition-colors duration-300 hover:bg-white/[0.015]"
+                  className="group flex items-baseline justify-between gap-6 border-b border-border py-5 transition-colors duration-300 hover:bg-black/[0.022]"
                 >
                   <span className="t-h3 flex items-start gap-1.5">
                     {n.title}

@@ -137,6 +137,28 @@ export default async function CaseStudyPage({
               <h1 className="t-h1 max-w-3xl text-balance">{project.name}</h1>
               <p className="t-lede mt-6 max-w-2xl text-pretty">{cs.tagline}</p>
 
+              {cs.partner && (
+                <p className="mt-7 max-w-2xl border-l border-border-strong pl-5 text-pretty text-sm leading-relaxed text-muted">
+                  <span className="text-foreground">
+                    In partnership with{" "}
+                    {cs.partner.href ? (
+                      <a
+                        href={cs.partner.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="underline decoration-border-strong underline-offset-4 transition-colors hover:decoration-foreground"
+                      >
+                        {cs.partner.name}
+                      </a>
+                    ) : (
+                      cs.partner.name
+                    )}
+                    .
+                  </span>{" "}
+                  {cs.partner.note}
+                </p>
+              )}
+
               {cs.liveUrl && (
                 <a
                   href={cs.liveUrl}
@@ -277,13 +299,21 @@ export default async function CaseStudyPage({
                 The app, running
               </h2>
             </Reveal>
-            <div className="mt-10 grid gap-8 sm:grid-cols-3">
+            <div
+              className={`mt-10 grid gap-8 ${
+                cs.motionLandscape ? "lg:grid-cols-2" : "sm:grid-cols-3"
+              }`}
+            >
               {cs.motion.map((clip, i) => (
                 <Reveal key={clip.label} delay={i * 0.07}>
                   <figure className="flex flex-col">
                     <div className="overflow-hidden rounded-lg border border-border bg-background-elevated">
                       <AutoVideo
-                        className="mx-auto block h-auto w-full max-w-[300px]"
+                        className={
+                          cs.motionLandscape
+                            ? "block h-auto w-full"
+                            : "mx-auto block h-auto w-full max-w-[300px]"
+                        }
                         src={clip.src}
                         poster={clip.poster}
                         label={`${project.name} — ${clip.label}`}
@@ -321,7 +351,7 @@ export default async function CaseStudyPage({
                 {cs.integrations.map((it) => (
                   <div
                     key={it.name}
-                    className="relative h-7 w-28 opacity-45 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
+                    className="relative h-7 w-28 opacity-50 brightness-0 transition-opacity duration-300 hover:opacity-100"
                   >
                     <Image
                       src={it.src}
@@ -399,7 +429,7 @@ export default async function CaseStudyPage({
                 <Reveal key={p.slug} delay={i * 0.06}>
                   <Link
                     href={`/work/${p.slug}`}
-                    className="group grid gap-2 border-b border-border py-7 transition-colors duration-300 hover:bg-white/[0.015] lg:grid-cols-[13rem_1fr] lg:items-baseline lg:gap-16"
+                    className="group grid gap-2 border-b border-border py-7 transition-colors duration-300 hover:bg-black/[0.022] lg:grid-cols-[13rem_1fr] lg:items-baseline lg:gap-16"
                   >
                     <span className="eyebrow">
                       {p.discipline}
