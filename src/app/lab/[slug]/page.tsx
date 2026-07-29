@@ -139,8 +139,12 @@ export default async function NotePage({
               {note.readingTime} min read
             </p>
             <h1 className="t-h1 mt-6 text-balance">{note.title}</h1>
+            {/* No byline. With `founder` unset the credit resolved to "By
+                GASPEROHLAB" on the lab's own site — a line that reads as a
+                placeholder because it tells the reader nothing. The author is
+                still carried in the OpenGraph tags and the JSON-LD graph, where
+                a machine does need to be told. */}
             <p className="t-lede mt-6 text-pretty">{note.excerpt}</p>
-            <p className="mt-7 text-sm text-muted">By {author}</p>
           </Reveal>
 
           {/* Contents. A ruled block rather than a floating sidebar — these

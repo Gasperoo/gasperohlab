@@ -12,7 +12,7 @@ import { notes, formatDate } from "@/lib/notes";
 export const metadata: Metadata = {
   title: "The Lab",
   description:
-    "Notes from GASPEROHLAB — devlogs, engineering write-ups and the thinking behind what we build and what we cut.",
+    "Engineering write-ups and design notes from GASPEROHLAB — why the work is built the way it is, and why some of it was cut.",
   alternates: {
     canonical: "/lab",
     types: {
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     url: "https://gasperohlab.com/lab",
     title: "The Lab · GASPEROHLAB",
     description:
-      "Devlogs, engineering write-ups and the thinking behind what we build.",
+      "Engineering write-ups and design notes on how the work is built.",
   },
 };
 
@@ -42,8 +42,8 @@ export default function LabIndex() {
       >
         <PageHero
           label="The lab notebook"
-          title="What we're learning, out loud."
-          lede="We build to learn. This is where some of that gets written down — devlogs, engineering notes, and the reasoning behind what makes it out of the lab and what doesn't."
+          title="The thinking behind the work."
+          lede="Engineering write-ups and design notes from inside the products — why they are built the way they are, and why some of them were cut. Published when there is something worth reporting, not on a schedule."
         >
           <a
             href="/feed.xml"
@@ -76,16 +76,13 @@ export default function LabIndex() {
                         {note.title}
                         <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-faint transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground" />
                       </h2>
+                      {/* Tags are not rendered here. They earn their keep as
+                          search terms and as the input to the related-notes
+                          list; printed under every row they were three generic
+                          lowercase words competing with the excerpt. */}
                       <p className="t-body mt-3 text-pretty text-[0.9375rem]">
                         {note.excerpt}
                       </p>
-                      {note.tags && note.tags.length > 0 && (
-                        <p className="eyebrow mt-4 flex flex-wrap gap-x-3 gap-y-1.5">
-                          {note.tags.map((tag) => (
-                            <span key={tag}>{tag}</span>
-                          ))}
-                        </p>
-                      )}
                     </div>
                     <span className="eyebrow shrink-0">
                       {note.readingTime} min

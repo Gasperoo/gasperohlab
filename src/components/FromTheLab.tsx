@@ -13,8 +13,8 @@ export function FromTheLab({ index = "09" }: { index?: string }) {
       <SectionHead
         index={index}
         label="From the lab"
-        title="What we're learning, out loud"
-        lede="Devlogs, engineering notes and the reasoning behind what makes it out of the lab — and what doesn't."
+        title="The thinking behind the work"
+        lede="Engineering write-ups and design notes on how the products are built — and why some of them were cut."
         action={
           <Link href="/lab" className="group inline-flex">
             <TextLink>All notes</TextLink>

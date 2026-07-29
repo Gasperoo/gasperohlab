@@ -108,67 +108,6 @@ export const notes: Note[] = [
     ],
   },
   {
-    slug: "the-numbers-we-deleted",
-    title: "The numbers we deleted",
-    date: "2026-07-29",
-    kind: "Notes",
-    excerpt:
-      "Our homepage claimed 12,000 documents audited and an 8× speed-up, under a heading that said “Proof, not promises”. Both were placeholders. Here's what replaced them.",
-    readingTime: 4,
-    tags: ["honesty", "process", "design"],
-    body: [
-      {
-        type: "p",
-        text: "There was a section on this site headed “Proof, not promises”. It carried four large figures: 12k+ documents audited, 8× faster turnaround, 100% on-prem, 0 bytes leaving the building. Directly above them, in the source, sat this:",
-      },
-      {
-        type: "code",
-        lang: "ts",
-        caption: "components/Metrics.tsx, as shipped",
-        code: `// NOTE: these are illustrative placeholders
-// — swap in the real numbers before launch.`,
-      },
-      {
-        type: "p",
-        text: "They were never swapped. That is an ordinary way for a site to end up lying: nobody decided to, someone wrote a plausible number to see whether the layout worked, and the layout worked.",
-      },
-      { type: "h2", text: "Two of the four were never a problem" },
-      {
-        type: "p",
-        text: "“100% on-prem” and “0 bytes leaving the building” aren't measurements. They're architectural facts — statements about how the thing is built, true the same way “it makes no network calls” is true. Nobody has to audit them and they can't drift.",
-      },
-      {
-        type: "p",
-        text: "The other two were measurements of deployments we don't publish telemetry for. Twelve thousand documents over what period, across how many customers? Eight times faster than which baseline? We couldn't answer either question, which means we shouldn't have been asking a reader to accept the answer.",
-      },
-      { type: "h2", text: "Count something you already know" },
-      {
-        type: "p",
-        text: "The replacement figures are counted from the work archive at build time. The number of released products and the number in production are facts this site already holds — they render the project cards forty pixels further down. Deriving the headline figures from the same array means they cannot disagree with the page beneath them, and adding a project updates them without anyone remembering to.",
-      },
-      {
-        type: "code",
-        lang: "tsx",
-        caption: "A figure that can't drift from the page under it",
-        code: `const released = projects.filter((p) => p.status === "Released").length;
-const building = projects.filter((p) => p.status === "In Production").length;`,
-      },
-      {
-        type: "quote",
-        text: "A number you can't source isn't proof. It's a promise wearing proof's clothes.",
-      },
-      { type: "h2", text: "Where the real numbers go" },
-      {
-        type: "p",
-        text: "Not nowhere — the case studies. A figure attached to a specific deployment, with its scope stated, is a claim someone can interrogate. The same figure floating on a homepage beside three others is decoration, and the larger it's set, the more decorative it becomes.",
-      },
-      {
-        type: "p",
-        text: "The lesson isn't “don't use placeholders”. It's that a placeholder under a heading claiming proof is a different category of debt from a placeholder in a layout, and it should never have survived the same review.",
-      },
-    ],
-  },
-  {
     slug: "ai-you-actually-own",
     title: "The case for AI you actually own",
     date: "2026-06-18",
@@ -204,71 +143,6 @@ const building = projects.filter((p) => p.status === "In Production").length;`,
       {
         type: "p",
         text: "The lesson we keep relearning: the hard part wasn't the model. It was having the discipline to say no to the cloud-and-subscription default that every other tool in the category reaches for.",
-      },
-    ],
-  },
-  {
-    slug: "cursor-fire-hero",
-    title: "A hero that catches fire under the cursor",
-    date: "2026-05-02",
-    kind: "Devlog",
-    excerpt:
-      "How the landing-page character reveal worked — a radial mask, a smoothed rAF loop, and the decision to delete the whole thing anyway.",
-    readingTime: 4,
-    tags: ["devlog", "css", "performance", "design"],
-    body: [
-      {
-        type: "p",
-        text: "The character on our landing page had two states: a calm version, and an on-fire version layered directly over it. Moving your cursor across it revealed the fire underneath through a soft spotlight. It was the one flourish on an otherwise deliberately quiet site, so it had to feel good and cost almost nothing.",
-      },
-      {
-        type: "figure",
-        src: "/hero/hero-character.png",
-        alt: "The calm voxel character that sat in the landing-page hero.",
-        caption: "The base layer — always painted, never masked.",
-      },
-      {
-        type: "figure",
-        src: "/hero/hero-character-fire.png",
-        alt: "The same voxel character, engulfed in flame.",
-        caption:
-          "The fire layer — also always painted, revealed only where the mask allowed.",
-      },
-      { type: "h2", text: "Reveal with a mask, not a second render" },
-      {
-        type: "p",
-        text: "The trick is that both images are always painted. The fire layer just carries a CSS radial-gradient mask that's transparent everywhere except a circle around the pointer. Nudge the mask and the fire appears to move with the cursor — no canvas, no per-frame image work.",
-      },
-      {
-        type: "code",
-        lang: "ts",
-        caption: "One string, rewritten per frame",
-        code: `// Ease toward the pointer rather than snapping to it — the lerp is
-// the entire reason this feels warm instead of twitchy.
-x += (targetX - x) * 0.12;
-y += (targetY - y) * 0.12;
-
-fireLayer.style.maskImage =
-  \`radial-gradient(circle 140px at \${x}px \${y}px,
-     #000 0%, #000 45%, transparent 100%)\`;`,
-      },
-      {
-        type: "p",
-        text: "That's the whole effect: one requestAnimationFrame loop, one string assignment, nothing re-serialised. The lerp is doing all of the emotional work.",
-      },
-      { type: "h2", text: "Know when to switch it off" },
-      {
-        type: "p",
-        text: "The effect bailed immediately on two conditions: prefers-reduced-motion, and any device without hover. On a phone there's no cursor to chase, so rather than ship a broken interaction we showed the calm character and moved on.",
-      },
-      { type: "h2", text: "And then we deleted it" },
-      {
-        type: "p",
-        text: "It's gone. The hero is now one sentence set large over a ruled fact strip, and the character, the accent glow behind it, the parallax and the scroll hint went with it. Nothing was wrong with the effect — it was cheap, it degraded properly, and people liked it. It was simply the loudest thing on a site whose entire argument is restraint, and it was the first thing every visitor met.",
-      },
-      {
-        type: "p",
-        text: "Keeping the write-up and cutting the feature is roughly how the lab is supposed to work. The technique was worth learning. It just wasn't worth being our first impression.",
       },
     ],
   },

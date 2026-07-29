@@ -21,7 +21,7 @@ export default async function OgImage({
   const kind = note?.kind ?? "Note";
   const excerpt =
     note?.excerpt ??
-    "Devlogs, engineering write-ups and the thinking behind what we build.";
+    "Engineering write-ups and design notes on how the work is built.";
 
   return new ImageResponse(
     (

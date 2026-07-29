@@ -65,7 +65,7 @@ ${(note.tags ?? []).map((t) => `      <category>${esc(t)}</category>`).join("\n"
     <title>GASPEROHLAB — The Lab</title>
     <link>${siteUrl}/lab</link>
     <atom:link href="${siteUrl}/feed.xml" rel="self" type="application/rss+xml" />
-    <description>Devlogs, engineering write-ups and the thinking behind what GASPEROHLAB builds — and what it cuts.</description>
+    <description>Engineering write-ups and design notes from GASPEROHLAB — how the work is built, and why some of it was cut.</description>
     <language>en</language>
     <lastBuildDate>${new Date(updated + "T00:00:00Z").toUTCString()}</lastBuildDate>
 ${items}
