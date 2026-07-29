@@ -9,8 +9,13 @@ import { ArrowRight } from "lucide-react";
  * carries the section now is one sentence set large, and a ruled fact strip
  * underneath it.
  *
- * This is a server component: the entrance is a pure CSS animation, so nothing
- * here waits on hydration and the LCP text paints with the first frame.
+ * The one thing that moves is the scan — a hairline crossing the sheet every
+ * seventeen seconds, described in full at `.hero-scan` in globals.css. It reads
+ * through both themes off two tokens, and it is the site's fifth use of the
+ * accent, which is why it is a single semi-transparent pixel.
+ *
+ * This is a server component: both the entrance and the scan are pure CSS, so
+ * nothing here waits on hydration and the LCP text paints with the first frame.
  */
 
 // Staggered by hand rather than by a variants tree — four elements don't
@@ -38,46 +43,60 @@ const cellRules = [
 export function Hero() {
   return (
     <section id="top">
-      <div className="mx-auto w-full max-w-[76rem] px-5 pt-36 pb-16 sm:px-8 sm:pt-44 sm:pb-20">
-        <div className="rise" style={{ animationDelay: delays[0] }}>
-          <p className="eyebrow flex items-center gap-2.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
-            Independent software lab
+      {/* Full-bleed wrapper so the scan crosses the whole sheet rather than
+          stopping at the content column's margins. `isolate` keeps its stacking
+          local, so the band can never end up over the type. */}
+      <div className="relative isolate">
+        <div className="hero-scan" aria-hidden />
+        <div className="relative z-10 mx-auto w-full max-w-[76rem] px-5 pt-36 pb-16 sm:px-8 sm:pt-44 sm:pb-20">
+          <div className="rise" style={{ animationDelay: delays[0] }}>
+            <p className="eyebrow flex items-center gap-2.5">
+              <span
+                className="h-1.5 w-1.5 rounded-full bg-accent"
+                aria-hidden
+              />
+              Independent software lab
+            </p>
+          </div>
+
+          {/* Set in caps by CSS rather than typed that way, so assistive tech and
+            anyone copying the line still get the sentence. Caps at this size
+            need the tracking opened back up — -0.042em is set for lowercase
+            with descenders to lean on, and it collides without them. */}
+          <h1
+            className="rise t-hero mt-8 max-w-4xl text-balance uppercase tracking-[-0.02em]"
+            style={{ animationDelay: delays[1] }}
+          >
+            We design and ship applications, AI Models, and games.
+          </h1>
+
+          <p
+            className="rise t-lede mt-8 max-w-xl text-pretty"
+            style={{ animationDelay: delays[2] }}
+          >
+            GASPEROHLAB takes hard problems from a single question all the way
+            to production — engineering software people actually use, not slide
+            decks.
           </p>
-        </div>
 
-        <h1
-          className="rise t-hero mt-8 max-w-4xl text-balance"
-          style={{ animationDelay: delays[1] }}
-        >
-          We design and ship applications, AI Models, and games.
-        </h1>
-
-        <p
-          className="rise t-lede mt-8 max-w-xl text-pretty"
-          style={{ animationDelay: delays[2] }}
-        >
-          GASPEROHLAB takes hard problems from a single question all the way to
-          production — engineering software people actually use, not slide decks.
-        </p>
-
-        <div
-          className="rise mt-10 flex w-full max-w-sm flex-col items-stretch gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:items-center"
-          style={{ animationDelay: delays[3] }}
-        >
-          <a
-            href="#work"
-            className="group inline-flex items-center justify-center gap-2 rounded-md bg-accent px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
+          <div
+            className="rise mt-10 flex w-full max-w-sm flex-col items-stretch gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:items-center"
+            style={{ animationDelay: delays[3] }}
           >
-            View selected work
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-          </a>
-          <a
-            href="#contact"
-            className="inline-flex items-center justify-center rounded-md border border-border-strong px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-surface"
-          >
-            Start a project
-          </a>
+            <a
+              href="#work"
+              className="group inline-flex items-center justify-center gap-2 rounded-md bg-accent px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
+            >
+              View selected work
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </a>
+            <a
+              href="#contact"
+              className="inline-flex items-center justify-center rounded-md border border-border-strong px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-surface"
+            >
+              Start a project
+            </a>
+          </div>
         </div>
       </div>
 
