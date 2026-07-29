@@ -62,7 +62,7 @@ export function CaseGallery({ shots, phone = false }: Props) {
             type="button"
             onClick={() => openAt(i)}
             aria-label={`Open ${s.label}`}
-            className="surface surface-hover-fx group relative block overflow-hidden rounded-xl p-0 text-left"
+            className="group relative block overflow-hidden rounded-lg border border-border bg-surface p-0 text-left transition-colors duration-300 hover:border-border-strong hover:bg-surface-hover"
           >
             <div
               className={`relative w-full overflow-hidden ${
@@ -74,12 +74,12 @@ export function CaseGallery({ shots, phone = false }: Props) {
                 alt={s.label}
                 fill
                 sizes={phone ? "(max-width: 640px) 45vw, 20vw" : "(max-width: 640px) 90vw, 45vw"}
-                className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+                className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
               />
             </div>
-            <span className="flex items-center justify-between px-4 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
+            <span className="eyebrow flex items-center justify-between border-t border-border px-4 py-3.5">
               {s.label}
-              <span className="text-faint transition-colors group-hover:text-accent">
+              <span className="transition-colors group-hover:text-foreground">
                 {String(i + 1).padStart(2, "0")}
               </span>
             </span>
@@ -97,7 +97,7 @@ export function CaseGallery({ shots, phone = false }: Props) {
             transition={{ duration: 0.2 }}
           >
             <div
-              className="absolute inset-0 bg-black/85 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/88 backdrop-blur-[3px]"
               onClick={() => setOpen(false)}
               aria-hidden
             />
@@ -106,7 +106,7 @@ export function CaseGallery({ shots, phone = false }: Props) {
               type="button"
               onClick={() => setOpen(false)}
               aria-label="Close"
-              className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background/70 text-muted backdrop-blur transition-colors hover:bg-white/10 hover:text-foreground"
+              className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-md border border-border bg-background/80 text-muted backdrop-blur transition-colors hover:border-border-strong hover:text-foreground"
             >
               <X className="h-5 w-5" />
             </button>
@@ -118,7 +118,7 @@ export function CaseGallery({ shots, phone = false }: Props) {
               className="relative flex w-full max-w-5xl flex-col items-center"
             >
               <div
-                className={`relative w-full overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl shadow-black/60 ${
+                className={`relative w-full overflow-hidden rounded-lg border border-border bg-black ${
                   phone ? "mx-auto max-w-[320px] aspect-[1320/2868]" : "aspect-[16/10]"
                 }`}
               >
@@ -166,15 +166,15 @@ export function CaseGallery({ shots, phone = false }: Props) {
                     type="button"
                     onClick={() => go(-1)}
                     aria-label="Previous"
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background/70 text-muted backdrop-blur transition-colors hover:bg-white/10 hover:text-foreground"
+                    className="flex h-11 w-11 items-center justify-center rounded-md border border-border bg-background/80 text-muted backdrop-blur transition-colors hover:border-border-strong hover:text-foreground"
                   >
                     <ChevronLeft className="h-5 w-5" />
                   </button>
                 )}
-                <p className="min-w-40 text-center text-sm font-medium text-foreground">
+                <p className="min-w-40 text-center text-sm text-foreground">
                   {active.label}
-                  <span className="ml-2 font-mono text-xs text-faint">
-                    {index + 1}/{shots.length}
+                  <span className="ml-2.5 font-mono text-xs text-faint">
+                    {String(index + 1).padStart(2, "0")}/{String(shots.length).padStart(2, "0")}
                   </span>
                 </p>
                 {multiple && (
@@ -182,7 +182,7 @@ export function CaseGallery({ shots, phone = false }: Props) {
                     type="button"
                     onClick={() => go(1)}
                     aria-label="Next"
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background/70 text-muted backdrop-blur transition-colors hover:bg-white/10 hover:text-foreground"
+                    className="flex h-11 w-11 items-center justify-center rounded-md border border-border bg-background/80 text-muted backdrop-blur transition-colors hover:border-border-strong hover:text-foreground"
                   >
                     <ChevronRight className="h-5 w-5" />
                   </button>

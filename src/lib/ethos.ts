@@ -25,11 +25,13 @@ export const principles: Principle[] = [
   },
 ];
 
-export type Stat = { count?: number; value?: string; suffix?: string; label: string };
+/** Figures render as written. The count/suffix split existed only to feed the
+ *  scroll-triggered <CountUp>, which no longer exists. */
+export type Stat = { value: string; label: string };
 
 export const stats: Stat[] = [
-  { count: 3, label: "Products in production" },
-  { count: 4, label: "Disciplines under one roof" },
+  { value: "3", label: "Products in production" },
+  { value: "4", label: "Disciplines under one roof" },
   { value: "2025", label: "Founded" },
-  { count: 100, suffix: "%", label: "Independently owned" },
+  { value: "100%", label: "Independently owned" },
 ];

@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "./Reveal";
+import { Section, SectionHead, TextLink } from "./Section";
 
 // The same four gates every project passes through, shared with /about.
-// Here they're drawn as a pipeline; the About page tells the fuller story.
-const steps = [
+export const steps = [
   {
     title: "Ask",
     body: "We start with a question worth answering, not a spec. If we can't say why it matters, we don't start.",
@@ -25,54 +24,34 @@ const steps = [
 
 export function HowWeWork() {
   return (
-    <section
-      id="process"
-      className="relative mx-auto max-w-6xl px-5 py-24 sm:px-6 sm:py-32"
-    >
-      <Reveal className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
-        <div className="max-w-2xl">
-          <p className="eyebrow mb-4">How we work</p>
-          <h2 className="font-display text-balance text-4xl font-bold tracking-tight sm:text-5xl">
-            From a question to production.
-          </h2>
-          <p className="mt-4 max-w-xl text-pretty text-lg leading-relaxed text-muted">
-            No two projects look the same, but they all move through the same
-            four gates. Most ideas don&apos;t make it past the second — and that
-            is exactly the point.
-          </p>
-        </div>
-        <Link
-          href="/about"
-          className="group inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-foreground"
-        >
-          The full method
-          <ArrowUpRight className="h-4 w-4 text-accent transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-        </Link>
-      </Reveal>
+    <Section id="process">
+      <SectionHead
+        index="06"
+        label="How we work"
+        title="From a question to production"
+        lede="No two projects look the same, but they all move through the same four gates. Most ideas don't make it past the second — and that is exactly the point."
+        action={
+          <Link href="/about" className="group inline-flex">
+            <TextLink>The full method</TextLink>
+          </Link>
+        }
+      />
 
-      <div className="relative mt-14">
-        {/* Connecting line behind the step badges (desktop only) */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-0 right-0 top-5 hidden h-px bg-border lg:block"
-        />
-
-        <ol className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-          {steps.map((step, i) => (
-            <Reveal as="li" key={step.title} delay={i * 0.08} className="relative">
-              <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full border border-border-strong bg-surface font-mono text-sm font-semibold text-accent">
-                0{i + 1}
-              </span>
-              <h3 className="mt-5 font-display text-xl font-bold tracking-tight sm:text-2xl">
-                {step.title}
-              </h3>
-              <p className="mt-3 text-pretty leading-relaxed text-muted">
+      {/* A pipeline read left to right, marked by a rule above each step rather
+          than by numbered circles on a connector line. */}
+      <ol className="mt-16 grid gap-10 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-4 lg:gap-x-8">
+        {steps.map((step, i) => (
+          <Reveal as="li" key={step.title} delay={i * 0.07}>
+            <div className="border-t border-border-strong pt-5">
+              <span className="eyebrow">Step 0{i + 1}</span>
+              <h3 className="t-h3 mt-4 text-xl">{step.title}</h3>
+              <p className="t-body mt-3 text-pretty text-[0.9375rem]">
                 {step.body}
               </p>
-            </Reveal>
-          ))}
-        </ol>
-      </div>
-    </section>
+            </div>
+          </Reveal>
+        ))}
+      </ol>
+    </Section>
   );
 }

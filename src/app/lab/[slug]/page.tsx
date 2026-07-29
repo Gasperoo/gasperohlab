@@ -93,34 +93,30 @@ export default async function NotePage({
         tabIndex={-1}
         className="relative z-10 flex-1 focus:outline-none"
       >
-        <article className="mx-auto max-w-2xl px-5 pt-32 pb-12 sm:px-6 sm:pt-40">
+        <article className="mx-auto w-full max-w-2xl px-5 pt-32 pb-12 sm:px-8 sm:pt-40">
           <Reveal>
             <Link
               href="/lab"
-              className="group inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-foreground"
+              className="group inline-flex items-center gap-2 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-faint transition-colors hover:text-foreground"
             >
-              <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+              <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
               The Lab
             </Link>
           </Reveal>
 
-          <Reveal className="mt-8">
-            <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em] text-faint">
-              <span className="text-accent">{note.kind}</span>
-              <span>·</span>
-              <span>{formatDate(note.date)}</span>
-              <span>·</span>
-              <span>{note.readingTime} min read</span>
-            </div>
-            <h1 className="mt-5 font-display text-balance text-3xl font-bold leading-[1.1] tracking-tight sm:text-5xl">
-              {note.title}
-            </h1>
-            <p className="mt-5 text-pretty text-lg leading-relaxed text-muted">
-              {note.excerpt}
+          <Reveal className="mt-10">
+            <p className="eyebrow">
+              {note.kind}
+              <span className="mx-2 opacity-40">/</span>
+              {formatDate(note.date)}
+              <span className="mx-2 opacity-40">/</span>
+              {note.readingTime} min read
             </p>
+            <h1 className="t-h1 mt-6 text-balance">{note.title}</h1>
+            <p className="t-lede mt-6 text-pretty">{note.excerpt}</p>
           </Reveal>
 
-          <div className="mt-10 border-t border-border pt-8">
+          <div className="mt-12 border-t border-border pt-10">
             {note.body.map((block, i) => (
               <Reveal key={i} delay={Math.min(i, 4) * 0.03}>
                 <NoteBlockView block={block} />
@@ -130,26 +126,22 @@ export default async function NotePage({
         </article>
 
         {others.length > 0 && (
-          <section className="mx-auto max-w-2xl px-5 pb-8 sm:px-6">
-            <div className="border-t border-border pt-8">
-              <p className="eyebrow mb-5">Keep reading</p>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {others.map((n) => (
-                  <Link
-                    key={n.slug}
-                    href={`/lab/${n.slug}`}
-                    className="surface surface-hover-fx group flex flex-col rounded-xl p-5"
-                  >
-                    <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                      {n.kind}
-                    </span>
-                    <span className="mt-2 flex items-center gap-1.5 font-semibold tracking-tight">
-                      {n.title}
-                      <ArrowUpRight className="h-4 w-4 shrink-0 text-faint transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
-                    </span>
-                  </Link>
-                ))}
-              </div>
+          <section className="mx-auto w-full max-w-2xl px-5 pb-8 sm:px-8">
+            <p className="eyebrow border-t border-border pt-10">Keep reading</p>
+            <div className="mt-6 border-t border-border">
+              {others.map((n) => (
+                <Link
+                  key={n.slug}
+                  href={`/lab/${n.slug}`}
+                  className="group flex items-baseline justify-between gap-6 border-b border-border py-5 transition-colors duration-300 hover:bg-white/[0.015]"
+                >
+                  <span className="t-h3 flex items-start gap-1.5">
+                    {n.title}
+                    <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-faint transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground" />
+                  </span>
+                  <span className="eyebrow shrink-0">{n.kind}</span>
+                </Link>
+              ))}
             </div>
           </section>
         )}
@@ -165,22 +157,22 @@ function NoteBlockView({ block }: { block: import("@/lib/notes").NoteBlock }) {
   switch (block.type) {
     case "h2":
       return (
-        <h2 className="mt-10 font-display text-xl font-bold tracking-tight sm:text-2xl">
-          {block.text}
-        </h2>
+        <h2 className="t-h3 mt-12 text-xl sm:text-2xl">{block.text}</h2>
       );
     case "quote":
       return (
-        <blockquote className="my-8 border-l-2 border-accent pl-5 text-pretty text-lg font-medium leading-relaxed text-foreground">
+        <blockquote className="my-10 border-l border-border-strong pl-6 text-pretty text-lg leading-relaxed text-foreground">
           {block.text}
         </blockquote>
       );
     case "list":
       return (
-        <ul className="mt-5 space-y-2.5">
+        <ul className="mt-6 border-t border-border">
           {block.items.map((item, i) => (
-            <li key={i} className="flex gap-3 text-pretty leading-relaxed text-muted">
-              <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+            <li
+              key={i}
+              className="border-b border-border py-3 text-pretty leading-relaxed text-muted"
+            >
               {item}
             </li>
           ))}
@@ -188,7 +180,7 @@ function NoteBlockView({ block }: { block: import("@/lib/notes").NoteBlock }) {
       );
     default:
       return (
-        <p className="mt-5 text-pretty leading-relaxed text-muted">{block.text}</p>
+        <p className="t-body mt-6 text-pretty">{block.text}</p>
       );
   }
 }

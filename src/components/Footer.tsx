@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 import Link from "next/link";
-import { Rocket } from "lucide-react";
+import { Wordmark } from "./Wordmark";
 
 type IconProps = { className?: string };
 
@@ -37,72 +37,107 @@ function XMark({ className }: IconProps) {
 }
 
 const socials: { label: string; Icon: ComponentType<IconProps>; href?: string }[] = [
-  { label: "Instagram", Icon: InstagramMark, href: "https://www.instagram.com/gasperohlab/" },
+  {
+    label: "Instagram",
+    Icon: InstagramMark,
+    href: "https://www.instagram.com/gasperohlab/",
+  },
   { label: "Facebook", Icon: FacebookMark },
   { label: "X", Icon: XMark },
   { label: "GitHub", Icon: GithubMark },
 ];
 
-const pageLinks: { label: string; href: string }[] = [
-  { label: "About", href: "/about" },
-  { label: "Privacy", href: "/privacy" },
-  { label: "Terms", href: "/terms" },
-  { label: "Cookies", href: "/cookies" },
+const columns: { heading: string; links: { label: string; href: string }[] }[] = [
+  {
+    heading: "Lab",
+    links: [
+      { label: "Work", href: "/work" },
+      { label: "Ethos", href: "/ethos" },
+      { label: "Notes", href: "/lab" },
+      { label: "About", href: "/about" },
+    ],
+  },
+  {
+    heading: "Legal",
+    links: [
+      { label: "Privacy", href: "/privacy" },
+      { label: "Terms", href: "/terms" },
+      { label: "Cookies", href: "/cookies" },
+      { label: "RSS", href: "/feed.xml" },
+    ],
+  },
 ];
 
+/**
+ * A proper sitemap footer rather than a single row of pill-shaped links and
+ * circular social buttons. Structured in columns, ruled off from the page, and
+ * closed by a quiet legal line.
+ */
 export function Footer() {
   return (
     <footer className="relative mt-auto border-t border-border">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-5 py-10 sm:flex-row sm:px-6">
-        <div className="flex items-center gap-2.5">
-          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-accent text-white ring-1 ring-white/10">
-            <Rocket className="h-3.5 w-3.5" strokeWidth={2} />
-          </span>
-          <span className="font-display text-sm font-bold tracking-[0.12em]">
-            GASPEROH<span className="text-accent">LAB</span>
-          </span>
+      <div className="mx-auto w-full max-w-[76rem] px-5 py-14 sm:px-8 sm:py-16">
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1.2fr] lg:gap-10">
+          <div>
+            <Wordmark size="lg" />
+            <p className="mt-5 max-w-xs text-pretty text-sm leading-relaxed text-muted">
+              An independent software lab. Games, applications and private AI —
+              from a single question to production.
+            </p>
+          </div>
+
+          {columns.map((col) => (
+            <nav key={col.heading} aria-label={col.heading}>
+              <p className="eyebrow">{col.heading}</p>
+              <ul className="mt-5 flex flex-col gap-3">
+                {col.links.map((l) => (
+                  <li key={l.label}>
+                    <Link
+                      href={l.href}
+                      className="text-sm text-muted transition-colors hover:text-foreground"
+                    >
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
+
+          <div>
+            <p className="eyebrow">Elsewhere</p>
+            <div className="mt-5 flex flex-wrap items-center gap-5">
+              {socials.map(({ label, Icon, href }) =>
+                href ? (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={label}
+                    title={label}
+                    className="flex h-6 w-6 items-center justify-center text-muted transition-colors hover:text-foreground"
+                  >
+                    <Icon className="h-[1.125rem] w-[1.125rem]" />
+                  </a>
+                ) : (
+                  <span
+                    key={label}
+                    aria-label={`${label} — coming soon`}
+                    title={`${label} — coming soon`}
+                    className="flex h-6 w-6 cursor-default items-center justify-center text-faint/60"
+                  >
+                    <Icon className="h-[1.125rem] w-[1.125rem]" />
+                  </span>
+                )
+              )}
+            </div>
+          </div>
         </div>
 
-        <p className="text-center text-sm text-muted">
-          © 2026 Gasperohlab. All Rights Reserved.
-          <span className="mt-0.5 block text-faint">Toronto, Canada</span>
-        </p>
-
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          {pageLinks.map(({ label, href }) => (
-            <Link
-              key={label}
-              href={href}
-              className="inline-flex min-h-11 items-center rounded-lg border border-border px-3.5 text-sm text-muted transition-colors hover:border-border-strong hover:text-foreground sm:min-h-0 sm:py-1.5"
-            >
-              {label}
-            </Link>
-          ))}
-          <span className="mx-1 hidden h-4 w-px bg-border sm:block" aria-hidden />
-          {socials.map(({ label, Icon, href }) =>
-            href ? (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={label}
-                title={label}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-border text-muted transition-colors hover:border-border-strong hover:text-foreground"
-              >
-                <Icon className="h-4 w-4" />
-              </a>
-            ) : (
-              <span
-                key={label}
-                aria-label={`${label} — coming soon`}
-                title={`${label} — coming soon`}
-                className="flex h-11 w-11 cursor-default items-center justify-center rounded-full border border-border text-faint"
-              >
-                <Icon className="h-4 w-4" />
-              </span>
-            )
-          )}
+        <div className="mt-14 flex flex-col gap-2 border-t border-border pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="eyebrow">© 2026 Gasperohlab — All rights reserved</p>
+          <p className="eyebrow">Toronto, Canada</p>
         </div>
       </div>
     </footer>

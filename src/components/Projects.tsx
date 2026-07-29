@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { AnimatePresence } from "framer-motion";
-import * as m from "framer-motion/m";
 import { Reveal } from "./Reveal";
+import { Section, SectionHead, TextLink } from "./Section";
 import { ProjectCard } from "./ProjectCard";
+import { FilterBar } from "./FilterBar";
 import { projects } from "@/lib/work";
 
 const filters = ["All", "In Production", "Released"] as const;
@@ -17,66 +17,38 @@ export function Projects() {
     filter === "All" ? projects : projects.filter((p) => p.status === filter);
 
   return (
-    <section
-      id="projects"
-      className="relative mx-auto max-w-6xl px-5 py-24 sm:px-6 sm:py-32"
-    >
-      <Reveal className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
-        <div className="max-w-xl">
-          <p className="eyebrow mb-4">Selected work</p>
-          <h2 className="font-display text-balance text-4xl font-bold tracking-tight sm:text-5xl">
-            What we&apos;ve shipped
-          </h2>
-          <p className="mt-4 max-w-md text-pretty text-muted">
-            Products in production today — with more taking shape in the lab.
-            Open any project for the full story.
-          </p>
-        </div>
+    <Section id="work">
+      <SectionHead
+        index="02"
+        label="Selected work"
+        title="What we've shipped"
+        lede="Products in production today, with more taking shape in the lab. Open any project for the full story."
+        action={
+          <Link href="/work" className="group inline-flex">
+            <TextLink>View all work</TextLink>
+          </Link>
+        }
+      />
 
-        {/* Filter tabs */}
-        <div className="flex flex-wrap gap-1 rounded-lg border border-border bg-surface p-1">
-          {filters.map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`relative isolate inline-flex min-h-11 items-center justify-center rounded-md px-4 text-xs font-medium transition-colors sm:min-h-0 sm:px-3.5 sm:py-1.5 ${
-                filter === f ? "text-white" : "text-muted hover:text-foreground"
-              }`}
-            >
-              {filter === f && (
-                <m.span
-                  layoutId="project-filter"
-                  className="absolute inset-0 -z-10 rounded-md bg-accent"
-                  transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                />
-              )}
-              {f}
-            </button>
-          ))}
-        </div>
+      <Reveal className="mt-14 border-b border-border pb-1">
+        <FilterBar
+          label="Filter work by status"
+          options={filters}
+          value={filter}
+          onChange={setFilter}
+        />
       </Reveal>
 
-      <m.div
-        layout
-        className="mt-12 grid gap-4 sm:mt-14 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        <AnimatePresence mode="popLayout">
-          {visible.map((p) => (
-            <ProjectCard key={p.slug} project={p} />
-          ))}
-        </AnimatePresence>
-      </m.div>
-
-      {/* Full archive link */}
-      <Reveal className="mt-10 flex justify-center">
-        <Link
-          href="/work"
-          className="group inline-flex items-center gap-2 rounded-lg border border-border-strong bg-surface px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-surface-hover"
-        >
-          View all work
-          <span className="text-faint transition-colors group-hover:text-accent">→</span>
-        </Link>
-      </Reveal>
-    </section>
+      {/* The grid re-renders on filter change without a layout animation. The
+          old popLayout transition made a three-item list feel like a shuffling
+          deck; swapping instantly is calmer and reads as a filter, not a toy. */}
+      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {visible.map((p, i) => (
+          <Reveal key={p.slug} delay={Math.min(i, 5) * 0.05} className="h-full">
+            <ProjectCard project={p} />
+          </Reveal>
+        ))}
+      </div>
+    </Section>
   );
 }

@@ -1,56 +1,49 @@
 import { Reveal } from "./Reveal";
-import { CountUp } from "./CountUp";
+import { Section, SectionHead } from "./Section";
 
 // Outcome figures from the Marapone deployments running in production today.
 // NOTE: these are illustrative placeholders — swap in the real numbers before launch.
-const stats: {
-  count?: number;
-  value?: string;
-  prefix?: string;
-  suffix?: string;
-  label: string;
-}[] = [
-  { count: 12, suffix: "k+", label: "Documents & drawings audited on-prem" },
-  { count: 8, suffix: "×", label: "Faster tender & invoice turnaround" },
-  { count: 100, suffix: "%", label: "Runs on hardware the client already owns" },
+//
+// The values are now plain text. They used to animate up from zero on scroll
+// via <CountUp>, which turns a factual claim into a slot machine; a number that
+// counts itself is asking to be watched rather than believed.
+const stats = [
+  { value: "12k+", label: "Documents & drawings audited on-prem" },
+  { value: "8×", label: "Faster tender & invoice turnaround" },
+  { value: "100%", label: "Runs on hardware the client already owns" },
   { value: "0", label: "Bytes of client data that leave the building" },
 ];
 
 export function Metrics() {
   return (
-    <section
-      id="metrics"
-      className="relative mx-auto max-w-6xl px-5 py-20 sm:px-6 sm:py-24"
-    >
-      <Reveal className="max-w-2xl">
-        <p className="eyebrow mb-4">The numbers</p>
-        <h2 className="font-display text-balance text-4xl font-bold tracking-tight sm:text-5xl">
-          Proof, not promises.
-        </h2>
-        <p className="mt-4 text-pretty text-lg leading-relaxed text-muted">
-          What the work is actually doing in production — measured on the
-          customers&apos; own machines, where it runs.
-        </p>
-      </Reveal>
+    <Section id="metrics">
+      <SectionHead
+        index="04"
+        label="The numbers"
+        title="Proof, not promises"
+        lede="What the work is actually doing in production — measured on the customers' own machines, where it runs."
+      />
 
-      <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border lg:grid-cols-4">
+      <div className="mt-16 grid border-t border-border sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s, i) => (
           <Reveal
             key={s.label}
-            delay={i * 0.08}
-            className="bg-background-elevated p-7 sm:p-8"
+            delay={i * 0.06}
+            className={`border-b border-border py-8 pr-6 ${
+              // Column rules only where a cell actually has a neighbour to its
+              // left at that breakpoint.
+              i % 2 === 1 ? "sm:border-l sm:pl-6" : ""
+            } ${i > 0 ? "lg:border-l lg:pl-6" : "lg:border-l-0 lg:pl-0"}`}
           >
-            <div className="flex items-baseline font-display text-5xl font-bold tracking-tight sm:text-6xl">
-              {s.prefix && <span className="text-accent">{s.prefix}</span>}
-              {s.count != null ? <CountUp value={s.count} /> : s.value}
-              {s.suffix && <span className="text-accent">{s.suffix}</span>}
-            </div>
-            <p className="mt-3 text-pretty text-sm leading-relaxed text-muted">
+            <p className="text-[2.75rem] font-medium leading-none tracking-[-0.04em] text-foreground sm:text-5xl">
+              {s.value}
+            </p>
+            <p className="mt-4 max-w-[16rem] text-pretty text-sm leading-relaxed text-muted">
               {s.label}
             </p>
           </Reveal>
         ))}
       </div>
-    </section>
+    </Section>
   );
 }

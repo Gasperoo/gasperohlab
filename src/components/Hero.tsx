@@ -1,318 +1,101 @@
-"use client";
-
-import { useEffect, useRef } from "react";
-import Image from "next/image";
-import { useScroll, useTransform, type Variants } from "framer-motion";
-import * as m from "framer-motion/m";
 import { ArrowRight } from "lucide-react";
 
-const container: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.1 } },
-};
+/**
+ * Typographic hero.
+ *
+ * The old hero was a voxel character with a cursor-tracked fire reveal running
+ * a rAF loop that rewrote a CSS mask every frame. It's gone — along with the
+ * character, the accent glow behind it, the parallax and the scroll hint. What
+ * carries the section now is one sentence set large, and a ruled fact strip
+ * underneath it.
+ *
+ * This is a server component: the entrance is a pure CSS animation, so nothing
+ * here waits on hydration and the LCP text paints with the first frame.
+ */
 
-const item: Variants = {
-  hidden: { opacity: 0, y: 18 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
-  },
-};
+// Staggered by hand rather than by a variants tree — four elements don't
+// warrant an animation library on the critical path.
+const delays = ["0.05s", "0.14s", "0.23s", "0.32s", "0.44s"];
+
+const facts = [
+  { label: "Based", value: "Toronto, Canada" },
+  { label: "Founded", value: "2025" },
+  { label: "Disciplines", value: "Games · Apps · AI · Systems" },
+  { label: "Model", value: "Independent, no investors" },
+];
+
+// The strip reflows from a 2×2 to a 1×4, which moves which cells sit against a
+// rule. Spelled out per cell rather than derived, because "has a neighbour to
+// the left at this breakpoint" isn't something an index expression can say
+// legibly across two column counts.
+const cellRules = [
+  "border-b border-border pr-5 lg:border-b-0 lg:pr-6",
+  "border-b border-l border-border pl-5 lg:border-b-0 lg:pl-6 lg:pr-6",
+  "pr-5 lg:border-l lg:border-border lg:pl-6 lg:pr-6",
+  "border-l border-border pl-5 lg:pl-6",
+];
 
 export function Hero() {
-  const ref = useRef<HTMLElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const fireRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  // Gentle parallax fade as the hero scrolls away. Nothing flashy.
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, 90]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
-
-  // Cursor spotlight: a soft radial mask follows the pointer and reveals the
-  // "on fire" character layered over the calm base. Driven by a smoothed rAF
-  // loop writing the CSS mask directly — cheap, no canvas re-serialization.
-  //
-  // The loop only runs while the hero is genuinely on screen and the tab is
-  // visible. Rewriting `mask-image` forces a repaint every frame, so left
-  // ungated it would keep doing that forever — including long after the reader
-  // has scrolled past — which is exactly the wrong trade on a phone.
-  useEffect(() => {
-    const section = ref.current;
-    const stage = stageRef.current;
-    const fire = fireRef.current;
-    if (!section || !stage || !fire) return;
-
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
-
-    // Touch/no-hover devices have no cursor to chase, so instead of showing a
-    // dead effect we run an automatic spotlight that sweeps across the
-    // character on a slow loop — the fire reveal still happens on a phone.
-    const auto = window.matchMedia("(hover: none)").matches;
-
-    const R = auto ? 150 : 190; // spotlight radius (px)
-    // The auto sweep is a slow drift, so half rate is indistinguishable from
-    // full rate and halves the repaints. Pointer tracking stays at full rate,
-    // where any lag behind the cursor is obvious.
-    const minFrameMs = auto ? 1000 / 30 : 0;
-    const OFFSCREEN_MASK =
-      "radial-gradient(circle 0px at -200px -200px, #000, transparent)";
-
-    const target = { x: -9999, y: -9999 };
-    const smooth = { x: -9999, y: -9999 };
-    let active = auto; // auto mode is always "on"
-    let raf = 0;
-    let running = false;
-    let lastFrame = 0;
-    const start = performance.now();
-
-    // Track over the whole section; express coordinates relative to the
-    // character stage so the mask lines up with the fire layer.
-    const onMove = (e: PointerEvent) => {
-      const rect = stage.getBoundingClientRect();
-      target.x = e.clientX - rect.left;
-      target.y = e.clientY - rect.top;
-      if (!active) {
-        active = true;
-        smooth.x = target.x;
-        smooth.y = target.y;
-      }
-    };
-    const onLeave = () => {
-      active = false;
-    };
-
-    const loop = (now: number) => {
-      raf = requestAnimationFrame(loop);
-      if (now - lastFrame < minFrameMs) return;
-      lastFrame = now;
-
-      if (auto) {
-        // A gentle figure-eight-ish sweep over the character stage.
-        const rect = stage.getBoundingClientRect();
-        const t = (now - start) / 1000;
-        target.x = rect.width * (0.5 + 0.34 * Math.sin(t * 0.8));
-        target.y = rect.height * (0.5 + 0.26 * Math.sin(t * 1.15 + 1));
-        if (smooth.x < -1000) {
-          smooth.x = target.x;
-          smooth.y = target.y;
-        }
-      }
-      smooth.x += (target.x - smooth.x) * 0.14;
-      smooth.y += (target.y - smooth.y) * 0.14;
-      const mask = active
-        ? `radial-gradient(circle ${R}px at ${smooth.x.toFixed(1)}px ${smooth.y.toFixed(
-          1,
-        )}px, #000 0%, #000 40%, rgba(0,0,0,0.55) 62%, rgba(0,0,0,0.18) 80%, transparent 92%)`
-        : OFFSCREEN_MASK;
-      fire.style.webkitMaskImage = mask;
-      fire.style.maskImage = mask;
-    };
-
-    const startLoop = () => {
-      if (running) return;
-      running = true;
-      // Only hint the compositor while we're actually animating; a permanent
-      // will-change pins a layer for a layer that spends most of its life idle.
-      fire.style.willChange = "mask-image";
-      lastFrame = 0;
-      raf = requestAnimationFrame(loop);
-    };
-
-    const stopLoop = () => {
-      if (!running) return;
-      running = false;
-      cancelAnimationFrame(raf);
-      fire.style.willChange = "";
-    };
-
-    // Visible = the hero is in the viewport *and* the tab is in the foreground.
-    let onScreen = false;
-    const sync = () => {
-      if (onScreen && !document.hidden) startLoop();
-      else stopLoop();
-    };
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        onScreen = entry.isIntersecting;
-        sync();
-      },
-      { threshold: 0 }
-    );
-    observer.observe(section);
-    document.addEventListener("visibilitychange", sync);
-
-    if (!auto) {
-      section.addEventListener("pointermove", onMove);
-      section.addEventListener("pointerleave", onLeave);
-    }
-
-    return () => {
-      stopLoop();
-      observer.disconnect();
-      document.removeEventListener("visibilitychange", sync);
-      section.removeEventListener("pointermove", onMove);
-      section.removeEventListener("pointerleave", onLeave);
-    };
-  }, []);
-
   return (
-    <section
-      id="top"
-      ref={ref}
-      className="relative flex min-h-[100svh] items-center overflow-hidden px-5 pt-28 pb-24 sm:px-6 lg:pt-24"
-    >
-      {/* ---- Character with cursor-spotlight fire reveal (absolute so the
-              wordmark can never squeeze it) ---- */}
-      <m.div
-        style={{ opacity: contentOpacity }}
-        initial={{ opacity: 0, scale: 1.08 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-        ref={stageRef}
-        aria-hidden
-        className="pointer-events-none absolute bottom-0 left-1/2 z-0 h-[48%] w-full max-w-md -translate-x-1/2 sm:h-[56%] sm:max-w-lg lg:left-auto lg:right-0 lg:h-[86%] lg:w-[52%] lg:max-w-none lg:translate-x-0 xl:right-4"
-      >
-        {/* Separate element for base opacity so the Framer scroll-fade (inline
-            opacity on the parent) doesn't clobber the mobile dimming. */}
-        <div className="relative h-full w-full opacity-35 sm:opacity-45 lg:opacity-100">
-          {/* Soft red glow behind the character */}
-          <div
-            className="absolute inset-0 -z-10 blur-3xl"
-            style={{
-              background:
-                "radial-gradient(closest-side, rgba(var(--accent-rgb),0.26), transparent 70%)",
-            }}
-          />
-          {/* Base: calm red character */}
-          <Image
-            src="/hero/hero-character.png"
-            alt="GasperohLab voxel character"
-            fill
-            // Loads immediately, but deliberately without `preload`: the LCP
-            // element here is the wordmark, and a head preload for what is a
-            // decorative backdrop would compete with the font it needs.
-            loading="eager"
-            fetchPriority="high"
-            sizes="(max-width: 1024px) 90vw, 50vw"
-            className="object-contain object-bottom lg:object-right-bottom"
-          />
-          {/* Reveal: on-fire character, masked to the cursor spotlight */}
-          <div
-            ref={fireRef}
-            className="pointer-events-none absolute inset-0 lg:pointer-events-auto"
-            style={{
-              maskImage:
-                "radial-gradient(circle 0px at -200px -200px, #000, transparent)",
-              WebkitMaskImage:
-                "radial-gradient(circle 0px at -200px -200px, #000, transparent)",
-            }}
-          >
-            <Image
-              src="/hero/hero-character-fire.png"
-              alt=""
-              fill
-              sizes="(max-width: 1024px) 90vw, 50vw"
-              className="object-contain object-bottom lg:object-right-bottom"
-            />
-          </div>
+    <section id="top">
+      <div className="mx-auto w-full max-w-[76rem] px-5 pt-36 pb-16 sm:px-8 sm:pt-44 sm:pb-20">
+        <div className="rise" style={{ animationDelay: delays[0] }}>
+          <p className="eyebrow flex items-center gap-2.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+            Independent software lab
+          </p>
         </div>
-      </m.div>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl">
-        {/* ---- Wordmark + copy ---- */}
-        <m.div
-          style={{ y: contentY, opacity: contentOpacity }}
-          variants={container}
-          initial="hidden"
-          animate="visible"
-          className="flex w-full max-w-2xl flex-col items-center text-center lg:items-start lg:text-left"
+        <h1
+          className="rise t-hero mt-8 max-w-4xl text-balance"
+          style={{ animationDelay: delays[1] }}
         >
-          {/* Status line — calm, factual */}
-          <m.div
-            variants={item}
-            className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-border bg-surface/60 px-3.5 py-1.5"
-          >
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping-ring absolute inline-flex h-full w-full rounded-full bg-accent" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
-            </span>
-            <span className="text-xs font-medium tracking-wide text-muted">
-              Independent software lab
-            </span>
-          </m.div>
+          We design and ship games, applications and AI models.
+        </h1>
 
-          {/* Wordmark — solid, tight, engineered */}
-          <m.h1
-            variants={item}
-            className="font-display text-[13vw] font-bold leading-[0.9] tracking-[-0.04em] text-foreground sm:text-[7rem] lg:text-[5.5rem] xl:text-[6.25rem]"
-          >
-            GASPEROH<span className="text-accent">LAB</span>
-          </m.h1>
+        <p
+          className="rise t-lede mt-8 max-w-xl text-pretty"
+          style={{ animationDelay: delays[2] }}
+        >
+          GASPEROHLAB takes hard problems from a single question all the way to
+          production — engineering software people actually use, not slide decks.
+        </p>
 
-          <m.p
-            variants={item}
-            className="mt-7 max-w-xl text-balance text-xl font-medium leading-snug text-foreground sm:text-2xl"
+        <div
+          className="rise mt-10 flex w-full max-w-sm flex-col items-stretch gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:items-center"
+          style={{ animationDelay: delays[3] }}
+        >
+          <a
+            href="#work"
+            className="group inline-flex items-center justify-center gap-2 rounded-md bg-accent px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
           >
-            We design and ship games, applications and AI models.
-          </m.p>
-
-          <m.p
-            variants={item}
-            className="mt-5 max-w-md text-pretty text-base leading-relaxed text-muted sm:text-lg"
+            View selected work
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </a>
+          <a
+            href="#contact"
+            className="inline-flex items-center justify-center rounded-md border border-border-strong px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-surface"
           >
-            An independent lab that takes hard problems from prototype to
-            production — engineering software people actually use, not slide
-            decks.
-          </m.p>
-
-          <m.div
-            variants={item}
-            className="mt-10 flex w-full max-w-sm flex-col items-stretch gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:items-center"
-          >
-            <a
-              href="#projects"
-              className="group inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-hover"
-            >
-              View our work
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-border-strong bg-surface px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-surface-hover"
-            >
-              Start a project
-            </a>
-          </m.div>
-        </m.div>
+            Start a project
+          </a>
+        </div>
       </div>
 
-      {/* Scroll hint */}
-      <m.a
-        href="#disciplines"
-        aria-label="Scroll to content"
-        style={{ opacity: contentOpacity }}
-        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2"
+      {/* Fact strip — the page's ruled grid, introduced immediately so the
+          structure is established before the reader scrolls. */}
+      <div
+        className="rise border-t border-border"
+        style={{ animationDelay: delays[4] }}
       >
-        <m.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.8 }}
-          className="flex h-9 w-6 items-start justify-center rounded-full border border-border p-1.5"
-        >
-          <m.span
-            className="h-1.5 w-1.5 rounded-full bg-muted"
-            animate={{ y: [0, 8, 0], opacity: [1, 0.3, 1] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </m.div>
-      </m.a>
+        <dl className="mx-auto grid w-full max-w-[76rem] grid-cols-2 px-5 sm:px-8 lg:grid-cols-4">
+          {facts.map((f, i) => (
+            <div key={f.label} className={`py-6 lg:py-7 ${cellRules[i]}`}>
+              <dt className="eyebrow">{f.label}</dt>
+              <dd className="mt-2.5 text-sm text-foreground">{f.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
     </section>
   );
 }

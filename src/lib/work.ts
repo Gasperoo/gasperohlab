@@ -1,11 +1,3 @@
-import {
-  Gamepad2,
-  LayoutGrid,
-  BrainCircuit,
-  TerminalSquare,
-  type LucideIcon,
-} from "lucide-react";
-
 export type Status = "In Production" | "Released" | "Coming Soon";
 export type Discipline = "Game" | "App" | "AI" | "Program";
 
@@ -65,13 +57,6 @@ export type Project = {
   href?: string;
   external?: boolean;
   caseStudy?: CaseStudy;
-};
-
-export const disciplineIcon: Record<Discipline, LucideIcon> = {
-  Game: Gamepad2,
-  App: LayoutGrid,
-  AI: BrainCircuit,
-  Program: TerminalSquare,
 };
 
 export const projects: Project[] = [

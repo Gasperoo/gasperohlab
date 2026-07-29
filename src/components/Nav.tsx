@@ -1,55 +1,33 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { AnimatePresence, useScroll, useSpring } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import * as m from "framer-motion/m";
-import { ArrowUpRight, Menu, Rocket, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { Wordmark } from "./Wordmark";
 
-// Section ids live on the home page; prefix with `/` so the links also work
-// from other routes (e.g. /about) by navigating home and then scrolling.
+// Section ids live on the home page; the hrefs are real routes so the links
+// also work from anywhere else on the site.
 const links = [
-  { label: "Work", id: "projects", href: "/work" },
+  { label: "Work", id: "work", href: "/work" },
   { label: "Ethos", id: "ethos", href: "/ethos" },
   { label: "Lab", id: "lab", href: "/lab" },
-  // No matching home-page section, so `id` never lights up — it's a page in its
-  // own right, previously reachable only from the footer.
   { label: "About", id: "about", href: "/about" },
 ];
-
-function Logo({ onClick }: { onClick?: () => void }) {
-  return (
-    <Link href="/" onClick={onClick} className="group flex items-center gap-2.5">
-      <span className="flex h-7 w-7 items-center justify-center rounded-md bg-accent text-white ring-1 ring-white/10">
-        <Rocket className="h-4 w-4 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2} />
-      </span>
-      <span className="font-display text-sm font-bold tracking-[0.12em]">
-        GASPEROH<span className="text-accent">LAB</span>
-      </span>
-    </Link>
-  );
-}
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string>("");
   const [menuOpen, setMenuOpen] = useState(false);
-  const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 30,
-    restDelta: 0.001,
-  });
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
+    const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    const ids = links.map((l) => l.id);
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -58,8 +36,8 @@ export function Nav() {
       },
       { rootMargin: "-45% 0px -50% 0px" }
     );
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
+    links.forEach((l) => {
+      const el = document.getElementById(l.id);
       if (el) observer.observe(el);
     });
     return () => observer.disconnect();
@@ -80,7 +58,7 @@ export function Nav() {
     };
   }, [menuOpen]);
 
-  // If the viewport grows to desktop, make sure the mobile menu isn't stuck open.
+  // If the viewport grows to desktop, make sure the menu isn't stuck open.
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 768px)");
     const onChange = (e: MediaQueryListEvent) => {
@@ -92,155 +70,106 @@ export function Nav() {
 
   return (
     <>
-      {/* Scroll progress bar */}
-      <m.div
-        className="fixed inset-x-0 top-0 z-[60] h-0.5 origin-left bg-accent"
-        style={{ scaleX: progress }}
-      />
-
-      <m.header
-        initial={{ y: -24, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4"
+      {/* A full-width bar sitting on a hairline, not a floating pill. It reads
+          as part of the page's ruled structure rather than an app chrome
+          element hovering above it. */}
+      <header
+        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+          scrolled || menuOpen ? "panel border-b border-border" : ""
+        }`}
       >
-        <nav
-          className={`flex w-full max-w-5xl items-center justify-between rounded-xl px-4 py-2.5 transition-all duration-300 sm:px-5 ${
-            scrolled || menuOpen
-              ? "panel shadow-lg shadow-black/40"
-              : "border border-transparent"
-          }`}
-        >
-          <Logo />
+        <nav className="mx-auto flex h-16 w-full max-w-[76rem] items-center justify-between px-5 sm:px-8">
+          <Wordmark />
 
-          <div className="hidden items-center gap-1 md:flex">
-            {links.map((l) => {
-              const isActive = active === l.id;
-              return (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  className={`relative isolate rounded-lg px-3.5 py-1.5 text-sm transition-colors ${
-                    isActive ? "text-foreground" : "text-muted hover:text-foreground"
-                  }`}
-                >
-                  {isActive && (
-                    <m.span
-                      layoutId="nav-active"
-                      className="absolute inset-0 -z-10 rounded-lg bg-white/[0.06] ring-1 ring-white/10"
-                      transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                    />
-                  )}
-                  {l.label}
-                </a>
-              );
-            })}
+          <div className="hidden items-center gap-8 md:flex">
+            {links.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                aria-current={active === l.id ? "page" : undefined}
+                className={`relative text-sm transition-colors ${
+                  active === l.id
+                    ? "text-foreground"
+                    : "text-muted hover:text-foreground"
+                }`}
+              >
+                {l.label}
+                {/* The active marker is a 1px rule under the label — the same
+                    hairline language the rest of the page uses. */}
+                {active === l.id && (
+                  <span
+                    aria-hidden
+                    className="absolute -bottom-1.5 left-0 h-px w-full bg-foreground"
+                  />
+                )}
+              </a>
+            ))}
           </div>
 
           <div className="flex items-center gap-2">
             <a
               href="#contact"
-              className="hidden rounded-lg bg-accent px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-accent-hover md:inline-block"
+              className="hidden rounded-md bg-accent px-4 py-2 text-[0.8125rem] font-medium text-white transition-colors hover:bg-accent-hover md:inline-block"
             >
               Get in touch
             </a>
 
-            {/* Mobile menu toggle */}
             <button
               type="button"
               onClick={() => setMenuOpen((v) => !v)}
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
-              className="flex h-11 w-11 items-center justify-center rounded-lg border border-border text-foreground transition-colors hover:bg-white/5 active:scale-95 md:hidden"
+              className="-mr-2 flex h-11 w-11 items-center justify-center rounded-md text-foreground transition-colors hover:bg-white/5 md:hidden"
             >
-              <AnimatePresence mode="wait" initial={false}>
-                {menuOpen ? (
-                  <m.span
-                    key="close"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.15 }}
-                  >
-                    <X className="h-5 w-5" />
-                  </m.span>
-                ) : (
-                  <m.span
-                    key="open"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.15 }}
-                  >
-                    <Menu className="h-5 w-5" />
-                  </m.span>
-                )}
-              </AnimatePresence>
+              {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </nav>
-      </m.header>
+      </header>
 
-      {/* Mobile menu overlay + panel */}
+      {/* Mobile menu — a full-height ink sheet with the links set large, rather
+          than a small dropdown card. */}
       <AnimatePresence>
         {menuOpen && (
           <m.div
-            className="fixed inset-0 z-40 md:hidden"
+            id="mobile-menu"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
+            className="fixed inset-0 top-16 z-40 bg-background md:hidden"
           >
-            <div
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-              onClick={() => setMenuOpen(false)}
-              aria-hidden
-            />
-
-            <m.div
-              id="mobile-menu"
-              initial={{ opacity: 0, y: -12, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -12, scale: 0.98 }}
-              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-              className="panel absolute inset-x-4 top-[4.75rem] overflow-hidden rounded-2xl p-3"
-            >
-              <nav className="flex flex-col">
-                {links.map((l, i) => {
-                  const isActive = active === l.id;
-                  return (
-                    <m.a
-                      key={l.href}
-                      href={l.href}
-                      onClick={() => setMenuOpen(false)}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.06 + i * 0.05, duration: 0.25 }}
-                      className={`flex items-center justify-between rounded-xl px-4 py-3.5 text-base font-medium transition-colors ${
-                        isActive
-                          ? "bg-white/[0.06] text-foreground"
-                          : "text-muted hover:bg-white/[0.04] hover:text-foreground"
-                      }`}
-                    >
-                      {l.label}
-                      <ArrowUpRight className="h-4 w-4 opacity-60" />
-                    </m.a>
-                  );
-                })}
-              </nav>
+            <div className="grain pointer-events-none absolute inset-0" />
+            <nav className="relative flex flex-col border-t border-border">
+              {links.map((l, i) => (
+                <m.a
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setMenuOpen(false)}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.04 + i * 0.04, duration: 0.25 }}
+                  className="flex items-baseline gap-4 border-b border-border px-5 py-6 sm:px-8"
+                >
+                  <span className="eyebrow w-6">0{i + 1}</span>
+                  <span className="t-h3 text-2xl tracking-[-0.03em] text-foreground">
+                    {l.label}
+                  </span>
+                </m.a>
+              ))}
 
               <m.a
                 href="#contact"
                 onClick={() => setMenuOpen(false)}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.06 + links.length * 0.05, duration: 0.25 }}
-                className="mt-2 flex items-center justify-center rounded-xl bg-accent px-4 py-3.5 text-sm font-semibold text-white transition-colors active:scale-95"
+                transition={{ delay: 0.04 + links.length * 0.04, duration: 0.25 }}
+                className="mx-5 mt-8 flex items-center justify-center rounded-md bg-accent px-4 py-3.5 text-sm font-medium text-white sm:mx-8"
               >
                 Get in touch
               </m.a>
-            </m.div>
+            </nav>
           </m.div>
         )}
       </AnimatePresence>

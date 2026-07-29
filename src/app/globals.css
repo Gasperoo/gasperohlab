@@ -1,23 +1,46 @@
 @import "tailwindcss";
 
-:root {
-  /* Neutral, near-black — no warm tint. Engineered, not moody. */
-  --background: #08090a;
-  --background-elevated: #0e0f11;
-  --surface: #111214;
-  --surface-hover: #16181b;
-  --foreground: #f4f5f6;
-  --muted: #9a9ca1;
-  /* Faint metadata text — lightened to clear WCAG AA (5.7:1 on the near-black
-     background) while staying visibly quieter than --muted. */
-  --faint: #868990;
-  --border: rgba(255, 255, 255, 0.09);
-  --border-strong: rgba(255, 255, 255, 0.16);
+/* ============================================================================
+   GASPEROHLAB — "Ink & Bone"
 
-  /* One accent. A single, confident red. */
-  --accent: #ff3b47;
-  --accent-hover: #e5242f;
-  --accent-rgb: 255, 59, 71;
+   A near-monochrome system. Ink is a cool, neutral near-black; bone is a warm
+   off-white. The contrast between the two is what carries the design — colour
+   is not a layout tool here. The single red accent is rationed to four places:
+   the rocket mark, LAB in the wordmark, a primary action, and a live dot.
+
+   Structure comes from hairline rules and a mono index, not from cards, glows
+   or gradients.
+   ============================================================================ */
+
+:root {
+  /* --- Ink: cool neutral, no warmth --- */
+  --background: #0b0b0d;
+  --background-elevated: #101013;
+  --surface: #121215;
+  --surface-hover: #17171b;
+
+  /* --- Bone: warm off-white. The warmth is the whole point; a pure white
+         here reads clinical and screen-lit, bone reads like paper. --- */
+  --foreground: #edebe6;
+  /* Body copy. 6.8:1 on ink. */
+  --muted: #9c9a94;
+  /* Metadata, timestamps, captions. 4.95:1 — clears AA with room to spare
+     while staying audibly quieter than --muted. */
+  --faint: #85837d;
+
+  /* Rules are bone at low alpha, never a flat grey — they inherit the warmth
+     so hairlines don't read blue against the ink. */
+  --border: rgba(237, 235, 230, 0.08);
+  --border-strong: rgba(237, 235, 230, 0.18);
+
+  /* --- The one accent --- */
+  /* Fill value. Carries white text at 4.7:1. */
+  --accent: #d93b30;
+  --accent-hover: #be3128;
+  /* Text value. The fill is too dark to read as small text on ink, so accent
+     *type* uses this lighter sibling instead (5.2:1). Same hue family. */
+  --accent-text: #f04a3e;
+  --accent-rgb: 217, 59, 48;
 }
 
 @theme inline {
@@ -32,9 +55,9 @@
   --color-border-strong: var(--border-strong);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
+  --color-accent-text: var(--accent-text);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-display);
 }
 
 * {
@@ -45,8 +68,7 @@ html {
   scroll-behavior: smooth;
   overflow-x: clip;
   /* The header is fixed, so an un-offset anchor jump parks the target heading
-     underneath it. Reserve its height plus a little breathing room for every
-     scroll-into-view the browser performs. */
+     underneath it. Reserve its height plus breathing room. */
   scroll-padding-top: 6rem;
 }
 
@@ -54,30 +76,31 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: rgba(var(--accent-rgb), 0.28);
-  color: #fff;
+  background: var(--foreground);
+  color: var(--background);
 }
 
-/* Keyboard focus — a single, branded ring for every interactive element.
-   Only shows for keyboard users (not on mouse click) via :focus-visible. */
+/* Keyboard focus — one ring for every interactive element, bone rather than
+   accent so it reads as system chrome instead of brand. */
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--foreground);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 3px;
 }
-/* The skip link and inputs manage their own focus styling. */
 input:focus-visible,
-textarea:focus-visible {
+textarea:focus-visible,
+select:focus-visible {
   outline: none;
 }
 
-/* Thin, neutral scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -85,131 +108,187 @@ textarea:focus-visible {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(237, 235, 230, 0.12);
   border-radius: 999px;
   border: 3px solid transparent;
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(237, 235, 230, 0.2);
   background-clip: content-box;
 }
 
-/* ---------- Typography helpers ---------- */
+/* ============================================================================
+   Type scale
 
-.font-display {
-  font-family: var(--font-display), var(--font-geist-sans), system-ui, sans-serif;
+   One family (Geist) doing all the work. The refinement comes from weight and
+   tracking, not from a second display face: headings sit at 500, never 700,
+   and tighten as they grow. Heavy weight at large sizes is the single biggest
+   contributor to a page feeling loud.
+   ============================================================================ */
+
+.t-hero {
+  font-size: clamp(2.75rem, 8.5vw, 5.25rem);
+  line-height: 0.95;
+  letter-spacing: -0.042em;
+  font-weight: 500;
 }
 
-/* Small, mono, uppercase section label */
-.eyebrow {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.6875rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
+.t-h1 {
+  font-size: clamp(2.25rem, 5.5vw, 3.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.036em;
+  font-weight: 500;
+}
+
+.t-h2 {
+  font-size: clamp(1.75rem, 3.4vw, 2.625rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+
+.t-h3 {
+  font-size: 1.125rem;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  font-weight: 500;
+}
+
+/* Standfirst under a heading. */
+.t-lede {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+@media (min-width: 640px) {
+  .t-lede {
+    font-size: 1.1875rem;
+  }
+}
+
+/* Long-form body copy — looser than UI text so paragraphs breathe. */
+.t-body {
+  line-height: 1.75;
   color: var(--muted);
 }
 
-/* ---------- Surfaces ---------- */
+/* Small mono label. The site's structural voice: section indices, metadata,
+   captions, table headers. */
+.eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  line-height: 1;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
 
-/* Solid card. No glass, no blur. Just a clean, defined surface. */
+/* Legacy alias — pages not yet on the .t-* scale still resolve to the right
+   family and tracking rather than falling back to a stale display font. */
+.font-display {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  letter-spacing: -0.03em;
+}
+
+/* ============================================================================
+   Surfaces
+
+   Precise, small radii. No glass, no blur, no gradient fills. A card is a
+   1px rule and a barely-raised ink value — nothing more.
+   ============================================================================ */
+
 .surface {
   background: var(--surface);
   border: 1px solid var(--border);
+  border-radius: 8px;
 }
+
 .surface-hover-fx {
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease;
 }
 .surface-hover-fx:hover {
   background: var(--surface-hover);
   border-color: var(--border-strong);
 }
 
-/* Only the nav uses a translucent panel — it sits over content.
+/* Only the header uses a translucent panel, since it sits over content.
 
    The blur is desktop-only. A backdrop-filter on a fixed element forces the
    compositor to re-sample everything scrolling underneath it on every frame,
-   which is the single easiest way to make a phone drop frames. Mobile gets a
-   nearly opaque panel instead: same job, no per-frame cost. */
+   which is the easiest way to make a phone drop frames. Mobile gets a nearly
+   opaque panel instead: same job, no per-frame cost. */
 .panel {
-  background: rgba(12, 13, 15, 0.94);
-  border: 1px solid var(--border);
+  background: rgba(11, 11, 13, 0.96);
 }
-
 @media (min-width: 768px) {
   .panel {
-    background: rgba(12, 13, 15, 0.72);
-    backdrop-filter: blur(14px) saturate(140%);
+    background: rgba(11, 11, 13, 0.72);
+    backdrop-filter: blur(16px) saturate(130%);
   }
 }
 
-/* ---------- Backgrounds ---------- */
+/* ============================================================================
+   Background grain
 
-/* Faint engineering grid, gently masked so it fades out. */
-.grid-bg {
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 20%, transparent 78%);
-  -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 20%, transparent 78%);
+   Replaces the old grid + accent glow. A single, very faint fractal-noise
+   layer gives the flat ink a paper-like tooth at close range and is invisible
+   at a glance — the opposite of a decorative backdrop asking to be noticed.
+   ============================================================================ */
+
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.035;
 }
 
-/* ---------- Scroll reveal ---------- */
+/* ============================================================================
+   Scroll reveal
 
-/* Drives <Reveal>. Kept in CSS so the transform is composited rather than
-   animated from JS — the component only toggles `.reveal-in`. */
+   Drives <Reveal>. Kept in CSS so the transform is composited rather than
+   animated from JS — the component only toggles `.reveal-in`. Deliberately
+   shorter and shallower than before: content should settle, not slide in.
+   ============================================================================ */
+
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(14px);
   transition:
-    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .reveal-in {
   opacity: 1;
   transform: none;
 }
 
-/* ---------- Motion keyframes ---------- */
-
-@keyframes marquee {
+/* Hero entrance. The hero is above the fold and never scrolls into view, so it
+   animates on load rather than on intersection — no JS, no hydration wait. */
+@keyframes rise {
   from {
-    transform: translateX(0);
+    opacity: 0;
+    transform: translateY(16px);
   }
   to {
-    transform: translateX(-50%);
+    opacity: 1;
+    transform: none;
   }
 }
-.animate-marquee {
-  animation: marquee 48s linear infinite;
+.rise {
+  animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Live status dot ping */
-@keyframes ping-ring {
-  0% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-  70%, 100% {
-    transform: scale(2.2);
-    opacity: 0;
-  }
-}
-.animate-ping-ring {
-  animation: ping-ring 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-/* ---------- Reduced motion ---------- */
+/* ============================================================================
+   Reduced motion
+   ============================================================================ */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  .animate-marquee,
-  .animate-ping-ring {
-    animation: none !important;
+  .rise {
+    animation: none;
   }
-  /* Show revealed content outright rather than sliding it in. */
   .reveal {
     opacity: 1;
     transform: none;

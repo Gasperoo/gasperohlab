@@ -1,82 +1,67 @@
-import { Gamepad2, LayoutGrid, BrainCircuit, TerminalSquare } from "lucide-react";
 import { Reveal } from "./Reveal";
+import { Section, SectionHead } from "./Section";
 
+// Icons are gone. Each of these used to sit in a bordered, rounded tile with a
+// lucide glyph — the visual signature of a template, and four in a row read as
+// decoration rather than information. The index carries the same job.
 const disciplines = [
   {
-    icon: Gamepad2,
     title: "Games",
+    tag: "Interactive",
     description:
       "Playable systems — from tight arcade loops to strange, systemic worlds. Mechanics first, polish always.",
-    tag: "Interactive",
   },
   {
-    icon: LayoutGrid,
     title: "Applications",
+    tag: "Product",
     description:
       "Web and mobile products built with intent. Fast, accessible and genuinely pleasant to use.",
-    tag: "Product",
   },
   {
-    icon: BrainCircuit,
-    title: "AI Models",
+    title: "AI models",
+    tag: "Intelligence",
     description:
       "Custom models and intelligent systems — training, fine-tuning and wiring intelligence into real tools.",
-    tag: "Intelligence",
   },
   {
-    icon: TerminalSquare,
-    title: "Systems & Tools",
+    title: "Systems & tooling",
+    tag: "Infrastructure",
     description:
       "Command-line tools, automations and engines. The quiet software that makes everything else possible.",
-    tag: "Infrastructure",
   },
 ];
 
 export function Disciplines() {
   return (
-    <section
-      id="disciplines"
-      className="relative mx-auto max-w-6xl px-5 py-24 sm:px-6 sm:py-32"
-    >
-      <Reveal className="max-w-2xl">
-        <p className="eyebrow mb-4">What we build</p>
-        <h2 className="font-display text-balance text-4xl font-bold tracking-tight sm:text-5xl">
-          Four disciplines, one team
-        </h2>
-        <p className="mt-4 text-pretty text-lg leading-relaxed text-muted">
-          Every project starts as a question. These are the forms the answers
-          take.
-        </p>
-      </Reveal>
+    <Section id="disciplines">
+      <SectionHead
+        index="01"
+        label="What we build"
+        title="Four disciplines, one team"
+        lede="Every project starts as a question. These are the forms the answers take."
+      />
 
-      <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2">
+      {/* A ruled list rather than a card grid: each row is a hairline and three
+          columns — index, name, description. */}
+      <div className="mt-16 border-t border-border">
         {disciplines.map((d, i) => (
           <Reveal
             key={d.title}
-            delay={i * 0.06}
-            className="group relative bg-background-elevated p-8 transition-colors duration-200 hover:bg-surface sm:p-10"
+            delay={i * 0.05}
+            className="grid gap-3 border-b border-border py-8 transition-colors duration-300 hover:bg-white/[0.015] lg:grid-cols-[13rem_1fr] lg:items-baseline lg:gap-16"
           >
-            {/* Accent rule that appears on hover */}
-            <span className="absolute inset-x-0 top-0 h-px scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100" />
-
-            <div className="flex items-center justify-between">
-              <span className="flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-surface text-muted transition-colors duration-200 group-hover:border-accent/40 group-hover:text-accent">
-                <d.icon className="h-5 w-5" strokeWidth={1.7} />
-              </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-faint">
-                {d.tag}
-              </span>
-            </div>
-
-            <h3 className="mt-6 font-display text-2xl font-bold tracking-tight">
-              {d.title}
-            </h3>
-            <p className="mt-3 text-pretty leading-relaxed text-muted">
-              {d.description}
+            <p className="eyebrow">
+              <span className="text-muted">0{i + 1}</span>
+              <span className="mx-2 opacity-40">/</span>
+              {d.tag}
             </p>
+            <div className="grid gap-2 sm:grid-cols-[15rem_1fr] sm:gap-10">
+              <h3 className="t-h3 text-xl">{d.title}</h3>
+              <p className="t-body max-w-xl text-pretty">{d.description}</p>
+            </div>
           </Reveal>
         ))}
       </div>
-    </section>
+    </Section>
   );
 }

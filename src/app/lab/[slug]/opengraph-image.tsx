@@ -31,8 +31,8 @@ export default async function OgImage({
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#08090a",
-          color: "#f4f5f6",
+          background: "#0b0b0d",
+          color: "#edebe6",
           padding: 72,
           fontFamily: "sans-serif",
         }}
@@ -44,12 +44,12 @@ export default async function OgImage({
               width: 40,
               height: 40,
               borderRadius: 10,
-              background: "#ff3b47",
+              background: "#d93b30",
             }}
           />
-          <div style={{ display: "flex", fontSize: 26, fontWeight: 700, letterSpacing: 2 }}>
+          <div style={{ display: "flex", fontSize: 26, fontWeight: 500, letterSpacing: 2 }}>
             <span>GASPEROH</span>
-            <span style={{ color: "#ff3b47" }}>LAB</span>
+            <span style={{ color: "#d93b30" }}>LAB</span>
           </div>
         </div>
 
@@ -58,7 +58,7 @@ export default async function OgImage({
             style={{
               display: "flex",
               fontSize: 28,
-              color: "#ff3b47",
+              color: "#d93b30",
               letterSpacing: 4,
               textTransform: "uppercase",
               marginBottom: 20,
@@ -66,10 +66,10 @@ export default async function OgImage({
           >
             {kind} · The Lab
           </div>
-          <div style={{ display: "flex", fontSize: 66, fontWeight: 700, letterSpacing: -2, lineHeight: 1.05, maxWidth: 1000 }}>
+          <div style={{ display: "flex", fontSize: 66, fontWeight: 500, letterSpacing: -2, lineHeight: 1.05, maxWidth: 1000 }}>
             {title}
           </div>
-          <div style={{ display: "flex", fontSize: 30, color: "#9a9ca1", marginTop: 26, maxWidth: 960, lineHeight: 1.35 }}>
+          <div style={{ display: "flex", fontSize: 30, color: "#9c9a94", marginTop: 26, maxWidth: 960, lineHeight: 1.35 }}>
             {excerpt}
           </div>
         </div>

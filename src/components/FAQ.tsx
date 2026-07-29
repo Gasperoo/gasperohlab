@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence } from "framer-motion";
-import * as m from "framer-motion/m";
 import { Plus } from "lucide-react";
 import { Reveal } from "./Reveal";
+import { Section, SectionHead } from "./Section";
 
 const faqs = [
   {
@@ -33,42 +32,53 @@ const faqs = [
   },
 ];
 
+/**
+ * Disclosure row.
+ *
+ * The panel is always in the DOM and collapsed with a grid-rows trick rather
+ * than an AnimatePresence height animation. It costs no JS, keeps the answers
+ * present for find-in-page, and — because `grid-template-rows` is animatable —
+ * still opens smoothly to a height nobody had to measure.
+ */
 function Item({ q, a, index }: { q: string; a: string; index: number }) {
-  const [open, setOpen] = useState(index === 0);
+  const [open, setOpen] = useState(false);
+  const panelId = `faq-panel-${index}`;
+
   return (
     <div className="border-b border-border">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="group flex w-full items-center justify-between gap-4 py-5 text-left"
+        aria-controls={panelId}
+        className="group flex w-full items-start justify-between gap-6 py-6 text-left"
       >
-        <span className="text-pretty text-base font-medium text-foreground sm:text-lg">
-          {q}
+        <span className="flex gap-4 sm:gap-8">
+          <span className="eyebrow w-6 shrink-0 pt-1.5">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <span className="text-pretty text-base text-foreground sm:text-lg">
+            {q}
+          </span>
         </span>
-        <span
-          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border text-muted transition-all duration-300 group-hover:border-accent/40 group-hover:text-accent ${
+        <Plus
+          className={`mt-1 h-4 w-4 shrink-0 text-faint transition-all duration-300 group-hover:text-foreground ${
             open ? "rotate-45" : ""
           }`}
-        >
-          <Plus className="h-4 w-4" />
-        </span>
+        />
       </button>
-      <AnimatePresence initial={false}>
-        {open && (
-          <m.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden"
-          >
-            <p className="max-w-2xl pb-6 text-pretty leading-relaxed text-muted">
-              {a}
-            </p>
-          </m.div>
-        )}
-      </AnimatePresence>
+
+      <div
+        id={panelId}
+        className="grid transition-[grid-template-rows] duration-300 ease-out"
+        style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
+      >
+        <div className="overflow-hidden">
+          <p className="t-body max-w-2xl text-pretty pb-6 pl-0 text-[0.9375rem] sm:pl-[3.5rem]">
+            {a}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -85,34 +95,23 @@ export function FAQ() {
   };
 
   return (
-    <section
-      id="faq"
-      className="relative mx-auto max-w-6xl px-5 py-24 sm:px-6 sm:py-32"
-    >
+    <Section id="faq">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
-        <Reveal>
-          <p className="eyebrow mb-4">Before you ask</p>
-          <h2 className="font-display text-balance text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-            How working with the lab works.
-          </h2>
-          <p className="mt-5 max-w-sm text-pretty leading-relaxed text-muted">
-            The short version of the questions we get most. Anything not here,
-            just ask us directly.
-          </p>
-        </Reveal>
+      <SectionHead
+        index="10"
+        label="Before you ask"
+        title="How working with the lab works"
+        lede="The short version of the questions we get most. Anything not here, just ask us directly."
+      />
 
-        <Reveal>
-          <div>
-            {faqs.map((f, i) => (
-              <Item key={f.q} q={f.q} a={f.a} index={i} />
-            ))}
-          </div>
-        </Reveal>
-      </div>
-    </section>
+      <Reveal className="mt-16 border-t border-border">
+        {faqs.map((f, i) => (
+          <Item key={f.q} q={f.q} a={f.a} index={i} />
+        ))}
+      </Reveal>
+    </Section>
   );
 }

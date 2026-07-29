@@ -18,8 +18,10 @@ type LegalPageProps = {
 
 /**
  * Shared layout for the plain-language legal pages (privacy, terms, cookies).
- * Same visual language as the rest of the site — mono eyebrow, display title,
- * muted prose — kept deliberately readable rather than dense legalese.
+ *
+ * Set as a numbered document: each clause carries its own index in the margin,
+ * which is both how legal copy is normally read and a use of the site's mono
+ * index that costs nothing. Bullets are hairline-ruled rather than accent dots.
  */
 export function LegalPage({
   eyebrow = "Legal",
@@ -29,51 +31,57 @@ export function LegalPage({
   sections,
 }: LegalPageProps) {
   return (
-    <article className="relative mx-auto max-w-3xl px-5 pt-36 pb-20 sm:px-6 sm:pt-44 sm:pb-28">
-      {/* Header */}
-      <Reveal>
-        <p className="eyebrow mb-4">{eyebrow}</p>
-        <h1 className="font-display text-balance text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl">
-          {title}
-        </h1>
-        <p className="mt-5 font-mono text-xs uppercase tracking-[0.18em] text-faint">
-          Last updated · {updated}
-        </p>
-        <div className="mt-8 flex flex-col gap-4">
-          {intro.map((p, i) => (
-            <p
-              key={i}
-              className="text-pretty text-lg leading-relaxed text-muted"
-            >
-              {p}
-            </p>
-          ))}
+    <>
+      <section>
+        <div className="mx-auto w-full max-w-[76rem] px-5 pt-36 pb-14 sm:px-8 sm:pt-44 sm:pb-16">
+          <p className="rise eyebrow" style={{ animationDelay: "0.05s" }}>
+            {eyebrow}
+            <span className="mx-2 opacity-40">/</span>
+            Last updated {updated}
+          </p>
+          <h1
+            className="rise t-h1 mt-7 max-w-3xl text-balance"
+            style={{ animationDelay: "0.13s" }}
+          >
+            {title}
+          </h1>
+          <div
+            className="rise mt-7 flex max-w-2xl flex-col gap-4"
+            style={{ animationDelay: "0.21s" }}
+          >
+            {intro.map((p, i) => (
+              <p key={i} className="t-lede text-pretty">
+                {p}
+              </p>
+            ))}
+          </div>
         </div>
-      </Reveal>
+      </section>
 
-      <hr className="my-12 border-border" />
-
-      {/* Sections */}
-      <div className="flex flex-col gap-12">
+      <div className="mx-auto w-full max-w-[76rem] border-t border-border px-5 pb-24 sm:px-8 sm:pb-32">
         {sections.map((section, i) => (
-          <Reveal key={section.heading} delay={Math.min(i, 4) * 0.04}>
-            <section>
-              <h2 className="font-display text-2xl font-bold tracking-tight">
-                {section.heading}
-              </h2>
+          <Reveal
+            key={section.heading}
+            delay={Math.min(i, 4) * 0.04}
+            className="grid gap-4 border-b border-border py-10 lg:grid-cols-[13rem_1fr] lg:gap-16"
+          >
+            <p className="eyebrow lg:pt-1.5">
+              <span className="text-muted">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+            </p>
+
+            <section className="max-w-2xl">
+              <h2 className="t-h3 text-xl">{section.heading}</h2>
               <div className="mt-4 flex flex-col gap-4">
                 {section.body.map((block, j) =>
                   Array.isArray(block) ? (
-                    <ul key={j} className="flex flex-col gap-2.5">
+                    <ul key={j} className="border-t border-border">
                       {block.map((item, k) => (
                         <li
                           key={k}
-                          className="relative pl-5 text-pretty leading-relaxed text-muted"
+                          className="border-b border-border py-3 text-pretty text-[0.9375rem] leading-relaxed text-muted"
                         >
-                          <span
-                            className="absolute left-0 top-[0.6em] h-1.5 w-1.5 rounded-full bg-accent"
-                            aria-hidden
-                          />
                           {item}
                         </li>
                       ))}
@@ -81,7 +89,7 @@ export function LegalPage({
                   ) : (
                     <p
                       key={j}
-                      className="text-pretty leading-relaxed text-muted"
+                      className="t-body text-pretty text-[0.9375rem] sm:text-base"
                     >
                       {block}
                     </p>
@@ -92,6 +100,6 @@ export function LegalPage({
           </Reveal>
         ))}
       </div>
-    </article>
+    </>
   );
 }

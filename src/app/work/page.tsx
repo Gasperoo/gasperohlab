@@ -3,8 +3,9 @@ import { Background } from "@/components/Background";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { CTA } from "@/components/CTA";
-import { Reveal } from "@/components/Reveal";
+import { PageHero } from "@/components/PageHero";
 import { WorkGallery } from "@/components/WorkGallery";
+import { projects } from "@/lib/work";
 
 export const metadata: Metadata = {
   title: "Work",
@@ -21,6 +22,8 @@ export const metadata: Metadata = {
 };
 
 export default function WorkIndex() {
+  const inProduction = projects.filter((p) => p.status === "In Production").length;
+
   return (
     <>
       <Background />
@@ -30,22 +33,21 @@ export default function WorkIndex() {
         tabIndex={-1}
         className="relative z-10 flex-1 focus:outline-none"
       >
-        <section className="mx-auto max-w-6xl px-5 pt-36 pb-10 sm:px-6 sm:pt-44">
-          <Reveal>
-            <p className="eyebrow mb-4">The archive</p>
-            <h1 className="max-w-3xl font-display text-balance text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
-              Everything we&apos;ve shipped,<span className="text-accent"> and what&apos;s in the lab.</span>
-            </h1>
-            <p className="mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-muted sm:text-xl">
-              The full body of work — games, applications and the private AI
-              systems behind Marapone. Some released, some in production. Open
-              any project for the whole story.
-            </p>
-          </Reveal>
-        </section>
+        <PageHero
+          label="The archive"
+          title="Everything we've shipped, and what's in the lab."
+          lede="The full body of work — games, applications and the private AI systems behind Marapone. Some released, some in production. Open any project for the whole story."
+          facts={[
+            { label: "Projects", value: String(projects.length) },
+            { label: "In production", value: String(inProduction) },
+            { label: "Disciplines", value: "Games · Apps · AI · Systems" },
+          ]}
+        />
 
-        <section className="mx-auto max-w-6xl px-5 pb-16 sm:px-6">
-          <WorkGallery />
+        <section className="border-t border-border">
+          <div className="mx-auto w-full max-w-[76rem] px-5 py-16 sm:px-8 sm:py-20">
+            <WorkGallery />
+          </div>
         </section>
 
         <CTA />

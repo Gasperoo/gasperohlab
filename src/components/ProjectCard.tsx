@@ -1,138 +1,77 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
-import { type Variants } from "framer-motion";
-import * as m from "framer-motion/m";
 import { ArrowUpRight } from "lucide-react";
-import { disciplineIcon, type Project, type Status } from "@/lib/work";
+import type { Project, Status } from "@/lib/work";
 
-const statusStyles: Record<Status, { dot: string; text: string; live?: boolean }> = {
-  "In Production": { dot: "bg-accent", text: "text-accent", live: true },
-  Released: { dot: "bg-emerald-400", text: "text-emerald-400" },
-  "Coming Soon": { dot: "bg-muted", text: "text-muted" },
+/**
+ * Work card.
+ *
+ * Stripped back from the previous version: no pointer-tracked accent glow, no
+ * discipline-tinted gradient covers, no icon tile, and no animated build-
+ * progress bar (a percentage on a portfolio piece reads like a school project;
+ * the status label already says everything a reader needs). What's left is the
+ * screenshot, a status, a name and a line of copy.
+ *
+ * Now a server component — nothing here was interactive except the glow.
+ */
+
+// Only "in production" gets colour, and only on a 5px dot. Everything else is
+// bone, so the one live signal on the page is unmissable.
+const statusTone: Record<Status, string> = {
+  "In Production": "bg-accent",
+  Released: "bg-foreground",
+  "Coming Soon": "bg-faint",
 };
-
-// Discipline-tinted procedural cover for cards without a screenshot.
-const disciplineTint: Record<Project["discipline"], string> = {
-  Game: "from-violet-500/25",
-  App: "from-sky-500/25",
-  AI: "from-accent/25",
-  Program: "from-emerald-500/25",
-};
-
-export const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } },
-  exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
-};
-
-function ProjectCover({ project }: { project: Project }) {
-  const Icon = disciplineIcon[project.discipline];
-  return (
-    <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-border bg-background-elevated">
-      {project.cover ? (
-        <Image
-          src={project.cover}
-          alt={`${project.name} preview`}
-          fill
-          sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
-          className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
-        />
-      ) : (
-        <div className={`relative flex h-full w-full items-center justify-center bg-gradient-to-br ${disciplineTint[project.discipline]} to-transparent`}>
-          <div className="absolute inset-0 grid-bg opacity-60" />
-          <Icon
-            className="relative h-14 w-14 text-foreground/70 transition-transform duration-500 group-hover:scale-110"
-            strokeWidth={1.2}
-          />
-        </div>
-      )}
-      {/* Top gradient so status pill stays readable over any image */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/40 to-transparent" />
-    </div>
-  );
-}
 
 export function ProjectCard({ project }: { project: Project }) {
-  const Icon = disciplineIcon[project.discipline];
-  const status = statusStyles[project.status];
-
-  const onMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
-    e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
-  };
-
   return (
-    <m.div variants={cardVariants} layout exit="exit" className="h-full">
-      <Link
-        href={`/work/${project.slug}`}
-        onMouseMove={onMove}
-        className="surface surface-hover-fx group relative flex h-full flex-col overflow-hidden rounded-xl"
-      >
-        {/* Pointer-tracked accent glow */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          style={{
-            background:
-              "radial-gradient(320px circle at var(--mx, 50%) var(--my, 0%), rgba(var(--accent-rgb),0.10), transparent 60%)",
-          }}
-        />
-        <ProjectCover project={project} />
+    <Link
+      href={`/work/${project.slug}`}
+      className="group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-surface transition-colors duration-300 hover:border-border-strong hover:bg-surface-hover"
+    >
+      <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-border bg-background-elevated">
+        {project.cover ? (
+          <Image
+            src={project.cover}
+            alt={`${project.name} preview`}
+            fill
+            sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
+            className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+          />
+        ) : (
+          // No screenshot: set the name large in the frame instead of falling
+          // back to a tinted gradient and a generic glyph.
+          <div className="flex h-full w-full items-end p-6">
+            <span className="t-h3 text-2xl text-faint">{project.name}</span>
+          </div>
+        )}
+      </div>
 
-        <div className="flex flex-1 flex-col p-6 sm:p-7">
-          <div className="flex items-start justify-between">
-            <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background-elevated text-muted transition-colors group-hover:text-foreground">
-              <Icon className="h-5 w-5" strokeWidth={1.7} />
-            </span>
+      <div className="flex flex-1 flex-col p-6">
+        <div className="flex items-center justify-between gap-4">
+          <span className="eyebrow">
+            {project.discipline}
+            <span className="mx-2 opacity-40">/</span>
+            {project.year}
+          </span>
+          <span className="flex items-center gap-2 text-[0.6875rem] tracking-wide text-muted">
             <span
-              className={`inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs ${status.text}`}
-            >
-              <span className="relative flex h-1.5 w-1.5">
-                {status.live && (
-                  <span
-                    className={`animate-ping-ring absolute inline-flex h-full w-full rounded-full ${status.dot}`}
-                  />
-                )}
-                <span className={`relative inline-flex h-1.5 w-1.5 rounded-full ${status.dot}`} />
-              </span>
-              {project.status}
-            </span>
-          </div>
-
-          <div className="mt-5 flex items-center gap-2">
-            <h3 className="text-lg font-semibold tracking-tight">{project.name}</h3>
-            <ArrowUpRight className="h-4 w-4 text-faint transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
-          </div>
-          <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.16em] text-faint">
-            {project.discipline} · {project.year}
-          </p>
-
-          <p className="mt-4 flex-1 text-pretty text-sm leading-relaxed text-muted">
-            {project.blurb}
-          </p>
-
-          {project.status === "In Production" && project.progress != null && (
-            <div className="mt-6">
-              <div className="mb-1.5 flex justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-faint">
-                <span>Build progress</span>
-                <span className="text-accent">{project.progress}%</span>
-              </div>
-              <div className="h-1 overflow-hidden rounded-full bg-white/[0.06]">
-                <m.div
-                  className="h-full rounded-full bg-accent"
-                  initial={{ width: 0 }}
-                  whileInView={{ width: `${project.progress}%` }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-                />
-              </div>
-            </div>
-          )}
+              className={`h-1.5 w-1.5 rounded-full ${statusTone[project.status]}`}
+              aria-hidden
+            />
+            {project.status}
+          </span>
         </div>
-      </Link>
-    </m.div>
+
+        <h3 className="t-h3 mt-5 flex items-center gap-1.5 text-xl">
+          {project.name}
+          <ArrowUpRight className="h-4 w-4 text-faint transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground" />
+        </h3>
+
+        <p className="mt-3 flex-1 text-pretty text-sm leading-relaxed text-muted">
+          {project.blurb}
+        </p>
+      </div>
+    </Link>
   );
 }
