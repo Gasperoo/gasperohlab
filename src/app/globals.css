@@ -84,14 +84,16 @@
   --grain-blend: multiply;
   --grain-opacity: 0.045;
 
-  /* The hero scan (see .hero-scan). A lighter sheen was the first instinct and
-     measured out at a 1.4% lift — invisible, because the sheet is already
-     within five points of white. So on paper the pass is an ink wash instead,
-     at the same strength as a hovered row, which is the value this site already
-     uses for "a faint shading on paper". The hairline is the fill red: a thin
-     dark line is exactly what that value is for. */
-  --scan-sheen: rgba(22, 22, 26, 0.03);
-  --scan-line: rgba(196, 48, 42, 0.3);
+  /* The hero backdrop (see .hero-threads). Not a colour of its own: the
+     filaments are the fill red, which is the value tuned for ink-on-paper
+     weight, and the only reason it's aliased at all is that a WebGL uniform
+     can't read a CSS variable — <HeroThreads> resolves this token at runtime.
+     Opacity is set by eye against the sheet, not chosen as a round number:
+     below about four tenths the filaments stop reading as red on paper and turn
+     into grey moiré, and much above it they start competing with the headline
+     they sit behind. */
+  --threads-line: var(--accent);
+  --threads-opacity: 0.42;
 }
 
 :root[data-theme="dark"] {
@@ -145,13 +147,14 @@
   --grain-blend: screen;
   --grain-opacity: 0.028;
 
-  /* Same move as the grain: the wash has to lift instead of darken, and it
-     needs only a couple of points to read, because a near-black sheet shows a
-     lift far more readily than paper shows a shadow. The hairline follows the
-     accent's own light/dark split — at one pixel the fill red disappears into
-     the sheet, so it takes the type red. */
-  --scan-sheen: rgba(236, 236, 239, 0.055);
-  --scan-line: rgba(255, 122, 112, 0.34);
+  /* The filaments follow the accent's own light/dark split: the fill red is
+     mixed for white type sitting on it, and against a near-black sheet it goes
+     muddy, so the backdrop steps up one value. Not as far as the type red —
+     that is a salmon, and a whole field of it stops reading as this red at all.
+     They can also afford more presence here, because a lift on a dark sheet is
+     gentler than a stain on paper. */
+  --threads-line: var(--accent-hover);
+  --threads-opacity: 0.48;
 }
 
 /* Readers without JavaScript never get a `data-theme` stamp, so honour the OS
@@ -187,8 +190,8 @@
     --logo-filter: brightness(0) invert(1);
     --grain-blend: screen;
     --grain-opacity: 0.028;
-    --scan-sheen: rgba(236, 236, 239, 0.055);
-    --scan-line: rgba(255, 122, 112, 0.34);
+    --threads-line: var(--accent-hover);
+    --threads-opacity: 0.48;
   }
 }
 
@@ -450,83 +453,56 @@ select:focus-visible {
    ============================================================================ */
 
 /* ============================================================================
-   Hero scan
+   Hero threads
 
-   The one moving thing on the landing page, which it had to earn: the previous
-   hero was cut for being the loudest element on a site whose whole argument is
-   restraint. So this isn't an effect laid over the design, it's the design's own
-   vocabulary in motion — a hairline exactly like every rule on the site, drawn
-   left to right across the sheet the way the products read a drawing, with a
-   soft sheen trailing behind it. It passes, then leaves five seconds of quiet
-   before the next one.
+   The one moving thing on the landing page, which it had to earn: the hero
+   before this was cut for being the loudest element on a site whose whole
+   argument is restraint. What replaced it was a CSS hairline scanning the sheet;
+   this replaces the scan with the same idea given depth — forty filaments in the
+   accent, gathered at a point behind the headline and fanning out to the right
+   edge, drifting on a noise field. The direction is the one the scan drew and
+   the one the products read a drawing in: left to right.
 
-   It overlaps the sheet rather than sitting on it: the band is transparent at
-   both ends and the whole layer is masked to nothing top and bottom, so there is
-   no edge anywhere for either theme to reveal. Both faces are handled by two
-   tokens, not two animations.
+   The canvas is a <HeroThreads>; everything below is the part of it that belongs
+   in the palette rather than in the component.
 
-   Cost is one composited transform on one pseudo-element — no JS, no layout, no
-   paint beyond the band itself.
+   The mask is the whole reason this stays tasteful. The layer is transparent
+   through the left fifth and doesn't reach full strength until past the two
+   thirds mark, so the filaments emerge *out of* the type rather than crossing
+   it, and there is no edge anywhere for either theme to reveal. Nothing
+   vertical is needed: at this amplitude the field spans the middle three
+   quarters of the band and never reaches the header above or the fact strip
+   below.
+
+   Cost is one <canvas>, one shader, and a chunk that isn't fetched until the
+   page is idle. It doesn't render at all on a narrow layout, off screen, in a
+   hidden tab, or for a reader who asked for less motion.
    ============================================================================ */
 
-.hero-scan {
+.hero-threads {
   position: absolute;
   inset: 0;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  /* Fades out well clear of the header above and the fact strip below, so the
-     pass never runs into a real rule. */
+  opacity: var(--threads-opacity);
   mask-image: linear-gradient(
-    to bottom,
+    to right,
     transparent 0%,
-    #000 20%,
-    #000 74%,
-    transparent 100%
+    transparent 20%,
+    #000 68%,
+    #000 100%
   );
+  /* It mounts a beat after the text, so it fades up rather than appearing. */
+  animation: threads-in 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.hero-scan::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 40%;
-  /* Sheen, then the pen: the hairline is the band's own right edge, so the two
-     can't drift apart the way two animated elements would. */
-  background-image: linear-gradient(
-      90deg,
-      transparent 0%,
-      var(--scan-sheen) 78%,
-      transparent 100%
-    ),
-    linear-gradient(
-      90deg,
-      transparent calc(100% - 1px),
-      var(--scan-line) calc(100% - 1px)
-    );
-  animation: hero-scan 17s cubic-bezier(0.42, 0, 0.58, 1) 1.6s infinite;
-}
-
-@keyframes hero-scan {
-  0% {
-    transform: translate3d(-105%, 0, 0);
+@keyframes threads-in {
+  from {
     opacity: 0;
   }
-  9% {
-    opacity: 1;
-  }
-  60% {
-    opacity: 1;
-  }
-  72% {
-    transform: translate3d(250%, 0, 0);
-    opacity: 0;
-  }
-  100% {
-    transform: translate3d(250%, 0, 0);
-    opacity: 0;
+  to {
+    opacity: var(--threads-opacity);
   }
 }
 
@@ -645,11 +621,10 @@ select:focus-visible {
   .rise {
     animation: none;
   }
-  /* Removed outright rather than parked mid-pass: a stationary band across the
-     hero would be a design element nobody chose. What's left is the type. */
-  .hero-scan {
-    display: none;
-  }
+  /* The hero backdrop isn't handled here. A stationary frame of the shader
+     would be a design element nobody chose, and a canvas that only ever paints
+     one frame is still a canvas — so <HeroThreads> reads the same preference in
+     JS and never mounts, which also means the shader is never even downloaded. */
   .reveal {
     opacity: 1;
     transform: none;

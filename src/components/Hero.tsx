@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { HeroThreads } from "./HeroThreads";
 
 /**
  * Typographic hero.
@@ -9,13 +10,15 @@ import { ArrowRight } from "lucide-react";
  * carries the section now is one sentence set large, and a ruled fact strip
  * underneath it.
  *
- * The one thing that moves is the scan — a hairline crossing the sheet every
- * seventeen seconds, described in full at `.hero-scan` in globals.css. It reads
- * through both themes off two tokens, and it is the site's fifth use of the
- * accent, which is why it is a single semi-transparent pixel.
+ * The one thing that moves is the backdrop — a field of red filaments fanning
+ * out from behind the headline, described at <HeroThreads> and `.hero-threads`
+ * in globals.css. It replaced a CSS hairline scan, and it is held to the same
+ * terms the scan was: one accent colour read from a token, masked well clear of
+ * the type, and gone entirely on a phone or under reduced motion.
  *
- * This is a server component: both the entrance and the scan are pure CSS, so
- * nothing here waits on hydration and the LCP text paints with the first frame.
+ * This is still a server component, and the entrance is still pure CSS: the
+ * LCP text paints with the first frame and the backdrop arrives later, on idle,
+ * from its own chunk.
  */
 
 // Staggered by hand rather than by a variants tree — four elements don't
@@ -43,11 +46,11 @@ const cellRules = [
 export function Hero() {
   return (
     <section id="top">
-      {/* Full-bleed wrapper so the scan crosses the whole sheet rather than
-          stopping at the content column's margins. `isolate` keeps its stacking
-          local, so the band can never end up over the type. */}
+      {/* Full-bleed wrapper so the backdrop runs to both edges of the sheet
+          rather than stopping at the content column's margins. `isolate` keeps
+          its stacking local, so the canvas can never end up over the type. */}
       <div className="relative isolate">
-        <div className="hero-scan" aria-hidden />
+        <HeroThreads />
         <div className="relative z-10 mx-auto w-full max-w-[76rem] px-5 pt-36 pb-16 sm:px-8 sm:pt-44 sm:pb-20">
           <div className="rise" style={{ animationDelay: delays[0] }}>
             <p className="eyebrow flex items-center gap-2.5">

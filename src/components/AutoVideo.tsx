@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
-import { useReducedMotion } from "@/lib/use-reduced-motion";
+import { useReducedMotion } from "@/lib/use-media-query";
 
 type Props = {
   src: string;
