@@ -6,6 +6,7 @@ import { aiEstimator } from "./projects/ai-estimator";
 import { scopeguard } from "./projects/scopeguard";
 import { yugidex } from "./projects/yugidex";
 import { nexusmind } from "./projects/nexusmind";
+import { omnivault } from "./projects/omnivault";
 import { orbit } from "./projects/orbit";
 
 export * from "./types";
@@ -37,6 +38,7 @@ export const projects: Project[] = [
   aiEstimator,
   scopeguard,
   yugidex,
+  omnivault,
   nexusmind,
   orbit,
 ];
