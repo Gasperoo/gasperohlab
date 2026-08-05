@@ -8,7 +8,7 @@ import { projects, presentDisciplines, type Discipline } from "@/lib/work";
 
 // Ordered heaviest-first, matching the home page's disciplines list, and only
 // offering a filter for disciplines that actually have work behind them.
-const order: Discipline[] = ["App", "AI", "Program", "Game"];
+const order: Discipline[] = ["App", "Program", "Game", "AI"];
 const filters = ["All", ...presentDisciplines(order)] as const;
 type Filter = (typeof filters)[number];
 

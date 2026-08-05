@@ -8,6 +8,10 @@ import { yugidex } from "./projects/yugidex";
 import { nexusmind } from "./projects/nexusmind";
 import { omnivault } from "./projects/omnivault";
 import { orbit } from "./projects/orbit";
+import { rebar } from "./projects/rebar";
+import { veer } from "./projects/veer";
+import { tessera } from "./projects/tessera";
+import { bequest } from "./projects/bequest";
 
 export * from "./types";
 
@@ -21,7 +25,9 @@ export * from "./types";
  * decided.
  *
  * Order is editorial, not chronological: the platform first, then the tools
- * built on it, then the work still in the lab.
+ * built on it, then the work still in the lab — and within that tail, roughly
+ * by how much of it exists, so the entry that is still a specification is last
+ * rather than sitting beside things that run.
  *
  * Four entries used to sit here that no longer do. The Construction and
  * Logistics suites are now chapters inside the MaraponeAI case study, and the
@@ -41,6 +47,10 @@ export const projects: Project[] = [
   omnivault,
   nexusmind,
   orbit,
+  rebar,
+  veer,
+  tessera,
+  bequest,
 ];
 
 export function getProject(slug: string): Project | undefined {

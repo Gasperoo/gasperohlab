@@ -30,6 +30,13 @@ export type LogEntry = {
  */
 export const log: LogEntry[] = [
   {
+    date: "2026-08-05",
+    kind: "Started",
+    title: "Four more into the lab",
+    body: "Rebar reads a spreadsheet the way a compiler reads source. Veer shows the weather models disagreeing instead of averaging them into an icon. Tessera generates its puzzles by genuinely breaking things. Bequest is a dead man's switch designed to outlive the company holding it, and is still only a specification — which is what its entry says.",
+    href: "/work",
+  },
+  {
     date: "2026-07-29",
     kind: "Changed",
     title: "Six Marapone entries become four",

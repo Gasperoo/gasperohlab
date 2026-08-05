@@ -10,8 +10,14 @@ import type { Discipline } from "@/lib/work";
  * one AI platform and a single game in production. Leading with the thinnest
  * strand is the fastest way to make a reader who then scrolls to the work feel
  * they've been sold something. So the order follows the evidence, each row
- * carries a live count from the archive, and the two lighter strands say what
- * they are rather than implying a body of work that isn't there.
+ * carries a live count from the archive, and the lighter strands say what they
+ * are rather than implying a body of work that isn't there.
+ *
+ * Which is why AI now sits last despite MaraponeAI being the largest thing the
+ * lab has built: the rule is the count, the count is rendered beside every
+ * heading, and an order that flattered the flagship would be contradicted on
+ * the same line. Re-check this order — and the copy in these rows — whenever
+ * the archive gains an entry.
  *
  * Icons are gone. Each of these used to sit in a bordered, rounded tile with a
  * lucide glyph — the visual signature of a template, and four in a row read as
@@ -31,25 +37,25 @@ const disciplines: {
       "Web and mobile products built with intent. Fast, accessible and genuinely pleasant to use — the bulk of what the lab ships.",
   },
   {
-    title: "AI models",
-    tag: "Intelligence",
-    key: "AI",
-    description:
-      "Domain-tuned models that run on the customer's own hardware. Training, fine-tuning, and wiring intelligence into tools people already use.",
-  },
-  {
     title: "Systems & tooling",
     tag: "Infrastructure",
     key: "Program",
     description:
-      "The engines, pipelines and command-line tools underneath everything above. Rarely shipped under its own name — it's the reason the rest can be.",
+      "The engines, analysers and command-line tools underneath everything above — and, lately, two that ship under their own names because the hard part was never the interface.",
   },
   {
     title: "Games",
     tag: "Interactive",
     key: "Game",
     description:
-      "Playable systems, and the newest strand here: one in production, built the same way as everything else. Mechanics first, polish always.",
+      "Playable systems, built the same way as everything else: the simulation has to be true before any of it is fun. Mechanics first, polish always.",
+  },
+  {
+    title: "AI models",
+    tag: "Intelligence",
+    key: "AI",
+    description:
+      "Domain-tuned models that run on the customer's own hardware. One entry, and the largest thing here — the platform the construction and logistics work is built on.",
   },
 ];
 
