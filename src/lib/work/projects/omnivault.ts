@@ -6,18 +6,18 @@ export const omnivault: Project = {
   discipline: "App",
   status: "In Production",
   blurb:
-    "A financial terminal for collectibles. Cards, sneakers, watches, art, spirits, sealed games, LEGO, vinyl, coins and crypto in one portfolio — priced off completed sales, net of the fees you'd actually pay.",
-  progress: 85,
+    "A native financial terminal for collectibles, on iOS and Android. Cards, sneakers, watches, art, spirits, sealed games, LEGO, vinyl, coins and crypto in one portfolio — priced off completed sales, net of the fees you'd actually pay.",
+  progress: 55,
   year: "2026",
   cover: "/work/omnivault/cover.png",
   caseStudy: {
     tagline: "Sixteen markets, one portfolio, priced honestly.",
-    role: "Product design, pricing engine, native iOS build",
+    role: "Product design, pricing engine, native iOS + Android build",
     timeframe: "2026 — in production",
     // No heroImage: the cover is the hero, so the card morphs into it exactly
     // rather than cross-fading between two near-identical compositions.
     overview: [
-      "OmniVault is a cross-asset terminal for the things collectors actually own — trading cards, sneakers, watches, vintage apparel, fine art, spirits, tech, sealed video games, comics, LEGO, board games, vinyl, coins, figures and crypto — held in one live portfolio. It's native iOS, SwiftUI, Swift 6.",
+      "OmniVault is a cross-asset terminal for the things collectors actually own — trading cards, sneakers, watches, vintage apparel, fine art, spirits, tech, sealed video games, comics, LEGO, board games, vinyl, coins, figures and crypto — held in one live portfolio. It's built native on iOS and Android, with the pricing engine sitting in a package that holds no platform types at all — no UI, no persistence schema — so one tested set of market arithmetic runs under both apps.",
       "The interesting problem was never the app. It was working out what a collectible is worth without lying about it: sixteen markets with different sale mechanics, different fee schedules, different grading scales, and — for most of them — no price API at all.",
     ],
     metrics: [
@@ -78,7 +78,7 @@ export const omnivault: Project = {
         heading: "Where it is",
         body: [
           "The engines are done and measured — pricing, portfolio, arbitrage, swaps, alerts, entitlements — behind 370 offline, deterministic tests that run in about thirteen seconds and are pointed at the arithmetic that carries money. They've earned it: eight real defects were found by the suite rather than by inspection, including a venue-premium cap that made cross-venue arbitrage structurally undetectable, a tokenizer that scored \"Base Set\" and \"Base Set 2\" identically and so served a reprint for the most valuable card in the hobby, and a CGC 9.8 comic priced at 72% of itself for borrowing the card market's quality factor.",
-          "The app runs on device: four tabs, asset detail, the viewer, alerts with background refresh, spreadsheet import, widgets, Siri and Spotlight intents, StoreKit 2 subscriptions. Nothing is seeded — a first launch is an empty vault.",
+          "The iOS app runs on device today: four tabs, asset detail, the viewer, alerts with background refresh, spreadsheet import, home- and lock-screen widgets, Siri and Spotlight intents, subscriptions. Nothing is seeded — a first launch is an empty vault. Android is next, and it inherits the part that took the longest: the engine is a separate package with no platform types in it, so the market arithmetic ports rather than being rewritten and re-argued.",
           "What's honestly not finished: the marketplace's state machines are tested but have no sync transport, so listings and orders are local. The gateway is deployable and undeployed. Encryption is specified to SQLCipher keyed from the Secure Enclave and today relies on iOS data-at-rest protection. And the condition ladders — a PSA 9 at 0.42 of a PSA 10 — are documented starting points rather than measured constants, which makes them the first numbers to revisit once real sales data flows.",
         ],
       },
@@ -87,16 +87,17 @@ export const omnivault: Project = {
       "Swift 6",
       "SwiftUI",
       "SwiftData",
+      "iOS",
+      "Android",
       "WidgetKit",
       "App Intents",
       "StoreKit 2",
       "Node / TypeScript",
-      "iOS 26",
     ],
     waitlist: {
-      platforms: ["iOS"],
+      platforms: ["iOS", "Android"],
       blurb:
-        "OmniVault is heading for a beta on iOS. Leave your email and we'll send you an invite and everything you need to bring your collection in when it opens.",
+        "OmniVault is heading for a beta on iOS and Android. Leave your email and we'll send you an invite and everything you need to bring your collection in when it opens.",
     },
   },
 };
