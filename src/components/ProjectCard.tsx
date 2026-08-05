@@ -36,6 +36,14 @@ export function ProjectCard({ project }: { project: Project }) {
   return (
     <Link
       href={`/work/${project.slug}`}
+      // Cards don't prefetch. Both the home page and the archive render the
+      // whole catalogue, and Next prefetches every link that scrolls into
+      // view — so a phone reaching the bottom of /work had pulled down a
+      // dozen case studies' RSC payloads, around 140 KB, to open at most one
+      // of them. The pages are static and roughly 10 KB each, so fetching on
+      // tap costs a moment against `loading.tsx` rather than a blank screen.
+      // The same reasoning that made the case-study clips stop preloading.
+      prefetch={false}
       className="group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-surface transition-colors duration-300 hover:border-border-strong hover:bg-surface-hover"
     >
       <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-border bg-background-elevated">

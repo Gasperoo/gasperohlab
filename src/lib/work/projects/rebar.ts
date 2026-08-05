@@ -35,7 +35,7 @@ export const rebar: Project = {
       {
         heading: "Where the magic numbers went",
         body: [
-          "`=SUM(D4:D40)*1.15` is the most expensive line of code in most businesses: a constant with no name, no date and no author, applied to everything downstream of it. Rebar lifts every literal out of every formula into one table — the value, the cells it reaches, and when the cell holding it was last edited. On the workbooks we've run it against, roughly a third are duplicates of each other that have quietly drifted apart.",
+          "=SUM(D4:D40)*1.15 is the most expensive line of code in most businesses: a constant with no name, no date and no author, applied to everything downstream of it. Rebar lifts every literal out of every formula into one table — the value, the cells it reaches, and when the cell holding it was last edited. On the workbooks we've run it against, roughly a third are duplicates of each other that have quietly drifted apart.",
           "It does not decide what they mean. It can't, and pretending otherwise would be the most dangerous thing this tool could do. It puts them in front of the one person who might still remember.",
         ],
       },
