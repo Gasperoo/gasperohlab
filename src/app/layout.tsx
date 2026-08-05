@@ -185,10 +185,16 @@ export default function RootLayout({
         />
         {/* The index is built here, on the server, so the palette can search
             the whole site without any of it reaching the client bundle. */}
+        {/* MotionProvider has to be the outer of the two: ContactProvider
+            renders the contact dialog beside its children, so with the nesting
+            the other way round that dialog sat outside <LazyMotion>. An `m.*`
+            with no LazyMotion above it never gets a renderer — it paints its
+            `initial` styles and stops there, which made "Get in touch" open a
+            fully transparent modal. */}
         <CommandPalette items={searchIndex()}>
-          <ContactProvider>
-            <MotionProvider>{children}</MotionProvider>
-          </ContactProvider>
+          <MotionProvider>
+            <ContactProvider>{children}</ContactProvider>
+          </MotionProvider>
         </CommandPalette>
         <Analytics />
       </body>
