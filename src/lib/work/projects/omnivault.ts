@@ -6,23 +6,23 @@ export const omnivault: Project = {
   discipline: "App",
   status: "In Production",
   blurb:
-    "A native financial terminal for collectibles, on iOS and Android. Cards, sneakers, watches, art, spirits, sealed games, LEGO, vinyl, coins and crypto in one portfolio — priced off completed sales, net of the fees you'd actually pay.",
+    "A native financial terminal for collectibles, on iOS and Android. Cards, comics, sneakers, watches, art, LEGO, figurines, vintage games, vinyl and crypto in one portfolio — priced off completed sales, net of the fees you'd actually pay.",
   progress: 55,
   year: "2026",
   cover: "/work/omnivault/cover.png",
   caseStudy: {
-    tagline: "Sixteen markets, one portfolio, priced honestly.",
+    tagline: "Twelve markets, one portfolio, priced honestly.",
     role: "Product design, pricing engine, native iOS + Android build",
     timeframe: "2026 — in production",
     // No heroImage: the cover is the hero, so the card morphs into it exactly
     // rather than cross-fading between two near-identical compositions.
     overview: [
-      "OmniVault is a cross-asset terminal for the things collectors actually own — trading cards, sneakers, watches, vintage apparel, fine art, spirits, tech, sealed video games, comics, LEGO, board games, vinyl, coins, figures and crypto — held in one live portfolio. It's built native on iOS and Android, with the pricing engine sitting in a package that holds no platform types at all — no UI, no persistence schema — so one tested set of market arithmetic runs under both apps.",
-      "The interesting problem was never the app. It was working out what a collectible is worth without lying about it: sixteen markets with different sale mechanics, different fee schedules, different grading scales, and — for most of them — no price API at all.",
+      "OmniVault is a cross-asset terminal for the things collectors actually own — every major trading card game, comics and manga, sneakers, watches, fine art, posters, memorabilia, LEGO, figurines, vintage vinyl, vintage video games and crypto — held in one live portfolio. It's built native on iOS and Android, with the pricing engine sitting in a package that holds no platform types at all — no UI, no persistence schema — so one tested set of market arithmetic runs under both apps.",
+      "The interesting problem was never the app. It was working out what a collectible is worth without lying about it: twelve markets with different sale mechanics, different fee schedules, different grading scales, and — for most of them — no price API at all.",
     ],
     metrics: [
-      { value: "16", label: "Asset categories, physical and digital" },
-      { value: "28", label: "Pricing sources with real fee schedules" },
+      { value: "12", label: "Asset categories, physical and digital" },
+      { value: "0", label: "Fixtures — what it can't price, it says it can't" },
       { value: "370", label: "Engine tests, offline and deterministic" },
     ],
     sections: [
@@ -46,7 +46,7 @@ export const omnivault: Project = {
         heading: "Deleting the fake market",
         body: [
           "There used to be a seeded market behind every holding: cost basis × 1.12, with a plausible history generated around it. The app looked completely functional and not one of its figures meant anything.",
-          "It's gone, and nothing replaced it. Crypto, Pokémon, Magic and Yu-Gi-Oh price from real APIs. Every venue without an open price feed — StockX, GOAT, eBay, Goldin, Chrono24, PriceCharting, BrickLink, Discogs, GreatCollections, Whatnot — publishes nothing, so those holdings are valued by the collector and labelled as such everywhere. An asset OmniVault can't price comes back unpriced, and the dashboard states how much of the collection that covers.",
+          "It's gone, and nothing replaced it. Crypto, Pokémon, Magic and Yu-Gi-Oh price from real APIs. Every venue without an open price feed — StockX, GOAT, eBay, Goldin, Chrono24, PriceCharting, BrickLink, Discogs, Whatnot — publishes nothing, so those holdings are valued by the collector and labelled as such everywhere. An asset OmniVault can't price comes back unpriced, and the dashboard states how much of the collection that covers.",
           "A valuation carries its own basis, so a market-derived value and a typed-in one stay distinguishable through every surface that consumes them — the charts, the alerts and the shareable card all refuse to present a manual figure as a market price. A partial read is handled the same way: a venue that can't be reached becomes a typed failure, the remaining venues still produce a valuation, and the UI says the pricing is incomplete instead of presenting it as whole.",
         ],
       },
@@ -54,24 +54,24 @@ export const omnivault: Project = {
         heading: "Refusing to show the wrong photograph",
         body: [
           "Holdings resolve to real imagery through a chain ordered by fidelity rather than convenience: a PSA cert lookup returns the exact slab, TCGdex and Scryfall return the set- and printing-matched card, MusicBrainz plus Cover Art Archive return the pressing when the catalogue number matches. Every result is labelled, so an approximate picture can never pass as a photograph of the collector's own item.",
-          "Two rules do most of the work, and both were written after the app got it wrong. A catalogue is only asked when it can actually answer — Wikimedia Commons is excluded from cards, comics, games, LEGO, vinyl and figures, not for lack of coverage but because it appears to have coverage: the artwork identifying those objects is in copyright, so a keyword search returns something adjacent and confident. \"Super Mario Bros. 3\" resolved to a photo of a Wii stand at a trade show. Coins are the opposite case and are wired in deliberately, because Commons holds obverse and reverse plates for most issues and a 1909-S VDB cent resolves to a real one.",
-          "And a weak match is no match. Commons ranks something for almost any query, so the winner of a field of irrelevant files is still irrelevant — \"Gloomhaven\" came back as a photograph of a jigsaw piece. Candidates now need real vocabulary overlap with the holding, and the category glyph is the honest answer when nothing clears it. Graded cards are drawn inside their holder, with the real grade and cert number on the label, because a PSA 10 Charizard isn't a card — it's a card sealed in a labelled slab, and that's how it's bought and shipped.",
+          "Two rules do most of the work, and both were written after the app got it wrong. A catalogue is only asked when it can actually answer — Wikimedia Commons is excluded from cards, comics, games, LEGO, vinyl and figurines, not for lack of coverage but because it appears to have coverage: the artwork identifying those objects is in copyright, so a keyword search returns something adjacent and confident. \"Super Mario Bros. 3\" resolved to a photograph of a Wii stand at a trade show, and \"Millennium Falcon\" to a film prop. Both were shown as somebody's asset before this was fixed. Commons stays wired in for watches, sneakers and art, where the most it can ever be is a library photo of the right model — which is exactly what the result is labelled.",
+          "And a weak match is no match. Commons ranks something for almost any query, so the winner of a field of irrelevant files is still irrelevant. Candidates now need real vocabulary overlap with the holding, and the category glyph is the honest answer when nothing clears it. Where a catalogue can be exact it's held to it as a hard constraint rather than a tie-break: a record's label catalogue number outweighs every other signal combined, a LEGO set number is the set's identity, and a comic's cover year is what stops a facsimile reprint standing in for a first printing. Graded cards are drawn inside their holder, with the real grade and cert number on the label, because a PSA 10 Charizard isn't a card — it's a card sealed in a labelled slab, and that's how it's bought and shipped.",
         ],
       },
       {
         heading: "A key in an app binary is a published key",
         body: [
-          "Five catalogues require registration — PSA, eBay, IGDB, Comic Vine, BoardGameGeek — and anyone can pull a credential out of a shipped IPA. A small Node/TypeScript gateway holds those keys, caches the answers and performs the client-credential exchanges a device shouldn't.",
+          "Four catalogues require registration — PSA, eBay, IGDB, Comic Vine — and anyone can pull a credential out of a shipped IPA. A small Node/TypeScript gateway holds those keys, caches the answers and performs the client-credential exchanges a device shouldn't.",
           "The split is deliberate. Keyed catalogues route through it, because its store is shared across users and its key is the one being rate-limited: a lookup answered once serves everyone who owns that item, so cost scales with distinct items owned rather than with users. Immutable records — a slab photograph, a comic cover, a game's box art — are written with no expiry, because a monthly TTL means paying for the same unchanging fact forever. Usage falls over time instead of resetting.",
-          "Keyless catalogues never touch it. Routing TCGdex or Scryfall through a server would add a hop, make pictures depend on that server being up, and send someone's item names somewhere for no benefit. With no gateway deployed at all, Pokémon, Magic, Yu-Gi-Oh, LEGO, vinyl, coins and crypto still resolve — that's the state the app ships in.",
+          "Keyless catalogues never touch it. Routing TCGdex or Scryfall through a server would add a hop, make pictures depend on that server being up, and send someone's item names somewhere for no benefit. With no gateway deployed at all, Pokémon, Magic, Yu-Gi-Oh, LEGO, vinyl and crypto still resolve — that's the state the app ships in.",
         ],
       },
       {
         heading: "The one screen that isn't a terminal",
         body: [
-          "Everywhere else OmniVault is spreads and net proceeds, but nobody buys a 1909-S VDB cent for its liquidity score, and a vault that only shows numbers forgets what it's a vault of. One screen does nothing but present the object.",
-          "The holographic card system is ported from YuGi-Dex — gyro and drag tilt, rotation on both axes, a shadow that moves against it, five foil treatments. Beyond cards, a stage composes from four ingredients rather than being written per category: backdrop, handling, ambience, hint. Watches sit in a glass case with lume you hold to charge; vinyl gets a slipmat and a spindle you flick to spin; coins sit on a velvet tray and turn over when tapped; games get a shelf edge and CRT scanlines. Sixteen bespoke view hierarchies would have been sixteen things to keep working, and a collector's instinct is the same across hobbies anyway.",
-          "Crypto gets no stage at all. Inventing a coin on velvet for a wallet balance would be the app pretending you own an object.",
+          "Everywhere else OmniVault is spreads and net proceeds, but nobody buys an original Star Wars one-sheet for its liquidity score, and a vault that only shows numbers forgets what it's a vault of. One screen does nothing but present the object.",
+          "The holographic card system is ported from YuGi-Dex — gyro and drag tilt, rotation on both axes, a shadow that moves against it, five foil treatments. Beyond cards, a stage composes from four ingredients rather than being written per category: backdrop, handling, ambience, hint. Sneakers turn on a plinth and keep the angle you leave them at; watches sit in a glass case with lume you hold to charge; vinyl gets a slipmat and a spindle you flick to spin, coasting down; games get a shelf edge and CRT scanlines; art hangs on a gallery wall under a spotlight and doesn't move at all. A dozen bespoke view hierarchies would have been a dozen things to keep working, and a collector's instinct is the same across hobbies anyway.",
+          "Crypto gets no stage at all. Standing a wallet balance on a plinth would be the app pretending you own an object.",
         ],
       },
       {
